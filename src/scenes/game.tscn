@@ -16,7 +16,7 @@
 [ext_resource type="Script" uid="uid://csjccrhj5wnx7" path="res://addons/phantom_camera/scripts/phantom_camera/phantom_camera_3d.gd" id="7_nm604"]
 [ext_resource type="Script" uid="uid://8umksf8e80fw" path="res://addons/phantom_camera/scripts/resources/tween_resource.gd" id="8_3ucld"]
 [ext_resource type="Script" uid="uid://clxq4bmgf2uqd" path="res://src/core/Players.cs" id="9_bd8mh"]
-[ext_resource type="Script" uid="uid://bvm3ns805u1wd" path="res://src/core/DiscordSystem.cs" id="9_h2mn8"]
+[ext_resource type="Script" uid="uid://bvm3ns805u1wd" path="res://src/core/discord/DiscordSystem.cs" id="9_h2mn8"]
 [ext_resource type="Script" uid="uid://bd046eokvcnu2" path="res://addons/phantom_camera/scripts/phantom_camera_host/phantom_camera_host.gd" id="16_3ucld"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_0fcgq"]
@@ -68,16 +68,6 @@ script = ExtResource("3_tnd0m")
 [node name="lighting" type="Node3D" parent="world"]
 script = ExtResource("6_5dxuo")
 
-[node name="gui" type="Control" parent="."]
-unique_name_in_owner = true
-layout_mode = 3
-anchors_preset = 0
-script = ExtResource("2_276xm")
-
-[node name="shaders" type="CanvasLayer" parent="gui"]
-script = ExtResource("4_6e0h8")
-metadata/_custom_type_script = "uid://css84aji0fro1"
-
 [node name="audio" type="Node" parent="."]
 unique_name_in_owner = true
 script = ExtResource("2_yufto")
@@ -105,6 +95,16 @@ process_priority = 300
 process_physics_priority = 300
 script = ExtResource("16_3ucld")
 metadata/_custom_type_script = "uid://bd046eokvcnu2"
+
+[node name="gui" type="Control" parent="client"]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("2_276xm")
+
+[node name="shaders" type="CanvasLayer" parent="client/gui"]
+script = ExtResource("4_6e0h8")
+metadata/_custom_type_script = "uid://css84aji0fro1"
 
 [node name="scripts" type="Node" parent="client"]
 script = ExtResource("7_flib5")

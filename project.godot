@@ -19,7 +19,7 @@ config/icon="res://icon.svg"
 
 DiscordRPCLoader="*res://addons/discord-rpc-gd/nodes/discord_autoload.gd"
 LiveDebugger="*res://addons/godot-live-debugger/node_live_debugger.tscn"
-Ext="*res://src/core/Ext.cs"
+Ext="*res://src/core/libs/Ext.cs"
 PhantomCameraManager="*res://addons/phantom_camera/scripts/managers/phantom_camera_manager.gd"
 
 [display]
@@ -32,11 +32,12 @@ project/assembly_name="multiplayer test"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/csg_converter/plugin.cfg", "res://addons/csg_terrain/plugin.cfg", "res://addons/csgtomesh/plugin.cfg", "res://addons/discord-rpc-gd/plugin.cfg", "res://addons/fancy_folder_colors/plugin.cfg", "res://addons/gdscript2all/plugin.cfg", "res://addons/godot-live-debugger/plugin.cfg", "res://addons/phantom_camera/plugin.cfg", "res://addons/script-tabs/plugin.cfg", "res://addons/terrain_3d/plugin.cfg")
+enabled=PackedStringArray("res://addons/csg_converter/plugin.cfg", "res://addons/csg_terrain/plugin.cfg", "res://addons/csgtomesh/plugin.cfg", "res://addons/discord-rpc-gd/plugin.cfg", "res://addons/fancy_folder_colors/plugin.cfg", "res://addons/gdscript2all/plugin.cfg", "res://addons/godot-live-debugger/plugin.cfg", "res://addons/phantom_camera/plugin.cfg", "res://addons/script-tabs/plugin.cfg", "res://addons/shyscriptsingleton/plugin.cfg", "res://addons/terrain_3d/plugin.cfg")
 
 [physics]
 
 3d/physics_engine="Jolt Physics"
+3d/default_gravity=9.8
 common/physics_interpolation=true
 
 [steam_server]
