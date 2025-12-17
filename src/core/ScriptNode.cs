@@ -43,9 +43,7 @@ public partial class " + Name + @" : "+ GetType().Name + @"
 	public override void _Process(double delta)
 	{
 	}
-}
-
-";	
+}";	
 	}
 
 	#endregion
