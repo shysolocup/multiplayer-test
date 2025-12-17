@@ -1,0 +1,44 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="multiplayer test"
+run/main_scene="uid://cg6684xj7fjx"
+config/features=PackedStringArray("4.4", "C#", "Forward Plus")
+config/icon="res://icon.svg"
+
+[autoload]
+
+DiscordRPCLoader="*res://addons/discord-rpc-gd/nodes/discord_autoload.gd"
+LiveDebugger="*res://addons/godot-live-debugger/node_live_debugger.tscn"
+Ext="*res://src/core/Ext.cs"
+PhantomCameraManager="*res://addons/phantom_camera/scripts/managers/phantom_camera_manager.gd"
+
+[display]
+
+window/subwindows/embed_subwindows=false
+
+[dotnet]
+
+project/assembly_name="multiplayer test"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/csg_converter/plugin.cfg", "res://addons/csg_terrain/plugin.cfg", "res://addons/csgtomesh/plugin.cfg", "res://addons/discord-rpc-gd/plugin.cfg", "res://addons/fancy_folder_colors/plugin.cfg", "res://addons/gdscript2all/plugin.cfg", "res://addons/godot-live-debugger/plugin.cfg", "res://addons/phantom_camera/plugin.cfg", "res://addons/script-tabs/plugin.cfg", "res://addons/terrain_3d/plugin.cfg")
+
+[physics]
+
+3d/physics_engine="Jolt Physics"
+common/physics_interpolation=true
+
+[steam_server]
+
+initialization/embed_callbacks=false
