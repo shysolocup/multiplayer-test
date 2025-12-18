@@ -19,7 +19,7 @@ config/icon="res://icon.svg"
 
 DiscordRPCLoader="*res://addons/discord-rpc-gd/nodes/discord_autoload.gd"
 LiveDebugger="*res://addons/godot-live-debugger/node_live_debugger.tscn"
-Ext="*res://src/core/libs/Ext.cs"
+Ext="*res://src/scripts/core/libs/Ext.cs"
 PhantomCameraManager="*res://addons/phantom_camera/scripts/managers/phantom_camera_manager.gd"
 ScriptNodeEditorBridge="*res://addons/shyscriptsingleton/ScriptNodeEditorBridge.cs"
 

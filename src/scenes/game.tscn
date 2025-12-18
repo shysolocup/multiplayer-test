@@ -1,34 +1,55 @@
-[gd_scene load_steps=23 format=3 uid="uid://cg6684xj7fjx"]
+[gd_scene load_steps=26 format=3 uid="uid://cg6684xj7fjx"]
 
-[ext_resource type="Script" uid="uid://dj3d8j4qfl1st" path="res://src/core/Game.cs" id="1_covw0"]
-[ext_resource type="Script" uid="uid://c5frf4qgle4bf" path="res://src/core/StarterGui.cs" id="2_276xm"]
-[ext_resource type="Script" uid="uid://d0t5vb0wvm7b6" path="res://src/core/World.cs" id="2_lcg6w"]
-[ext_resource type="Script" uid="uid://dd1he2wiyd6x4" path="res://src/core/AudioSystem.cs" id="2_yufto"]
-[ext_resource type="Script" uid="uid://hilik46ime86" path="res://src/core/CharacterSystem.cs" id="3_0fcgq"]
-[ext_resource type="Script" uid="uid://c3yamjsvvi4eo" path="res://src/core/MapSystem.cs" id="3_tnd0m"]
-[ext_resource type="Script" uid="uid://bvp7c0e42bdmd" path="res://src/core/Character.cs" id="4_3xf06"]
-[ext_resource type="Script" uid="uid://css84aji0fro1" path="res://src/core/ShaderSystem.cs" id="4_6e0h8"]
-[ext_resource type="Script" uid="uid://d1k532y44p2cq" path="res://src/core/ServerSystem.cs" id="5_lcg6w"]
-[ext_resource type="Script" uid="uid://cv04eaa2q8bhx" path="res://src/core/LightingSystem.cs" id="6_5dxuo"]
-[ext_resource type="Script" uid="uid://dcblggjtpvjin" path="res://src/core/ClientSystem.cs" id="6_gh3at"]
-[ext_resource type="Script" uid="uid://cro0v0l0cdq5v" path="res://src/core/ServerScriptSystem.cs" id="6_h2mn8"]
-[ext_resource type="Script" uid="uid://bb5na7uref4ps" path="res://src/core/ClientScriptSystem.cs" id="7_flib5"]
+[ext_resource type="Script" uid="uid://dj3d8j4qfl1st" path="res://src/scripts/core/Game.cs" id="1_covw0"]
+[ext_resource type="Script" uid="uid://c5frf4qgle4bf" path="res://src/scripts/core/GuiSystem.cs" id="2_276xm"]
+[ext_resource type="Script" uid="uid://d0t5vb0wvm7b6" path="res://src/scripts/core/World.cs" id="2_lcg6w"]
+[ext_resource type="Script" uid="uid://dd1he2wiyd6x4" path="res://src/scripts/core/AudioSystem.cs" id="2_yufto"]
+[ext_resource type="Script" uid="uid://hilik46ime86" path="res://src/scripts/core/CharacterSystem.cs" id="3_0fcgq"]
+[ext_resource type="Script" uid="uid://c3yamjsvvi4eo" path="res://src/scripts/core/MapSystem.cs" id="3_tnd0m"]
+[ext_resource type="PackedScene" uid="uid://dtwjgai1ljwtw" path="res://src/scenes/starter_character.tscn" id="4_lkrtx"]
+[ext_resource type="Script" uid="uid://d1k532y44p2cq" path="res://src/scripts/core/ServerSystem.cs" id="5_lcg6w"]
+[ext_resource type="Script" uid="uid://cv04eaa2q8bhx" path="res://src/scripts/core/LightingSystem.cs" id="6_5dxuo"]
+[ext_resource type="Script" uid="uid://dcblggjtpvjin" path="res://src/scripts/core/ClientSystem.cs" id="6_gh3at"]
 [ext_resource type="Script" uid="uid://csjccrhj5wnx7" path="res://addons/phantom_camera/scripts/phantom_camera/phantom_camera_3d.gd" id="7_nm604"]
 [ext_resource type="Script" uid="uid://8umksf8e80fw" path="res://addons/phantom_camera/scripts/resources/tween_resource.gd" id="8_3ucld"]
-[ext_resource type="Script" uid="uid://clxq4bmgf2uqd" path="res://src/core/Players.cs" id="9_bd8mh"]
-[ext_resource type="Script" uid="uid://bvm3ns805u1wd" path="res://src/core/discord/DiscordSystem.cs" id="9_h2mn8"]
-[ext_resource type="Script" uid="uid://djylsh4f537kf" path="res://src/core/ServerScript.cs" id="13_lkrtx"]
+[ext_resource type="Script" uid="uid://iqerivcko5tq" path="res://src/scripts/core/CameraSystem.cs" id="9_44dqv"]
+[ext_resource type="Script" uid="uid://clxq4bmgf2uqd" path="res://src/scripts/core/Players.cs" id="9_bd8mh"]
+[ext_resource type="Script" uid="uid://bvm3ns805u1wd" path="res://src/scripts/core/discord/DiscordSystem.cs" id="9_h2mn8"]
+[ext_resource type="PackedScene" uid="uid://c3w57vg3x48cu" path="res://src/scenes/server_scripts.tscn" id="14_44dqv"]
+[ext_resource type="Script" uid="uid://frnpgkvyxvtv" path="res://src/scripts/core/Player.cs" id="14_ta85g"]
 [ext_resource type="Script" uid="uid://bd046eokvcnu2" path="res://addons/phantom_camera/scripts/phantom_camera_host/phantom_camera_host.gd" id="16_3ucld"]
-
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_0fcgq"]
-
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_3xf06"]
+[ext_resource type="PackedScene" uid="uid://ds6x2baksbent" path="res://src/scenes/shaders.tscn" id="18_44dqv"]
+[ext_resource type="PackedScene" uid="uid://by5f8a6nan5nk" path="res://src/scenes/client_scripts.tscn" id="19_3xp0n"]
+[ext_resource type="Script" uid="uid://3u0cd6x7v7xf" path="res://src/scripts/core/ReplicationSystem.cs" id="19_lkrtx"]
+[ext_resource type="Script" uid="uid://beh33gmhfkqv4" path="res://src/scripts/core/replicator/WorldSpawner.cs" id="22_3xp0n"]
 
 [sub_resource type="Resource" id="Resource_lkrtx"]
 script = ExtResource("8_3ucld")
 duration = 1.0
 transition = 0
 ease = 2
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_p02ep"]
+properties/0/path = NodePath(".:scale")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:visible")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath(".:position")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+properties/3/path = NodePath(".:rotation")
+properties/3/spawn = true
+properties/3/replication_mode = 1
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_ta85g"]
+properties/0/path = NodePath(".:PlayerName")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:PlayerId")
+properties/1/spawn = true
+properties/1/replication_mode = 1
 
 [node name="game" type="Node"]
 script = ExtResource("1_covw0")
@@ -38,30 +59,11 @@ unique_name_in_owner = true
 script = ExtResource("2_lcg6w")
 Gravity = 9.8
 
-[node name="characters" type="Node3D" parent="world" node_paths=PackedStringArray("StarterCharacter")]
+[node name="characters" type="Node3D" parent="world"]
 script = ExtResource("3_0fcgq")
-StarterCharacter = NodePath("starterCharacter")
 
-[node name="starterCharacter" type="CharacterBody3D" parent="world/characters"]
+[node name="starterCharacter" parent="world/characters" instance=ExtResource("4_lkrtx")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-script = ExtResource("4_3xf06")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="world/characters/starterCharacter"]
-mesh = SubResource("CapsuleMesh_0fcgq")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="world/characters/starterCharacter"]
-shape = SubResource("CapsuleShape3D_3xf06")
-
-[node name="mainCamera" type="Node3D" parent="world" node_paths=PackedStringArray("follow_target")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 4)
-script = ExtResource("7_nm604")
-priority = 1
-follow_mode = 6
-follow_target = NodePath("../characters/starterCharacter")
-look_at_mode = 1
-tween_resource = SubResource("Resource_lkrtx")
-follow_offset = Vector3(0, 1, 3)
-metadata/_custom_type_script = "uid://csjccrhj5wnx7"
 
 [node name="map" type="Node3D" parent="world"]
 script = ExtResource("3_tnd0m")
@@ -69,32 +71,43 @@ script = ExtResource("3_tnd0m")
 [node name="lighting" type="Node3D" parent="world"]
 script = ExtResource("6_5dxuo")
 
-[node name="audio" type="Node" parent="."]
+[node name="cameras" type="Node3D" parent="world"]
+unique_name_in_owner = true
+script = ExtResource("9_44dqv")
+
+[node name="primary" type="Node3D" parent="world/cameras"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 4)
+script = ExtResource("7_nm604")
+priority = 1
+follow_mode = 6
+look_at_mode = 1
+tween_resource = SubResource("Resource_lkrtx")
+follow_offset = Vector3(0, 1, 3)
+metadata/_custom_type_script = "uid://csjccrhj5wnx7"
+
+[node name="audios" type="Node" parent="world"]
 unique_name_in_owner = true
 script = ExtResource("2_yufto")
 
 [node name="players" type="Node" parent="."]
 script = ExtResource("9_bd8mh")
 
+[node name="starterPlayer" type="Node" parent="players"]
+script = ExtResource("14_ta85g")
+metadata/_custom_type_script = "uid://frnpgkvyxvtv"
+
 [node name="server" type="Node" parent="."]
 unique_name_in_owner = true
 script = ExtResource("5_lcg6w")
 
-[node name="scripts" type="Node" parent="server"]
-script = ExtResource("6_h2mn8")
-
-[node name="ServerScript" type="Node" parent="server/scripts"]
-script = ExtResource("13_lkrtx")
-_sourcePromptedOnStart = true
-metadata/_custom_type_script = "uid://djylsh4f537kf"
+[node name="scripts" parent="server" instance=ExtResource("14_44dqv")]
 
 [node name="client" type="Node" parent="."]
 unique_name_in_owner = true
 script = ExtResource("6_gh3at")
 
 [node name="camera" type="Camera3D" parent="client"]
-physics_interpolation_mode = 1
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 4)
 
 [node name="cameraHost" type="Node" parent="client/camera"]
 process_priority = 300
@@ -108,12 +121,36 @@ layout_mode = 3
 anchors_preset = 0
 script = ExtResource("2_276xm")
 
-[node name="shaders" type="CanvasLayer" parent="client/gui"]
-script = ExtResource("4_6e0h8")
-metadata/_custom_type_script = "uid://css84aji0fro1"
+[node name="shaders" parent="client/gui" instance=ExtResource("18_44dqv")]
 
-[node name="scripts" type="Node" parent="client"]
-script = ExtResource("7_flib5")
+[node name="scripts" parent="client" instance=ExtResource("19_3xp0n")]
 
 [node name="discordrpc" type="Node" parent="client"]
 script = ExtResource("9_h2mn8")
+
+[node name="replicated" type="Node" parent="."]
+script = ExtResource("19_lkrtx")
+metadata/_custom_type_script = "uid://3u0cd6x7v7xf"
+
+[node name="replicator" type="Node" parent="replicated"]
+
+[node name="worldSpawner" type="MultiplayerSpawner" parent="replicated/replicator"]
+_spawnable_scenes = PackedStringArray("uid://ds6x2baksbent", "uid://dtwjgai1ljwtw")
+spawn_path = NodePath("../../../world")
+script = ExtResource("22_3xp0n")
+
+[node name="characterSync" type="MultiplayerSynchronizer" parent="replicated/replicator"]
+root_path = NodePath("../../../world/characters/starterCharacter")
+replication_config = SubResource("SceneReplicationConfig_p02ep")
+
+[node name="serverSpawner" type="MultiplayerSpawner" parent="replicated/replicator"]
+_spawnable_scenes = PackedStringArray("uid://c3w57vg3x48cu")
+spawn_path = NodePath("../../../server")
+
+[node name="playerSpawner" type="MultiplayerSpawner" parent="replicated/replicator"]
+_spawnable_scenes = PackedStringArray("uid://by5f8a6nan5nk", "")
+spawn_path = NodePath("../../../players")
+
+[node name="playerSyncer" type="MultiplayerSynchronizer" parent="replicated/replicator"]
+root_path = NodePath("../../../players/starterPlayer")
+replication_config = SubResource("SceneReplicationConfig_ta85g")

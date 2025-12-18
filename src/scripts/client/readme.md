@@ -1,0 +1,1 @@
+client scripts that are ran exclusively on the client and use client stuff

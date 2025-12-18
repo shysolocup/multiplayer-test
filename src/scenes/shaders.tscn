@@ -1,3 +1,7 @@
-[gd_scene format=3 uid="uid://ds6x2baksbent"]
+[gd_scene load_steps=2 format=3 uid="uid://ds6x2baksbent"]
 
-[node name="shaders" type="Node"]
+[ext_resource type="Script" uid="uid://css84aji0fro1" path="res://src/scripts/core/ShaderSystem.cs" id="1_r63nx"]
+
+[node name="shaders" type="CanvasLayer"]
+script = ExtResource("1_r63nx")
+metadata/_custom_type_script = "uid://css84aji0fro1"
