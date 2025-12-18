@@ -10,6 +10,7 @@ public partial class ShyScriptSingleton : EditorPlugin
 
     public override void _Ready()
     {
+		Name = "ShyScriptSingleton";
         base._Ready();
 		ScriptNodeEditorBridge.Plugin = this;
     }
@@ -23,6 +24,8 @@ public partial class ShyScriptSingleton : EditorPlugin
 			FileMode = EditorFileDialog.FileModeEnum.SaveFile,
 			Access = EditorFileDialog.AccessEnum.Filesystem
 		};
+
+		_dialog.MinSize = new Vector2I(800, 400);
 
 		_dialog.FileSelected += path =>
 		{
