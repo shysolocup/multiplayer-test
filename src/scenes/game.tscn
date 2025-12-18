@@ -148,7 +148,7 @@ _spawnable_scenes = PackedStringArray("uid://c3w57vg3x48cu")
 spawn_path = NodePath("../../../server")
 
 [node name="playerSpawner" type="MultiplayerSpawner" parent="replicated/replicator"]
-_spawnable_scenes = PackedStringArray("uid://by5f8a6nan5nk", "")
+_spawnable_scenes = PackedStringArray("uid://by5f8a6nan5nk")
 spawn_path = NodePath("../../../players")
 
 [node name="playerSyncer" type="MultiplayerSynchronizer" parent="replicated/replicator"]
