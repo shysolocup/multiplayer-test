@@ -4,7 +4,7 @@ using Godot.Collections;
 
 [Tool]
 [GlobalClass, Icon("uid://caemrook4v2la")]
-public partial class LightingSystem : Node3D
+public partial class LightingSystem : Singleton3D<LightingSystem>
 {
 	[Signal] public delegate void LightingChangedEventHandler();
 	[Signal] public delegate void LightingDisabledEventHandler();

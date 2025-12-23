@@ -17,7 +17,7 @@ namespace Core
 		/// <param name="time">time in milliseconds to wait for</param>
 		public async static Task Sleep(float time)
 		{
-			Game game = Game.Instance;
+			Game game = await Game.Instance();
 			SceneTreeTimer t = game.GetTree().CreateTimer(time);
 			await game.ToSignal(t, SceneTreeTimer.SignalName.Timeout);
 			t.Dispose();
@@ -33,17 +33,34 @@ namespace Core
 
 			var cts = new CancellationTokenSource();
 
-			Game game = Game.Instance;
-			SceneTreeTimer t = game.GetTree().CreateTimer(time);
 			Task.Run(async () =>
 			{
+				var game = await Game.Instance();
+				SceneTreeTimer t = game.GetTree().CreateTimer(time);
+
 				await game.ToSignal(t, SceneTreeTimer.SignalName.Timeout);
 				await callback(cts.Token);
+
 				t.Dispose();
 			});
 
 			return cts;
 		}
+
+		/// <summary>
+		/// Waits for a given time and runs function in a new thread
+		/// </summary>
+		/// <param name="time">time in milliseconds to wait for</param>
+		public static void Delay(float time, Func<Task> callback) => Task.Run(async () =>
+			{
+				var game = await Game.Instance();
+				SceneTreeTimer t = game.GetTree().CreateTimer(time);
+
+				await game.ToSignal(t, SceneTreeTimer.SignalName.Timeout);
+				await callback();
+
+				t.Dispose();
+			});
 
 		/// <summary>
 		/// Spawns a new cancellable threaded task
@@ -61,6 +78,16 @@ namespace Core
 
 			return cts;
 		}
+
+		/// <summary>
+		/// Spawns a new cancellable threaded task
+		/// </summary>
+		/// <param name="callback">The callback to run</param>
+		/// <returns>CancellationTokenSource to cancel the task</returns>
+		public static void Spawn(Func<Task> callback) => Task.Run(async () =>
+			{
+				await callback();
+			});
 	}
 	#endregion
 

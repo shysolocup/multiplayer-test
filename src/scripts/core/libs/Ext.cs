@@ -1,6 +1,7 @@
 using Godot;
 using Godot.Collections;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 public partial class Ext : Node {}
@@ -32,7 +33,14 @@ public static class Extensions
 
 	public static Array<T> GetChildren<[MustBeVariant] T>(this Node self) where T : Node
 	{
-		return self.GetChildren() as Array<T>;
+		return Variant.From(
+			self
+				.GetChildren()
+				.Select( c => c is T t ? t : null)
+				.Where( c => c != null)
+				.ToArray()
+			)
+			.AsGodotArray<T>();
 	}
 
 

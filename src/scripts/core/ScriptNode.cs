@@ -16,17 +16,12 @@ public partial class ScriptNode : Node
 
 	#region file stuff
 
-	private EditorFileDialog _dialog;
-
-	private int _fileExtension = 0;
 
 	[Export(PropertyHint.Enum, "C#,GDScript,C++,Lua,Python,Rust")]
-	public int FileExtension { 
-		get => _fileExtension;
-		set => _fileExtension = value;
-	}
+	public int FileExtension = 0;
 
-		private string DefaultFileContents
+
+	private string DefaultFileContents
 	{
 		get => @"
 using Godot;
@@ -67,7 +62,15 @@ public partial class " + Name + @" : "+ GetType().Name + @"
 
 	public void Execute(params object[] args) {
 		var reloaded = ReloadSource().Obj;
-		Node script = (Node)((reloaded is CSharpScript cs) ? cs.New() : (reloaded is GDScript gd) ? gd.New() : nullvar);
+
+		Node script = (Node)(
+			(reloaded is CSharpScript cs) 
+			? cs.New() 
+			: (reloaded is GDScript gd) 
+			? gd.New() 
+			: nullvar
+		);
+		
 		GetParent().AddChild(script);
 		script.QueueFree();
 	}
@@ -159,8 +162,8 @@ public partial class " + Name + @" : "+ GetType().Name + @"
 
 	public Node AttachScript(string source = null)
 	{
-		source ??= Source;
-
+		Source = source ?? Source;
+		
 		if (SpawnedNode != null) {
 			DetatchScript();
 		}

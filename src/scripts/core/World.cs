@@ -24,14 +24,14 @@ public partial class World : Node3D
 	
 	public LightingSystem Lighting;
 	public MapSystem Map;
-	public CharacterSystem Characters;
+	public Characters Characters;
 	
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
 		Lighting = GetNode<LightingSystem>("./lighting");
 		Map = GetNode<MapSystem>("./map");
-		Characters = GetNode<CharacterSystem>("./characters");
+		Characters = GetNode<Characters>("./characters");
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.

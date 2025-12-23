@@ -2,7 +2,7 @@ using Godot;
 using System;
 
 [GlobalClass, Icon("uid://cpsdgcaao4new")]
-public partial class AudioSystem : Node
+public partial class AudioSystem : Singleton3D<AudioSystem>
 {
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()

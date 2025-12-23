@@ -2,6 +2,6 @@ using Godot;
 using System;
 
 [GlobalClass, Icon("uid://4q5k2k6tslpp")]
-public partial class ClientScriptSystem : Node
+public partial class ClientScriptSystem : Singleton<ClientScriptSystem>
 {
 }

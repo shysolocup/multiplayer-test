@@ -12,7 +12,7 @@ config_version=5
 
 config/name="multiplayer test"
 run/main_scene="uid://cg6684xj7fjx"
-config/features=PackedStringArray("4.4", "C#", "Forward Plus")
+config/features=PackedStringArray("4.5", "C#", "Forward Plus")
 config/icon="res://icon.svg"
 
 [autoload]
@@ -38,7 +38,6 @@ enabled=PackedStringArray("res://addons/csg_converter/plugin.cfg", "res://addons
 [physics]
 
 3d/physics_engine="Jolt Physics"
-3d/default_gravity=9.8
 common/physics_interpolation=true
 
 [steam_server]

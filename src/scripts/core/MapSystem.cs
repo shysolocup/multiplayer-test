@@ -4,7 +4,7 @@ using Godot.Collections;
 
 [Tool]
 [GlobalClass, Icon("uid://bu4xjum6vtr11")]
-public partial class MapSystem : Node3D
+public partial class MapSystem : Singleton3D<MapSystem>
 {
 	[Signal] public delegate void MapChangedEventHandler();
 

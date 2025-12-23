@@ -2,7 +2,7 @@ using Godot;
 using System;
 
 [GlobalClass, Icon("uid://nxhbjfaqej4p")]
-public partial class CameraSystem : Node3D
+public partial class CameraSystem : Singleton3D<CameraSystem>
 {
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()

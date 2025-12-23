@@ -1,10 +1,21 @@
-[gd_scene load_steps=4 format=3 uid="uid://dtwjgai1ljwtw"]
+[gd_scene load_steps=5 format=3 uid="uid://dtwjgai1ljwtw"]
 
 [ext_resource type="Script" uid="uid://bvp7c0e42bdmd" path="res://src/scripts/core/Character.cs" id="1_bbyxb"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_0fcgq"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_3xf06"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_bbyxb"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath(".:scale")
+properties/2/spawn = true
+properties/2/replication_mode = 1
 
 [node name="starterCharacter" type="CharacterBody3D"]
 script = ExtResource("1_bbyxb")
@@ -14,3 +25,6 @@ mesh = SubResource("CapsuleMesh_0fcgq")
 
 [node name="collision" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_3xf06")
+
+[node name="characterSync" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_bbyxb")
