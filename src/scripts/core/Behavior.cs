@@ -1,16 +1,25 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Core;
 using Godot;
-using Godot.Bridge;
+
 
 [Tool]
 [GlobalClass, Icon("uid://dme3m2uv5jaju")]
-public partial class ScriptBase : Node
+public partial class Behavior : Node
 {
-
     public bool ScriptReady = false;
+
+    #region overridable events
+
+    [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = false)]
+    public virtual void OnServer()
+    {   
+    }
+
+    public virtual void OnClient()
+    {
+    }
 
 	public virtual void OnStart()
 	{
@@ -32,13 +41,65 @@ public partial class ScriptBase : Node
 	{
 	}
 
-    public override void _Ready()
-    {
-        base._Ready();
+    #endregion
+    #region dependencies
 
-        OnReady();
-        ScriptReady = true;
-    }
+    public Client client;
+	public AudioSystem audios;
+	public CameraSystem cameras;
+	public Characters characters;
+	public Game game;
+	public GlobalStorage global;
+	public LightingSystem lighting;
+	public MapSystem map;
+	public Players players;
+	public ClientScriptSystem clientScripts;
+	public Workspace workspace;
+	public GuiSystem gui;
+	public ShaderSystem shaders;
+
+    public override async void _Ready()
+	{
+        if (Enabled)
+        {
+            ProcessMode = ProcessModeEnum.Inherit;   
+        }
+        else
+        {
+            ProcessMode = ProcessModeEnum.Disabled;
+        }
+
+		client = await Client.Instance();
+		audios = await AudioSystem.Instance();
+		cameras = await CameraSystem.Instance();
+		characters = await Characters.Instance();
+		game = await Game.Instance();
+		global = await GlobalStorage.Instance();
+		lighting = await LightingSystem.Instance();
+		map = await MapSystem.Instance();
+		players = await Players.Instance();
+		clientScripts = await ClientScriptSystem.Instance();
+		workspace = await Workspace.Instance();
+		gui = await GuiSystem.Instance();
+		shaders = await ShaderSystem.Instance();
+
+		// it's specifically just in this order so ready fires before processes
+		// this might lead to issues but we ball
+		OnReady();
+        if (IsServer())
+        {
+            OnServer();
+        }
+        else
+        {
+            OnClient();
+        }
+		ScriptReady = true;
+	}
+
+    #endregion
+
+    #region event handlers
 
     public override void _Process(double delta)
     {
@@ -70,6 +131,8 @@ public partial class ScriptBase : Node
 		OnEnd();
     }
 
+    #endregion
+
     private bool _enabled = true;
 
     [Export]
@@ -89,6 +152,8 @@ public partial class ScriptBase : Node
             _enabled = value;
         }
     }
+
+    #region methods
 
     /// <summary>
     /// Checks if the script is running on the server (STATIC)
@@ -142,4 +207,6 @@ public partial class ScriptBase : Node
             || thing is Node n && !IsInstanceValid(n)    
         ) Throw(what);
     }
+
+    #endregion
 }

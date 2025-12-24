@@ -1,5 +1,5 @@
-// meta-name: Script Base
-// meta-description: A simple base script template
+// meta-name: Behavior Template
+// meta-description: A simple base behavior/script template
 // meta-default: true
 
 using _BINDINGS_NAMESPACE_;

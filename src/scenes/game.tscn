@@ -71,9 +71,6 @@ script = ExtResource("9_bd8mh")
 [node name="server" type="Node" parent="."]
 unique_name_in_owner = true
 script = ExtResource("5_lcg6w")
-Port = null
-DefaultServerIP = null
-MaxPlayers = null
 
 [node name="scripts" parent="server" instance=ExtResource("14_44dqv")]
 
@@ -116,14 +113,10 @@ metadata/_custom_type_script = "uid://3u0cd6x7v7xf"
 
 [node name="starterPlayer" parent="global" instance=ExtResource("20_44dqv")]
 process_mode = 4
-PlayerName = null
-PlayerId = null
 
 [node name="starterCharacter" parent="global" instance=ExtResource("4_lkrtx")]
 process_mode = 4
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-Speed = null
-JumpVelocity = null
 
 [node name="replicator" type="Node" parent="."]
 script = ExtResource("22_p02ep")

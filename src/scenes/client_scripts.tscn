@@ -1,6 +1,11 @@
-[gd_scene load_steps=2 format=3 uid="uid://by5f8a6nan5nk"]
+[gd_scene load_steps=3 format=3 uid="uid://by5f8a6nan5nk"]
 
 [ext_resource type="Script" uid="uid://bb5na7uref4ps" path="res://src/scripts/core/ClientScriptSystem.cs" id="1_k2q7g"]
+[ext_resource type="Script" uid="uid://brxcpgmp23vds" path="res://src/scripts/server/GrunkTinkely.cs" id="2_y0jk5"]
 
 [node name="scripts" type="Node"]
 script = ExtResource("1_k2q7g")
+
+[node name="GrunkTinkely" type="Node" parent="."]
+script = ExtResource("2_y0jk5")
+metadata/_custom_type_script = "uid://c3lflpkmclxja"

@@ -2,7 +2,7 @@ using Godot;
 using System;
 
 [Tool]
-public partial class GrunkTinkely : ServerScript
+public partial class GrunkTinkely : Behavior
 {
 	// Called when the script node and its dependencies are ready.
 	public override void OnReady()
@@ -10,8 +10,6 @@ public partial class GrunkTinkely : ServerScript
 		base.OnReady();
 
 		Print(workspace);
-
-		Assert(true, "guh");
 
 		foreach (Node guh in workspace.GetChildren())
 		{
