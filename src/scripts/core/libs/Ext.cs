@@ -9,6 +9,12 @@ public partial class Ext : Node {}
 
 public static class Extensions
 {
+
+	public static void SetParent(this Node self, Node parent)
+	{
+		self.Owner = parent;
+	}
+
 	public static T GetGameNode<T>(this Node self, NodePath nodePath)  where T : Node
 	{
 		return self.GetNode<T>($"/root/Game/{nodePath}");
@@ -262,7 +268,7 @@ public static class Extensions
 		return true;
 	}
 	
-	public static async Task<T> GetNodeAsync<T>(this Node self, string nodeName) where T : class
+	public static async Task<T> WaitForNode<T>(this Node self, string nodeName) where T : class
 	{
 		int elapsed = 0;
 		Node node = self.GetNode(nodeName);
@@ -279,7 +285,7 @@ public static class Extensions
 		return self.GetNode<T>(nodeName);
 	}
 
-	public static async Task<Node> GetNodeAsync(this Node self, string nodeName) => await self.GetNodeAsync<Node>(nodeName);
+	public static async Task<Node> WaitForNode(this Node self, string nodeName) => await self.WaitForNode<Node>(nodeName);
 
 	public static async Task WaitUntilNodeReady(this Node self, string nodeName)
 	{

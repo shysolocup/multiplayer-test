@@ -4,4 +4,8 @@
     <EnableDynamicLoading>true</EnableDynamicLoading>
     <RootNamespace>multiplayertest</RootNamespace>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="script_templates/**/*.cs" /> <!-- All .cs files in a directory subtree -->
+  </ItemGroup>
 </Project>

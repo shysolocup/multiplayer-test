@@ -12,6 +12,20 @@ namespace Core
 	public static class Chore
 	{
 		/// <summary>
+		/// Creates a new thread and deletes the given node after a given time.
+		/// </summary>
+		public static CancellationTokenSource Debris(Node node, float time)
+		{
+			return Delay(time, async token =>
+			{
+				if (!token.IsCancellationRequested)
+				{
+					node.QueueFree();
+				}
+			});
+		}
+
+		/// <summary>
 		/// Waits for a given time
 		/// </summary>
 		/// <param name="time">time in milliseconds to wait for</param>

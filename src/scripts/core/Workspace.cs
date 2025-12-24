@@ -3,8 +3,17 @@ using System;
 
 [Tool]
 [GlobalClass, Icon("uid://cr2l07lnbg74c")]
-public partial class World : Node3D
+public partial class Workspace : Singleton3D<Workspace>
 {
+	private Marker3D _spawn;
+
+	[Export]
+	public Marker3D Spawn
+	{
+		get => _spawn ?? GetNode<Marker3D>("./spawn");
+		set => _spawn = value;
+	}
+
 	[Export]
 	public float Gravity
 	{
@@ -29,9 +38,14 @@ public partial class World : Node3D
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		Lighting = GetNode<LightingSystem>("./lighting");
-		Map = GetNode<MapSystem>("./map");
-		Characters = GetNode<Characters>("./characters");
+		Spawn ??= GetNode<Marker3D>("./spawn");
+
+		if (!Engine.IsEditorHint())
+		{
+			Lighting = GetNode<LightingSystem>("./lighting");
+			Map = GetNode<MapSystem>("./map");
+			Characters = GetNode<Characters>("./characters");	
+		}
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.

@@ -4,7 +4,7 @@ using System;
 using System.Threading.Tasks;
 
 [GlobalClass, Icon("uid://cx7nfcxc0as46")]
-public partial class ServerSystem : Singleton<ServerSystem>
+public partial class Server : Singleton<Server>
 {
 
 	[Signal] public delegate void PlayerConnectedEventHandler(int peerId, Player player);

@@ -18,10 +18,54 @@ public partial class Characters : Singleton3D<Characters>
 	public delegate void CharacterRemovedEventHandler(Character character);
 
 
+	#region character physics
+	public override void _PhysicsProcess(double delta)
+	{
+		base._PhysicsProcess(delta);
+
+		var player = Client.LocalPlayer;
+		var chara = player?.Character;
+
+		if (chara is not null )
+		{
+			Vector3 velocity = chara.Velocity;
+
+			if (!chara.IsOnFloor())
+			{
+				velocity += chara.GetGravity() * (float)delta;
+			}
+
+			if (Input.IsActionJustPressed("ui_accept") && chara.IsOnFloor())
+			{
+				velocity.Y = chara.JumpVelocity;
+			}
+
+			Vector2 inputDir = Input.GetVector("ui_left", "ui_right", "ui_up", "ui_down");
+			Vector3 direction = (chara.Transform.Basis * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized();
+
+			if (direction != Vector3.Zero)
+			{
+				velocity.X = direction.X * chara.Speed;
+				velocity.Z = direction.Z * chara.Speed;
+			}
+			
+			else
+			{
+				velocity.X = Mathf.MoveToward(chara.Velocity.X, 0, chara.Speed);
+				velocity.Z = Mathf.MoveToward(chara.Velocity.Z, 0, chara.Speed);
+			}
+
+			chara.Velocity = velocity;
+			chara.MoveAndSlide();		
+		}	
+	}
+	#endregion
+
+
 	// Called when the node enters the scene tree for the first time.
 	public override async void _Ready()
 	{
-		var replication = await ReplicationSystem.Instance();
+		var replication = await GlobalStorage.Instance();
 		
 		StarterCharacter ??= replication.GetNode<Character>("./starterCharacter");
 
@@ -43,37 +87,41 @@ public partial class Characters : Singleton3D<Characters>
 	#region replicated
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /// Replicated Methods ///
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	/// Replicated Methods ///
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	/// <summary>
 	/// Spawns a character for the given player.
 	/// </summary>
 	[Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-    public async static Task<Character> Spawn(Player player)
-    {
+	public async static Task<Character> Spawn(Player player)
+	{
 		player.Character?.QueueFree();
 
-        var character = await MakeCharacter(player);
+		var character = await MakeCharacter(player);
 		
-        player.EmitSignal(Player.SignalName.Spawned, character);
+		player.EmitSignal(Player.SignalName.Spawned, character);
 		player.Character = character;
 
-        return character;
-    }
+		return character;
+	}
 
 	#endregion
 	#region utility
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /// Non-Replicated Utility Methods ///
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	/// Non-Replicated Utility Methods ///
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	public static async Task<Character> MakeCharacter(Player player)
 	{
 		var inst = await Instance();
+		var workspace = await Workspace.Instance();
 
 		Character character = inst.StarterCharacter.Duplicate() as Character;
+		character.GlobalTransform = workspace.Spawn.GlobalTransform;
+
+		character.ProcessMode = ProcessModeEnum.Inherit;
 		return character;
 	}
 

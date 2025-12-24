@@ -10,18 +10,6 @@ public partial class Players : Singleton<Players>
 	[Export]
 	public Player StarterPlayer;
 
-	private static Player _localPlayer;
-
-	public static Player LocalPlayer
-	{
-		get => _localPlayer;
-		private set
-		{
-			_localPlayer?.QueueFree();
-			_localPlayer = value;
-		}
-	}
-
 
 	[Signal]
 	public delegate void PlayerJoinedEventHandler(Player player);
@@ -33,7 +21,7 @@ public partial class Players : Singleton<Players>
 
 	public override async void _Ready()
 	{
-		var replication = await ReplicationSystem.Instance();
+		var replication = await GlobalStorage.Instance();
 		
 		StarterPlayer ??= replication.GetNode<Player>("./starterPlayer");
 
@@ -67,19 +55,11 @@ public partial class Players : Singleton<Players>
 	{
 		var inst = await Instance();
 		var player = inst.StarterPlayer.Duplicate<Player>();
+		player.ProcessMode = ProcessModeEnum.Inherit;
 
 		inst.AddChild(player);
 		
 		return player;
-	}
-
-	/// <summary>
-	/// Sets the local player of a player, only available to the server.
-	/// </summary>
-	[Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-	public static void SetLocalPlayer(Player player)
-	{
-		LocalPlayer = player;
 	}
 
 

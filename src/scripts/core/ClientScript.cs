@@ -2,19 +2,13 @@ using Godot;
 using System;
 
 [Tool]
-[GlobalClass, Icon("uid://c3h6eietljlln")]
-public partial class ServerScript : ScriptBase
+[GlobalClass, Icon("uid://dajl85q1ep7j4")]
+public partial class ClientScript : ScriptBase
 {
-
-	[Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = false)]
-	public new virtual void OnReady()
-	{
-	}
-
 
 	#region dependencies
 
-	public Server server;
+	public Client client;
 	public AudioSystem audios;
 	public CameraSystem cameras;
 	public Characters characters;
@@ -23,13 +17,14 @@ public partial class ServerScript : ScriptBase
 	public LightingSystem lighting;
 	public MapSystem maps;
 	public Players players;
-	public Replicator replicator;
-	public ServerScriptSystem serverScripts;
+	public ClientScriptSystem clientScripts;
 	public Workspace workspace;
+	public GuiSystem gui;
+	public ShaderSystem shaders;
 
 	public override async void _Ready()
 	{
-		server = await Server.Instance();
+		client = await Client.Instance();
 		audios = await AudioSystem.Instance();
 		cameras = await CameraSystem.Instance();
 		characters = await Characters.Instance();
@@ -38,9 +33,10 @@ public partial class ServerScript : ScriptBase
 		lighting = await LightingSystem.Instance();
 		maps = await MapSystem.Instance();
 		players = await Players.Instance();
-		replicator = await Replicator.Instance();
-		serverScripts = await ServerScriptSystem.Instance();
+		clientScripts = await ClientScriptSystem.Instance();
 		workspace = await Workspace.Instance();
+		gui = await GuiSystem.Instance();
+		shaders = await ShaderSystem.Instance();
 
 		// it's specifically just in this order so ready fires before processes
 		// this might lead to issues but we ball
