@@ -20,7 +20,7 @@ public partial class Remote : Node
 	#region private base methods
 
 
-	private void _FireServer(params Variant[] args)
+	private void _FireServer(Player player, params Variant[] args)
 	{
 		if (Multiplayer.IsServer())
 		{
@@ -63,8 +63,8 @@ public partial class Remote : Node
 	public void FireAllClients(params Variant[] args) => _FireAllClients(args);
 
 
-	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = false, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-	public void FireServer(params Variant[] args) => _FireServer(args);
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+	public void FireServer(params Variant[] args) => _FireServer(Client.LocalPlayer, args);
 
 
 	#endregion
@@ -87,7 +87,7 @@ public partial class Remote : Node
 
 
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = false, TransferMode = MultiplayerPeer.TransferModeEnum.Unreliable)]
-	public void FireServerUnreliably(params Variant[] args) => _FireServer(args);
+	public void FireServerUnreliably(params Variant[] args) => _FireServer(Client.LocalPlayer, args);
 
 
 	#endregion

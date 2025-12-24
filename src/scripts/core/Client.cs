@@ -21,6 +21,7 @@ public partial class Client : Singleton<Client>
 	{
 		// if ran from the server it'll say it loaded the host player
 		var server = await Server.Instance();
-		server.RpcId(1, Server.MethodName.PlayerLoaded);
+
+		server.RpcId(1, Server.MethodName.JoinGame);
 	}
 }
