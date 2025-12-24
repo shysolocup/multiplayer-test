@@ -69,6 +69,8 @@ public partial class Behavior : Node
             ProcessMode = ProcessModeEnum.Disabled;
         }
 
+        if (IsEditor()) return;
+
 		client = await Client.Instance();
 		audios = await AudioSystem.Instance();
 		cameras = await CameraSystem.Instance();

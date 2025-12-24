@@ -17,7 +17,10 @@ public partial class Client : Singleton<Client>
 	}
 
 	// Called when the node enters the scene tree for the first time.
-	public override void _Ready()
+	public override async void _Ready()
 	{
+		// if ran from the server it'll say it loaded the host player
+		var server = await Server.Instance();
+		server.RpcId(1, Server.MethodName.PlayerLoaded);
 	}
 }

@@ -13,7 +13,14 @@ public abstract partial class Singleton<T> : Node
     /// <summary>
     /// Single instance of the singleton.
     /// </summary>
-    public static Task<T> Instance() => Task.FromResult(_instance);
+    public static async Task<T> Instance() {
+        while (_instance is null || !IsInstanceValid(_instance))
+        {
+            await Task.Delay(10);
+        }
+
+        return _instance;
+    }
 
 
     public override void _Ready()

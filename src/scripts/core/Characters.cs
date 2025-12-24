@@ -24,7 +24,7 @@ public partial class Characters : Singleton3D<Characters>
 		base._PhysicsProcess(delta);
 
 		var player = Client.LocalPlayer;
-		var chara = player?.Character;
+		var chara = player?.GetCharacter();
 
 		if (chara is not null )
 		{
@@ -84,29 +84,6 @@ public partial class Characters : Singleton3D<Characters>
 		};
 	}
 
-	#region replicated
-
-	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	/// Replicated Methods ///
-	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	/// <summary>
-	/// Spawns a character for the given player.
-	/// </summary>
-	[Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-	public async static Task<Character> Spawn(Player player)
-	{
-		player.Character?.QueueFree();
-
-		var character = await MakeCharacter(player);
-		
-		player.EmitSignal(Player.SignalName.Spawned, character);
-		player.Character = character;
-
-		return character;
-	}
-
-	#endregion
 	#region utility
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -128,7 +105,7 @@ public partial class Characters : Singleton3D<Characters>
 
 	public static async Task<Character> GetCharacterById(long id)
 	{
-		return (await Players.GetPlayerById(id))?.Character;
+		return (await Players.GetPlayerById(id))?.GetCharacter();
 	}
 	
 	#endregion

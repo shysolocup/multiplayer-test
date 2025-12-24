@@ -116,7 +116,7 @@ process_mode = 4
 
 [node name="starterCharacter" parent="global" instance=ExtResource("4_lkrtx")]
 process_mode = 4
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6189446, 1, 2.8367674)
 
 [node name="replicator" type="Node" parent="."]
 script = ExtResource("22_p02ep")

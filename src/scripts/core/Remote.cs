@@ -1,12 +1,13 @@
 using Godot;
+using Godot.Collections;
 
 [GlobalClass, Icon("uid://b1mrpempxy0vk")]
 public partial class Remote : Node
 {
-	public delegate void OnClientEvent(params Variant[] args);
+	public delegate void OnClientEvent(params object[] args);
 	private event OnClientEvent ClientEvent;
 
-	public delegate void OnServerEvent(Player player, params Variant[] args);
+	public delegate void OnServerEvent(Player player, params object[] args);
 	private event OnServerEvent ServerEvent;
 
 
@@ -27,12 +28,9 @@ public partial class Remote : Node
 		}
 	}
 
-	private void _FireClient(Player player, params Variant[] args)
+	public void _FireClient(Variant[] args)
 	{
-		if (!Multiplayer.IsServer() && player == Client.LocalPlayer && player.PlayerId == Multiplayer.GetRemoteSenderId())
-		{
-			ClientEvent?.Invoke(args);
-		}
+		ClientEvent?.Invoke(args);
 	}
 
 	private void _FireAllClients(params Variant[] args)
@@ -44,21 +42,24 @@ public partial class Remote : Node
 	}
 
 
-	#endregion
+    #endregion
 
 
-	#region reliable
+    #region reliable
 
-	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	/// Reliable ///
-	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-	[Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-	public void FireClient(Player player, params Variant[] args) =>_FireClient(player, args);
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /// Reliable ///
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 	[Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    public void FireClient(Player player, params Variant[] args) => RpcId(player.GetId(), nameof(_FireClient), args);
+
+	[Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    public void FireClient(long id, params Variant[] args) => RpcId(id, nameof(_FireClient), args);
+
+
+    [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
 	public void FireAllClients(params Variant[] args) => _FireAllClients(args);
 
 
@@ -79,7 +80,10 @@ public partial class Remote : Node
 
 
 	[Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Unreliable)]
-	public void FireClientUnreliably(Player player, params Variant[] args) => _FireClient(player, args);
+	public void FireClientUnreliably(Player player, params Variant[] args) => RpcId(player.GetId(), nameof(_FireClient), args);
+
+	[Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Unreliable)]
+	public void FireClientUnreliably(long id, params Variant[] args) => RpcId(id, nameof(_FireClient), args);
 
 
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = false, TransferMode = MultiplayerPeer.TransferModeEnum.Unreliable)]

@@ -43,8 +43,8 @@ public partial class Players : Singleton<Players>
 	#region replicated
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /// Replicated Methods ///
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	/// Replicated Methods ///
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 	/// <summary>
@@ -54,12 +54,49 @@ public partial class Players : Singleton<Players>
 	public static async Task<Player> MakePlayer()
 	{
 		var inst = await Instance();
+
+		// incase they somehow get past the rpc restriction bc I lowk don't know how it works
+		if (!inst.Multiplayer.IsServer()) throw new Exception("can't make a player on the client");
+
 		var player = inst.StarterPlayer.Duplicate<Player>();
 		player.ProcessMode = ProcessModeEnum.Inherit;
 
-		inst.AddChild(player);
+		inst.CallDeferred(Node.MethodName.AddChild, player);
 		
 		return player;
+	}
+
+
+	/// <summary>
+	/// removes a player by node
+	/// <para/>@Server
+	/// </summary>
+	[Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+	public static async Task RemovePlayer(Player player)
+	{
+		var inst = await Instance();
+
+		// incase they somehow get past the rpc restriction bc I lowk don't know how it works
+		if (!inst.Multiplayer.IsServer()) throw new Exception("can't remove a player on the client");
+		
+		inst.CallDeferred(Node.MethodName.RemoveChild, player);
+	}
+
+
+	/// <summary>
+	/// removes a player by id
+	/// <para/>@Server
+	/// </summary>
+	[Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+	public static async Task RemovePlayer(long id)
+	{
+		var inst = await Instance();
+
+		// incase they somehow get past the rpc restriction bc I lowk don't know how it works
+		if (!inst.Multiplayer.IsServer()) throw new Exception("can't remove a player on the client");
+		
+		var player = await GetPlayerById(id);
+		inst.CallDeferred(Node.MethodName.RemoveChild, player);
 	}
 
 
@@ -67,27 +104,37 @@ public partial class Players : Singleton<Players>
 	#region utility
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /// Non-Replicated Utility Methods ///
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+	/// Non-Replicated Utility Methods ///
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	/// <summary>
+	/// Gets a player by their peer id
+	/// </summary>
 	public static async Task<Player> GetPlayerById(long id)
 	{
 		var inst = await Instance();
 		var players = inst.GetChildren<Player>();
 
-		return players.FirstOrDefault(p => p is Player player && player.PlayerId == id);
+		return players.FirstOrDefault(p => p is Player player && player.GetId() == id);
 	}
 
+	/// <summary>
+	/// Returns an array of players in the game
+	/// <para/> Specifically it returns a <see cref="Array"/>
+	/// </summary>
 	public static async Task<Array<Player>> GetPlayers()
 	{
 		var inst = await Instance();
 		return inst.GetChildren<Player>();
 	}
 
+	/// <summary>
+	/// Gets a player by their character model
+	/// </summary>
 	public static async Task<Player> GetPlayerByCharacter(Character character)
 	{
 		var players = await GetPlayers();
-		return players.FirstOrDefault(p => p.Character == character);
+		return players.FirstOrDefault(p => p.GetCharacter() == character);
 	}
 
 	#endregion
