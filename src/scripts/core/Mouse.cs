@@ -2,7 +2,7 @@ using Godot;
 using System;
 using System.Threading.Tasks;
 
-[GlobalClass, Icon("")]
+[GlobalClass, Icon("uid://bd2ep30fvfeix")]
 public partial class Mouse : Singleton<Mouse>
 {
 	private RayCast3D Ray { get; set; }

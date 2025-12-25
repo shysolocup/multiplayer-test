@@ -30,15 +30,13 @@
 [sub_resource type="Resource" id="Resource_lkrtx"]
 script = ExtResource("8_3ucld")
 
-[sub_resource type="Resource" id="Resource_kcfyl"]
+[sub_resource type="Resource" id="Resource_pm1mm"]
 script = ExtResource("17_pm1mm")
 X = Vector2(0, 200)
 Y = Vector2(0, 200)
 
-[sub_resource type="Resource" id="Resource_pm1mm"]
+[sub_resource type="Resource" id="Resource_tnxn1"]
 script = ExtResource("17_pm1mm")
-X = Vector2(0.5, 0)
-Y = Vector2(0.5, 0)
 
 [node name="game" type="Node"]
 script = ExtResource("1_covw0")
@@ -117,10 +115,10 @@ metadata/_edit_use_anchors_ = true
 
 [node name="container" type="VBoxContainer" parent="client/gui"]
 layout_mode = 0
-offset_left = 476.0
-offset_top = 224.0
-offset_right = 676.0
-offset_bottom = 424.0
+offset_left = -100.0
+offset_top = -100.0
+offset_right = 100.0
+offset_bottom = 100.0
 pivot_offset = Vector2(100, 100)
 
 [node name="anchor" type="Node" parent="client/gui/container" node_paths=PackedStringArray("Adornee")]
@@ -129,8 +127,8 @@ Adornee = NodePath("..")
 AnchorSize = true
 AnchorPosition = true
 AnchorPivot = true
-Size = SubResource("Resource_kcfyl")
-Position = SubResource("Resource_pm1mm")
+Size = SubResource("Resource_pm1mm")
+Position = SubResource("Resource_tnxn1")
 metadata/_custom_type_script = "uid://t3gdsy50jy21"
 
 [node name="label" type="Label" parent="client/gui/container"]
