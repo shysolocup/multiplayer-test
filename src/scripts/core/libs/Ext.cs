@@ -8,7 +8,12 @@ public partial class Ext : Node {}
 
 
 public static class Extensions
-{
+{	
+
+	public static T Get<[MustBeVariant] T>(this GodotObject self, StringName property)
+	{
+		return self.Get(property).As<T>();
+	}
 
 	public static void SetParent(this Node self, Node parent)
 	{

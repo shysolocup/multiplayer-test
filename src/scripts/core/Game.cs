@@ -62,9 +62,6 @@ public partial class Game : Singleton<Game>
 			// load singleton systems
 			Load();
 
-			// run to tell the server that the player loaded
-			await Server.Run(Server.MethodName.PlayerLoaded);
-
 			IsLoaded = true;	
 		}
     }

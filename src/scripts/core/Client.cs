@@ -1,3 +1,4 @@
+using Core;
 using Godot;
 using System;
 using System.Threading.Tasks;
@@ -41,12 +42,16 @@ public partial class Client : Singleton<Client>
 	// Called when the node enters the scene tree for the first time.
 	public override async void _Ready()
 	{
+		base._Ready();
+
 		Gui ??= await GuiSystem.Instance();
 		Camera ??= GetNode<Camera3D>("./camera");
 		Scripts ??= await ClientScriptSystem.Instance();
 		DiscordRPC ??= await DiscordSystem.Instance();
 		Replicator ??= await Replicator.Instance();
 		Mouse ??= await Mouse.Instance();
+
+		GD.PushWarning("loaded client stuff");
 	}
 
 

@@ -8,7 +8,43 @@ using Godot.Collections;
 
 namespace Core
 {
+
+	#region NodeTunnelBridge
+
+	public static class NodeTunnelBridge
+	{
+
+		public static void ConnectToRelay(MultiplayerPeer peer, string nodeTunnelAddress, int nodeTunnelPort) => 
+			peer.Call("connect_to_relay", nodeTunnelAddress, nodeTunnelPort);
+
+		public static void Host(MultiplayerPeer peer) =>
+			peer.Call("host");
+
+		public static void Join(MultiplayerPeer peer, string hostId) =>
+			peer.Call("join", hostId);
+
+		public static async Task RelayConnected(MultiplayerPeer peer) => 
+			await peer.ToSignal(peer, "relay_connected");
+
+		public static async Task Hosting(MultiplayerPeer peer) => 
+			await peer.ToSignal(peer, "hosting");
+
+		public static async Task Joined(MultiplayerPeer peer) =>
+			await peer.ToSignal(peer, "joined");
+
+		public static string GetOnlineId(MultiplayerPeer peer) => 
+			peer.Get<string>("online_id");
+
+		public static MultiplayerPeer NewPeer()
+		{
+			var script = GD.Load<GDScript>("res://addons/nodetunnel/NodeTunnelPeer.gd");
+			return (MultiplayerPeer)script.New();
+		}
+	}
+
+	#endregion
 	#region Chore
+
 	public static class Chore
 	{
 		/// <summary>

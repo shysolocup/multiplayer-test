@@ -41,6 +41,8 @@ public partial class Players : Singleton<Players>
 
 	public override async void _Ready()
 	{
+		base._Ready();
+
 		var replication = await GlobalStorage.Instance();
 		
 		StarterPlayer ??= replication.GetNode<Player>("./starterPlayer");
@@ -52,6 +54,7 @@ public partial class Players : Singleton<Players>
     public override void _ExitTree()
     {
         base._ExitTree();
+		
 		Disconnect(Node.SignalName.ChildEnteredTree, _joinedCall);
 		Disconnect(Node.SignalName.ChildExitingTree, _leftCall);
     }

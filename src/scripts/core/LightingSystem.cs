@@ -189,6 +189,7 @@ public partial class LightingSystem : Singleton3D<LightingSystem>
 
 	public override void _ExitTree()
 	{
+		base._ExitTree();
 		Disconnect(Node3D.SignalName.VisibilityChanged, new Callable(this, MethodName.OnVisibilityChanged));
 	}
 

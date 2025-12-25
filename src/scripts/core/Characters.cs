@@ -85,6 +85,7 @@ public partial class Characters : Singleton3D<Characters>
 	// Called when the node enters the scene tree for the first time.
 	public override async void _Ready()
 	{
+		base._Ready();
 		var replication = await GlobalStorage.Instance();
 		
 		StarterCharacter ??= replication.GetNode<Character>("./starterCharacter");

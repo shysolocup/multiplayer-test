@@ -14,168 +14,85 @@ public partial class Server : Singleton<Server>
 	[Signal] public delegate void PlayerDisconnectedEventHandler(int peerId, string response);
 	[Signal] public delegate void ServerDisconnectedEventHandler(string response);
 
-	private Godot.Collections.Dictionary<long, Godot.Collections.Dictionary<string, string>> LocalPlayerDatas = [];
-
-	private Godot.Collections.Dictionary<string, string> BasePlayerInfo = new()
-	{
-		{ "Name", "PlayerName" },
-	};
-
-	private int PlayersLoaded = 0;
-
-	[Export] private int Port = 7000;
-	[Export] private string DefaultServerIP = "127.0.0.1"; // IPv4 localhost
+	[Export] private int Port = 9998;
+	[Export] private string DefaultServerAddress = "relay.nodetunnel.io"; 
 	[Export] private int MaxPlayers = 20;
 
-	public ENetMultiplayerPeer ServerHost;
+	public MultiplayerPeer Peer { get; set; }
+
+	public string HostId { get; set;}
+
+	private async Task Init()
+	{
+		Peer = NodeTunnelBridge.NewPeer();
+		Multiplayer.MultiplayerPeer = Peer;
+
+		NodeTunnelBridge.ConnectToRelay(Peer, DefaultServerAddress, Port);
+
+		await NodeTunnelBridge.RelayConnected(Peer);
+
+		var id = NodeTunnelBridge.GetOnlineId(Peer);
+
+		GD.PushWarning("initialized with peer id ", id);
+	}
+
+	public async Task Host()
+	{
+		NodeTunnelBridge.Host(Peer);
+
+		await NodeTunnelBridge.Hosting(Peer);
+
+		HostId = NodeTunnelBridge.GetOnlineId(Peer);
+		DisplayServer.ClipboardSet(HostId.ToString());
+
+		GD.PushWarning($"started hosting at id {HostId}");	
+	}
+
+	public async Task Join(string hostId)
+	{
+		GD.PushWarning($"trying to join {hostId}");	
+		NodeTunnelBridge.Join(Peer, hostId);
+
+		await NodeTunnelBridge.Joined(Peer);
+
+		var id = NodeTunnelBridge.GetOnlineId(Peer);
+
+		GD.PushWarning($"peer {id} has joined with the function");	
+	}
 
 	public override async void _Ready()
 	{
-		Multiplayer.PeerConnected += OnPlayerConnected;
-		Multiplayer.PeerDisconnected += OnPlayerDisconnected;
-		Multiplayer.ConnectedToServer += OnConnectOk;
-		Multiplayer.ServerDisconnected += OnServerDisconnected;
-		Multiplayer.ConnectionFailed += OnConnectionFail;
+		base._Ready();
 
-		CreateGame();
+		Multiplayer.PeerConnected += (id) =>
+		{
+			GD.PushWarning($"peer {id} has joined the game from the event side");	
+		};
+
+		Multiplayer.PeerDisconnected += (id) =>
+		{
+			GD.PushWarning($"peer {id} disconnected");		
+		};
+
+		Multiplayer.ConnectedToServer += () =>
+		{
+			GD.PushWarning($"connected to server");	
+		};
+
+		Multiplayer.ConnectionFailed += () =>
+		{
+			GD.PushWarning($"failed to connect to server");	
+		};
+
+		Multiplayer.ServerDisconnected += () =>
+		{
+			GD.PushWarning($"server disconnected");	
+		};
+
+		await Init();
+		await Host();
 
 		Scripts = await ServerScriptSystem.Instance();
 		Replicator = await Replicator.Instance();
-	}
-
-	public override void _ExitTree()
-	{
-		base._ExitTree();
-
-		// dotnet security
-		Multiplayer.PeerConnected -= OnPlayerConnected;
-		Multiplayer.PeerDisconnected -= OnPlayerDisconnected;
-		Multiplayer.ConnectedToServer -= OnConnectOk;
-		Multiplayer.ServerDisconnected -= OnServerDisconnected;
-		Multiplayer.ConnectionFailed -= OnConnectionFail;
-	}
-
-
-	public Error JoinGame(string address = "")
-	{
-		if (string.IsNullOrEmpty(address))
-		{
-			address = DefaultServerIP;
-		}
-
-		var peer = new ENetMultiplayerPeer();
-		Error error = peer.CreateClient(address, Port);
-
-		if (error != Error.Ok)
-		{
-			return error;
-		}
-
-		Multiplayer.MultiplayerPeer = peer;
-
-		GD.PushWarning("created client");
-
-		return Error.Ok;
-	}
-
-	private Error CreateGame()
-	{
-		// server peer
-		ServerHost = new ENetMultiplayerPeer();
-		Error error = ServerHost.CreateServer(Port, MaxPlayers);
-
-		if (error != Error.Ok)
-		{
-			return error;
-		}
-
-		Multiplayer.MultiplayerPeer = ServerHost;
-		LocalPlayerDatas[1] = BasePlayerInfo;
-
-		GD.PushWarning("created game");
-		
-		EmitSignal(SignalName.PlayerConnected, 1, BasePlayerInfo);
-		
-		return Error.Ok;
-	}
-
-	private void RemoveMultiplayerPeer()
-	{
-		Multiplayer.MultiplayerPeer = null;
-		GD.PushWarning("cleared players");
-		LocalPlayerDatas.Clear();
-	}
-
-	// Every peer will call this when they have loaded the game scene.
-	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-	public void PlayerLoaded()
-	{
-		if (Multiplayer.IsServer())
-		{
-			PlayersLoaded += 1;
-			
-			if (PlayersLoaded == LocalPlayerDatas.Count)
-			{
-				PlayersLoaded = 0;
-			}
-
-			GD.PushWarning("player loaded");
-		}
-	}
-
-	/// <summary>
-	/// More easily run a function directly to the server
-	/// <para/>@client
-	/// </summary>
-	public static async Task<Error> Run(StringName method, params Variant[] args)
-	{
-		var server = await Instance();
-		return server.RpcId(1, method, args);
-	} 
-
-	// When a peer connects, send them my player info.
-	// This allows transfer of all desired data for each player, not only the unique ID.
-	private void OnPlayerConnected(long id)
-	{
-		GD.PushWarning("player connected");
-		RpcId(id, MethodName.RegisterPlayer, BasePlayerInfo);
-	}
-
-	// client side, initializes data
-	[Rpc(MultiplayerApi.RpcMode.AnyPeer, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-	private void RegisterPlayer(Godot.Collections.Dictionary<string, string> newPlayerInfo)
-	{
-		GD.PushWarning("player registered");
-		int id = Multiplayer.GetRemoteSenderId();
-		LocalPlayerDatas[id] = newPlayerInfo;
-		EmitSignal(SignalName.PlayerConnected, id);
-	}
-
-	private void OnPlayerDisconnected(long id)
-	{
-		LocalPlayerDatas.Remove(id);
-		EmitSignal(SignalName.PlayerDisconnected, id);
-	}
-
-	private void OnConnectOk()
-	{
-		GD.PushWarning("server connected");
-		int peerId = Multiplayer.GetUniqueId();
-		LocalPlayerDatas[peerId] = BasePlayerInfo;
-		EmitSignal(SignalName.PlayerConnected, peerId, BasePlayerInfo);
-	}
-
-	private void OnConnectionFail()
-	{
-		GD.PushWarning("server failed");
-		Multiplayer.MultiplayerPeer = null;
-	}
-
-	private void OnServerDisconnected()
-	{
-		GD.PushWarning("server disconnected");
-		Multiplayer.MultiplayerPeer = null;
-		LocalPlayerDatas.Clear();
-		EmitSignal(SignalName.ServerDisconnected);
 	}
 }

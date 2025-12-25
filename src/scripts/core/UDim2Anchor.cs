@@ -10,7 +10,7 @@ public partial class UDim2Anchor : Node
 	[ExportGroup("Operations")]
 
 	[Export]
-    public Control Adornee;
+	public Control Adornee;
 
 	[Export]
 	public bool Canvas = false;
@@ -47,7 +47,7 @@ public partial class UDim2Anchor : Node
 	{
 		base._Process(delta);
 		Update();
-    }
+	}
 
 	public void Update()
 	{
@@ -62,7 +62,7 @@ public partial class UDim2Anchor : Node
 
 			if (AnchorPosition)
 			{
-				c.Position = Position.ToVector2(basis) - (AnchorPoint * Size.ToVector2(basis));
+				c.Position = Position.ToVector2(basis) - (AnchorPoint * c.Size);
 			}
 
 			if (AnchorPivot) {

@@ -26,6 +26,8 @@ public abstract partial class Singleton3D<T> : Node3D
 
     public override void _Ready()
     {
+        base._Ready();
+
         if (Me != null && Me != this)
         {
             QueueFree();
@@ -37,6 +39,8 @@ public abstract partial class Singleton3D<T> : Node3D
 
     public override void _ExitTree()
     {
+        base._ExitTree();
+
         Me?.QueueFree();
         Me = null;
     }
