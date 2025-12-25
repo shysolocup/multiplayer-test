@@ -8,32 +8,32 @@ using Godot;
 public abstract partial class Singleton<T> : Node
     where T : Node
 {
-    private static T _instance;
+    public static T Me;
 
     /// <summary>
     /// Single instance of the singleton.
     /// </summary>
     public static async Task<T> Instance() {
-        while (_instance is null || !IsInstanceValid(_instance))
+        while (Me is null || !IsInstanceValid(Me))
         {
             await Task.Delay(10);
         }
 
-        return _instance;
+        return Me;
     }
 
 
     public override void _Ready()
     {
-        if (_instance != null && _instance != this)
+        if (Me != null && Me != this)
         {
             QueueFree();
             return;
         }
 
-        _instance = (T)(object)this;
+        Me = (T)(object)this;
 
-        _instance.TreeExiting += static () => _instance = null;
+        Me.TreeExiting += static () => Me = null;
 
         if (!Engine.IsEditorHint())
         {

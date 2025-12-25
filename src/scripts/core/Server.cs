@@ -7,11 +7,14 @@ using System.Threading.Tasks;
 public partial class Server : Singleton<Server>
 {
 
+	public static Replicator Replicator { get; set; }
+	public static ServerScriptSystem Scripts { get; set; }
+
 	[Signal] public delegate void PlayerConnectedEventHandler(int peerId, Player player);
 	[Signal] public delegate void PlayerDisconnectedEventHandler(int peerId, string response);
 	[Signal] public delegate void ServerDisconnectedEventHandler(string response);
 
-	private Godot.Collections.Dictionary<long, Godot.Collections.Dictionary<string, string>> PlayerDatas = [];
+	private Godot.Collections.Dictionary<long, Godot.Collections.Dictionary<string, string>> LocalPlayerDatas = [];
 
 	private Godot.Collections.Dictionary<string, string> BasePlayerInfo = new()
 	{
@@ -27,7 +30,7 @@ public partial class Server : Singleton<Server>
 	public ENetMultiplayerPeer ServerHost;
 
 
-	public override void _Ready()
+	public override async void _Ready()
 	{
 		Multiplayer.PeerConnected += OnPlayerConnected;
 		Multiplayer.PeerDisconnected += OnPlayerDisconnected;
@@ -36,9 +39,12 @@ public partial class Server : Singleton<Server>
 		Multiplayer.ConnectionFailed += OnConnectionFail;
 
 		CreateGame();
+
+		Scripts = await ServerScriptSystem.Instance();
+		Replicator = await Replicator.Instance();
 	}
 
-	public Error JoinGame(string address = "")
+	private Error JoinGame(string address = "")
 	{
 		if (string.IsNullOrEmpty(address))
 		{
@@ -60,67 +66,83 @@ public partial class Server : Singleton<Server>
 	private Error CreateGame()
 	{
 		// server peer
-		var peer = new ENetMultiplayerPeer();
-		Error error = peer.CreateServer(Port, MaxPlayers);
-		ServerHost = peer;
+		ServerHost = new ENetMultiplayerPeer();
+		Error error = ServerHost.CreateServer(Port, MaxPlayers);
 
 		if (error != Error.Ok)
 		{
 			return error;
 		}
 
-		Multiplayer.MultiplayerPeer = peer;
-		PlayerDatas[1] = BasePlayerInfo;
+		Multiplayer.MultiplayerPeer = ServerHost;
+		LocalPlayerDatas[1] = BasePlayerInfo;
+		
 		EmitSignal(SignalName.PlayerConnected, 1, BasePlayerInfo);
+		
 		return Error.Ok;
 	}
 
 	private void RemoveMultiplayerPeer()
 	{
 		Multiplayer.MultiplayerPeer = null;
-		PlayerDatas.Clear();
+		GD.PushWarning("cleared players");
+		LocalPlayerDatas.Clear();
 	}
 
 	// Every peer will call this when they have loaded the game scene.
-	[Rpc(MultiplayerApi.RpcMode.AnyPeer,CallLocal = true,TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
 	private void PlayerLoaded()
 	{
 		if (Multiplayer.IsServer())
 		{
 			PlayersLoaded += 1;
-			if (PlayersLoaded == PlayerDatas.Count)
+			
+			if (PlayersLoaded == LocalPlayerDatas.Count)
 			{
 				PlayersLoaded = 0;
 			}
+
+			var id = Multiplayer.GetRemoteSenderId();
 		}
 	}
+
+	/// <summary>
+	/// More easily run a function directly to the server
+	/// <para/>@client
+	/// </summary>
+	public static async Task<Error> Run(StringName method, params Variant[] args)
+	{
+		var server = await Instance();
+		return server.RpcId(1, method, args);
+	} 
 
 	// When a peer connects, send them my player info.
 	// This allows transfer of all desired data for each player, not only the unique ID.
 	private void OnPlayerConnected(long id)
 	{
+		GD.PushWarning("player connected");
 		RpcId(id, MethodName.RegisterPlayer, BasePlayerInfo);
 	}
 
 	// client side, initializes data
-	[Rpc(MultiplayerApi.RpcMode.AnyPeer,TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
 	private void RegisterPlayer(Godot.Collections.Dictionary<string, string> newPlayerInfo)
 	{
 		int id = Multiplayer.GetRemoteSenderId();
-		PlayerDatas[id] = newPlayerInfo;
+		LocalPlayerDatas[id] = newPlayerInfo;
 		EmitSignal(SignalName.PlayerConnected, id);
 	}
 
 	private void OnPlayerDisconnected(long id)
 	{
-		PlayerDatas.Remove(id);
+		LocalPlayerDatas.Remove(id);
 		EmitSignal(SignalName.PlayerDisconnected, id);
 	}
 
 	private void OnConnectOk()
 	{
 		int peerId = Multiplayer.GetUniqueId();
-		PlayerDatas[peerId] = BasePlayerInfo;
+		LocalPlayerDatas[peerId] = BasePlayerInfo;
 		EmitSignal(SignalName.PlayerConnected, peerId, BasePlayerInfo);
 	}
 
@@ -132,7 +154,7 @@ public partial class Server : Singleton<Server>
 	private void OnServerDisconnected()
 	{
 		Multiplayer.MultiplayerPeer = null;
-		PlayerDatas.Clear();
+		LocalPlayerDatas.Clear();
 		EmitSignal(SignalName.ServerDisconnected);
 	}
 }

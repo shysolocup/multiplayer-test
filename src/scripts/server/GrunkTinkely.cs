@@ -5,21 +5,23 @@ using System;
 public partial class GrunkTinkely : Behavior
 {
 	// Called when the script node and its dependencies are ready.
-	public override void OnReady()
+	public override async void OnReady()
 	{
-		base.OnReady();
-
-		Print(workspace);
-
-		foreach (Node guh in workspace.GetChildren())
+		if (isServer())
 		{
-			Print(guh.Name);
+			print(workspace);
+
+			foreach (Node guh in workspace.GetChildren())
+			{
+				print(guh.Name);
+			}
+
+			var target = await mouse.GetTarget<Node3D>();
 		}
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
-	public override void OnProcess(double delta)
+	public override async void OnProcess(double delta)
 	{
-		base.OnProcess(delta);
 	}
 }

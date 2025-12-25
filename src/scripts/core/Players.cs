@@ -43,23 +43,36 @@ public partial class Players : Singleton<Players>
 	#region replicated
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	/// Replicated Methods ///
+	/// RPC Methods ///
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 	/// <summary>
 	/// Makes a new player and adds it to the player list
 	/// </summary>
-	[Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-	public static async Task<Player> MakePlayer()
+	[Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = false, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+	public static async Task<Player> MakePlayer(long id)
 	{
 		var inst = await Instance();
 
 		// incase they somehow get past the rpc restriction bc I lowk don't know how it works
 		if (!inst.Multiplayer.IsServer()) throw new Exception("can't make a player on the client");
+		
+		// INCASE THEY SOMEHOW GET PAST THE TWO OTHER RESTRICTIONS becuase I'm paranoid as SHIT
+		// the mere CHANCE that a little RAT could send an event to join a second time and break the entire thing
+		// FUCK YOUUUU
+		// herherherherherher heeeehehehehe
+		var CHEATING_FUCKING_RAT = await GetPlayerById(id);
+		
+		if (CHEATING_FUCKING_RAT is not null)
+		{
+			throw new Exception("YOU LITTLE FUCKIN RAT STOP CHEATING TRYING TO MAKE A NEW PLAYER AND BREAK MY ENGINE YOU PIECE OF SHIT GET OUT OF MY WALLSSSSS");
+		}
 
 		var player = inst.StarterPlayer.Duplicate<Player>();
 		player.ProcessMode = ProcessModeEnum.Inherit;
+		player.SetPlayerId(id);
+		player.SetPlayerName($"player:${id}");
 
 		inst.CallDeferred(Node.MethodName.AddChild, player);
 		
@@ -69,9 +82,9 @@ public partial class Players : Singleton<Players>
 
 	/// <summary>
 	/// removes a player by node
-	/// <para/>@Server
+	/// <para/>@server
 	/// </summary>
-	[Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+	[Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = false)]
 	public static async Task RemovePlayer(Player player)
 	{
 		var inst = await Instance();
@@ -85,9 +98,9 @@ public partial class Players : Singleton<Players>
 
 	/// <summary>
 	/// removes a player by id
-	/// <para/>@Server
+	/// <para/>@server
 	/// </summary>
-	[Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+	[Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = false)]
 	public static async Task RemovePlayer(long id)
 	{
 		var inst = await Instance();

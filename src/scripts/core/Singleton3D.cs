@@ -9,25 +9,32 @@ public abstract partial class Singleton3D<T> : Node3D
     where T : Node3D
 {
 
-    private static T _instance;
+    public static T Me;
 
     /// <summary>
     /// Single instance of the singleton.
     /// </summary>
-    public static Task<T> Instance() => Task.FromResult(_instance);
+    public static async Task<T> Instance() {
+        while (Me is null || !IsInstanceValid(Me))
+        {
+            await Task.Delay(10);
+        }
+
+        return Me;
+    }
 
 
     public override void _Ready()
     {
-        if (_instance != null && _instance != this)
+        if (Me != null && Me != this)
         {
             QueueFree();
             return;
         }
 
-        _instance = (T)(object)this;
+        Me = (T)(object)this;
 
-        _instance.TreeExiting += static () => _instance = null;
+        Me.TreeExiting += static () => Me = null;
 
         if (!Engine.IsEditorHint())
         {

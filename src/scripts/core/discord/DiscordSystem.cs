@@ -2,7 +2,7 @@ using Godot;
 using System;
 
 [GlobalClass, Icon("uid://bhib8x7fhxxwd")]
-public partial class DiscordSystem : Node
+public partial class DiscordSystem : Singleton<DiscordSystem>
 {
 	static public Node DiscordRPCNode;
 	// private PlaceController pc;
@@ -33,6 +33,8 @@ public partial class DiscordSystem : Node
 
 		GDScript rpcscript = GD.Load<GDScript>("res://src/scripts/core/discord/DiscordRPCNode.gd");
 		DiscordRPCNode = (Node)rpcscript.New();
+		
+		CallDeferred(Node.MethodName.AddChild, DiscordRPCNode);
 
 		/*pc = GetNode<PlaceController>("../%PlaceController");
 

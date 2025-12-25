@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Godot;
@@ -12,34 +13,86 @@ public partial class Behavior : Node
 
     #region overridable events
 
+    public bool isActionPressed(StringName actionName) => Input.IsActionPressed(actionName);
+    public bool wasActionJustReleased(StringName actionName) => Input.IsActionJustReleased(actionName);
+    public bool wasActionJustPressed(StringName actionName) => Input.IsActionJustPressed(actionName);
+
+    public bool isKeyPressed(Key key) => Input.IsKeyPressed(key);
+
+    public virtual void OnKeyPressed(InputEventKey key)
+    {
+    }
+
+    public virtual void OnKeyReleased(InputEventKey key)
+    {
+    }
+
+    public virtual void OnTabbedIn()
+    {
+    }
+
+    public virtual void OnTabbedOut()
+    {
+    }
+
+    /// <summary>
+    /// Overridable event function that only runs on the server
+    /// </summary>
     [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = false)]
     public virtual void OnServer()
     {   
     }
 
+    /// <summary>
+    /// Overridable event function that only runs on the client
+    /// </summary>
     public virtual void OnClient()
     {
     }
 
-	public virtual void OnStart()
+    /// <summary>
+    /// Overridable event function for when the script is being created
+    /// </summary>
+	public virtual void OnCreation()
 	{
 	}
 
-    public virtual void OnEnd()
+    /// <summary>
+    /// Overridable event function for when the script is deleting
+    /// </summary>
+    public virtual void OnDeletion()
 	{
 	}
 
+    /// <summary>
+    /// Overridable event function for when the script and its dependencies are ready, not the player. 
+    /// <para/> For when the player is fully loaded and ready use <c>OnLoaded()</c>
+    /// </summary>
 	public virtual void OnReady()
 	{
 	}
 
+    /// <summary>
+    /// Overridable event function ran every frame
+    /// </summary>
 	public virtual void OnProcess(double delta)
 	{
 	}
 
+    /// <summary>
+    /// Overridable event function for physics calculations
+    /// </summary>
 	public virtual void OnPhysics(double delta)
 	{
 	}
+
+    /// <summary>
+    /// Overridable event function for when the player has fully loaded
+    /// /// <para/>@client
+    /// </summary>
+    public virtual void OnLoaded()
+    {
+    }
 
     #endregion
     #region dependencies
@@ -57,6 +110,7 @@ public partial class Behavior : Node
 	public Workspace workspace;
 	public GuiSystem gui;
 	public ShaderSystem shaders;
+    public Mouse mouse;
 
     public override async void _Ready()
 	{
@@ -69,7 +123,7 @@ public partial class Behavior : Node
             ProcessMode = ProcessModeEnum.Disabled;
         }
 
-        if (IsEditor()) return;
+        if (isEditor()) return;
 
 		client = await Client.Instance();
 		audios = await AudioSystem.Instance();
@@ -84,11 +138,13 @@ public partial class Behavior : Node
 		workspace = await Workspace.Instance();
 		gui = await GuiSystem.Instance();
 		shaders = await ShaderSystem.Instance();
+        mouse = await Mouse.Instance();
 
 		// it's specifically just in this order so ready fires before processes
 		// this might lead to issues but we ball
 		OnReady();
-        if (IsServer())
+
+        if (isServer())
         {
             OnServer();
         }
@@ -96,12 +152,38 @@ public partial class Behavior : Node
         {
             OnClient();
         }
-		ScriptReady = true;
+		
+        ScriptReady = true;
 	}
 
     #endregion
 
     #region event handlers
+
+    public override void _Notification(int what)
+    {
+        base._Notification(what);
+
+        if (what == NotificationApplicationFocusIn)
+        {
+            OnTabbedIn();
+        }
+        else if (what == NotificationApplicationFocusOut)
+        {
+            OnTabbedOut();
+        }
+    }
+
+    public override void _UnhandledInput(InputEvent @event)
+    {
+        base._UnhandledInput(@event);
+
+        if (@event is InputEventKey key)
+        {
+            if (key.Pressed) OnKeyPressed(key);    
+            else OnKeyReleased(key);
+        }
+    }
 
     public override void _Process(double delta)
     {
@@ -124,13 +206,13 @@ public partial class Behavior : Node
     public override void _EnterTree()
     {
         base._EnterTree();
-		OnStart();
+		OnCreation();
     }
 
     public override void _ExitTree()
     {
         base._ExitTree();
-		OnEnd();
+		OnDeletion();
     }
 
     #endregion
@@ -157,57 +239,76 @@ public partial class Behavior : Node
 
     #region methods
 
+
     /// <summary>
     /// Checks if the script is running on the server (STATIC)
     /// </summary>
-    public static async Task<bool> IsServer(object _ = null)
+    public static async Task<bool> isServer(object _ = null)
     {
         var repl = await Game.Instance();
         return repl.Multiplayer.IsServer();
     }
 
+
     /// <summary>
     /// Checks if the script is running on the server
     /// </summary>
-    public bool IsServer() => Multiplayer.IsServer();
+    public bool isServer() => Multiplayer.IsServer();
 
 
     /// <summary>
     /// Checks if the script is running on the client (STATIC)
     /// </summary>
-    public static async Task<bool> IsClient(object _ = null)
+    public static async Task<bool> isClient(object _ = null)
     {
-        return !await IsServer();
+        return !await isServer();
     }
 
     /// <summary>
     /// Checks if the script is running on the client
     /// </summary>
-    public bool IsClient() => !Multiplayer.IsServer();
+    public bool isClient() => !Multiplayer.IsServer();
 
     /// <summary>
     /// 
     /// </summary>
     /// <returns></returns>
-    public static bool IsEditor() => Engine.IsEditorHint();
+    public static bool isEditor() => Engine.IsEditorHint();
 
-    public static void Print(params object[] what) => GD.Print(what);
+    /// <summary>
+    /// Prints whatever's input
+    /// </summary>
+    public static void print(params object[] what) => GD.Print(what);
 
-    public static void Throw(params object[] what) => throw new Exception(
+    /// <summary>
+    /// Throws an error completely stopping current execution
+    /// </summary>
+    public static void error(params object[] what) => throw new Exception(
         string.Join(' ', [.. what.Select( a => a.ToString() )])
     );
 
-    public static void Warn(params object[] what) => GD.PushWarning(what);
+    /// <summary>
+    /// Throws an error without completely stopping current execution
+    /// </summary>
+    public static void softError(params object[] what) => GD.PushError(what);
 
     /// <summary>
-    /// If the given thing is 
+    /// Produces a warning in Godot's console
     /// </summary>
-    public static void Assert(object thing, params object[] what) {
+    public static void warn(params object[] what) => GD.PushWarning(what);
+
+    /// <summary>
+    /// If the given thing is null, false, or invalid produce an error
+    /// <para/><c>
+    /// assert(node, "node isn't real");
+    /// </c>
+    /// </summary>
+    public static void assert(object thing, params object[] what) {
         if (
             thing is null 
             || thing is bool b && b == false 
             || thing is Node n && !IsInstanceValid(n)    
-        ) Throw(what);
+        ) error(what);
     }
 
     #endregion

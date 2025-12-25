@@ -9,16 +9,15 @@ using System;
 public partial class _CLASS_ : _BASE_
 {
     // Called when the script node and its dependencies are ready.
-    public override void OnReady()
+    public override async void OnReady()
     {
-        base.OnReady();
+        print("Hello World!");
 
         print(workspace);
     }
 
     // Called every frame. 'delta' is the elapsed time since the previous frame.
-    public override void OnProcess(double delta)
+    public override async void OnProcess(double delta)
     {
-        base.OnProcess(delta);
     }
 }

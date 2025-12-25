@@ -7,6 +7,22 @@ public partial class UDim2 : Resource
 	[Export] public Vector2 X = Vector2.Zero;
 	[Export] public Vector2 Y = Vector2.Zero;
 
+	private Vector2 defaultAnchor = new(0.5f, 0.5f);
+	private Vector2 defaultPivot = new(0.5f, 0.5f);
+
+
+	public Vector2 ToVectorSpace( Vector2 anchorPoint, Vector2 pivotPoint, Control inside = null)
+	{
+		Vector2 basis = inside is not null ? inside.GetParentAreaSize() : DisplayServer.WindowGetSize();
+
+		Vector2 size = ToVector2(basis);
+
+		Vector2 anchorOffset = anchorPoint * basis;
+		Vector2 pivotOffset  = size * pivotPoint;
+
+		return size - anchorOffset - pivotOffset;
+	}
+
 
 	public Vector2 Scale
 	{

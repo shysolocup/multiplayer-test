@@ -90,6 +90,7 @@ public partial class Characters : Singleton3D<Characters>
 	/// Non-Replicated Utility Methods ///
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+	[Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
 	public static async Task<Character> MakeCharacter(Player player)
 	{
 		var inst = await Instance();
@@ -97,8 +98,12 @@ public partial class Characters : Singleton3D<Characters>
 
 		Character character = inst.StarterCharacter.Duplicate() as Character;
 		character.GlobalTransform = workspace.Spawn.GlobalTransform;
+		character.Name = player.GetPlayerName();
 
-		character.ProcessMode = ProcessModeEnum.Inherit;
+		player.SetCharacter(character);
+
+		inst.CallDeferred(Node.MethodName.AddChild, inst);
+
 		return character;
 	}
 

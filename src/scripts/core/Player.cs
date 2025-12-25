@@ -21,18 +21,51 @@ public partial class Player : Node
 	public Character GetCharacter() => Character;
 
 
-	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = false, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-	public void SetPlayerId(long id)
+	/// <summary>
+	/// sets the player's peer id
+	/// <para/>@server
+	/// </summary>
+	[Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+	public void SetPlayerName(string name)
 	{
-		Id = id;
+		if (Multiplayer.IsServer())
+		{
+			PlayerName = name;	
+		}
 	}
 
-	[Export] public GuiSystem Gui { get; set; }
-	[Export] public Camera3D Camera { get; set; }
 
+	/// <summary>
+	/// sets the player's peer id
+	/// <para/>@server
+	/// </summary>
+	[Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+	public void SetPlayerId(long id)
+	{
+		if (Multiplayer.IsServer())
+		{
+			Id = id;	
+		}
+	}
 
+	/// <summary>
+	/// sets the player's character
+	/// <para/>@server
+	/// </summary>
+	[Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+	public void SetCharacter(Character character)
+	{
+		if (Multiplayer.IsServer())
+		{
+			Character = character;	
+		}
+	}
+	
 
-	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = false, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+	/// <summary>
+	/// Spawns a character for the given player.
+	/// <para/>@server
+	/// </summary>
 	public override async void _Ready()
 	{
 		base._Ready();
@@ -42,17 +75,12 @@ public partial class Player : Node
 			var players = await Players.Instance();
 			players.AddChild(this);
 		}
-
-		await Spawn(this);
-
-		// init 
-
 	}
 
 
 	/// <summary>
 	/// Spawns a character for the given player.
-	/// @Server
+	/// <para/>@server
 	/// </summary>
 	[Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = false, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
 	public async static Task<Character> Spawn(Player player)

@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://cg6684xj7fjx"]
+[gd_scene load_steps=25 format=3 uid="uid://cg6684xj7fjx"]
 
 [ext_resource type="Script" uid="uid://dj3d8j4qfl1st" path="res://src/scripts/core/Game.cs" id="1_covw0"]
 [ext_resource type="Script" uid="uid://c5frf4qgle4bf" path="res://src/scripts/core/GuiSystem.cs" id="2_276xm"]
@@ -17,6 +17,7 @@
 [ext_resource type="Script" uid="uid://bvm3ns805u1wd" path="res://src/scripts/core/discord/DiscordSystem.cs" id="9_h2mn8"]
 [ext_resource type="PackedScene" uid="uid://c3w57vg3x48cu" path="res://src/scenes/server_scripts.tscn" id="14_44dqv"]
 [ext_resource type="Script" uid="uid://bd046eokvcnu2" path="res://addons/phantom_camera/scripts/phantom_camera_host/phantom_camera_host.gd" id="16_3ucld"]
+[ext_resource type="Script" uid="uid://da68dgxcsirv3" path="res://src/scripts/core/Mouse.cs" id="17_p02ep"]
 [ext_resource type="PackedScene" uid="uid://ds6x2baksbent" path="res://src/scenes/shaders.tscn" id="18_44dqv"]
 [ext_resource type="PackedScene" uid="uid://by5f8a6nan5nk" path="res://src/scenes/client_scripts.tscn" id="19_3xp0n"]
 [ext_resource type="Script" uid="uid://3u0cd6x7v7xf" path="res://src/scripts/core/GlobalStorage.cs" id="19_lkrtx"]
@@ -74,9 +75,6 @@ script = ExtResource("5_lcg6w")
 
 [node name="scripts" parent="server" instance=ExtResource("14_44dqv")]
 
-[node name="lifetime" type="Timer" parent="server"]
-autostart = true
-
 [node name="client" type="Node" parent="."]
 unique_name_in_owner = true
 script = ExtResource("6_gh3at")
@@ -98,24 +96,23 @@ script = ExtResource("2_276xm")
 
 [node name="shaders" parent="client/gui" instance=ExtResource("18_44dqv")]
 
+[node name="mouse" type="Node" parent="client"]
+script = ExtResource("17_p02ep")
+
 [node name="scripts" parent="client" instance=ExtResource("19_3xp0n")]
 
 [node name="discordrpc" type="Node" parent="client"]
 script = ExtResource("9_h2mn8")
 
-[node name="lifetime" type="Timer" parent="client"]
-autostart = true
-
 [node name="global" type="Node" parent="."]
 unique_name_in_owner = true
+process_mode = 4
 script = ExtResource("19_lkrtx")
 metadata/_custom_type_script = "uid://3u0cd6x7v7xf"
 
 [node name="starterPlayer" parent="global" instance=ExtResource("20_44dqv")]
-process_mode = 4
 
 [node name="starterCharacter" parent="global" instance=ExtResource("4_lkrtx")]
-process_mode = 4
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6189446, 1, 2.8367674)
 
 [node name="replicator" type="Node" parent="."]

@@ -18,7 +18,6 @@ config/icon="res://icon.svg"
 [autoload]
 
 DiscordRPCLoader="*res://addons/discord-rpc-gd/nodes/discord_autoload.gd"
-LiveDebugger="*res://addons/godot-live-debugger/node_live_debugger.tscn"
 Ext="*res://src/scripts/core/libs/Ext.cs"
 PhantomCameraManager="*res://addons/phantom_camera/scripts/managers/phantom_camera_manager.gd"
 
@@ -32,7 +31,15 @@ project/assembly_name="multiplayer test"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/csg_converter/plugin.cfg", "res://addons/csg_terrain/plugin.cfg", "res://addons/csgtomesh/plugin.cfg", "res://addons/discord-rpc-gd/plugin.cfg", "res://addons/fancy_folder_colors/plugin.cfg", "res://addons/gdscript2all/plugin.cfg", "res://addons/godot-live-debugger/plugin.cfg", "res://addons/phantom_camera/plugin.cfg", "res://addons/script-tabs/plugin.cfg", "res://addons/terrain_3d/plugin.cfg")
+enabled=PackedStringArray("res://addons/csg_converter/plugin.cfg", "res://addons/csg_terrain/plugin.cfg", "res://addons/csgtomesh/plugin.cfg", "res://addons/discord-rpc-gd/plugin.cfg", "res://addons/fancy_folder_colors/plugin.cfg", "res://addons/gdscript2all/plugin.cfg", "res://addons/phantom_camera/plugin.cfg", "res://addons/script-ide/plugin.cfg", "res://addons/script-tabs/plugin.cfg", "res://addons/terrain_3d/plugin.cfg")
+
+[input]
+
+toggle_ruake={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":true,"meta_pressed":false,"pressed":false,"keycode":49,"physical_keycode":0,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
+]
+}
 
 [physics]
 

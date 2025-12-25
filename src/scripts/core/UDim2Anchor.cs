@@ -12,9 +12,6 @@ public partial class UDim2Anchor : Node
 	[Export]
     public Control Adornee;
 
-	[Export(PropertyHint.Enum, "Scale:0,Offset:1")]
-	public int ResizeMode = 0;
-
 	[Export]
 	public bool Canvas = false;
 	[Export]
@@ -44,11 +41,6 @@ public partial class UDim2Anchor : Node
 		{
 			Adornee ??= GetParent<Control>();
 		}
-	}
-
-	public void guh<T>() where T : Control
-	{
-
 	}
 
 	public override void _Process(double delta)
