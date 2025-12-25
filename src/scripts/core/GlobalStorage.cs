@@ -8,15 +8,4 @@ public partial class GlobalStorage : Singleton<GlobalStorage>
 	{
 		base._Ready();
 	}
-
-	/// <summary>
-	/// Gets relative remotes by directory eg: GlobalSystem.GetRemote("Dance")
-	/// </summary>
-	/// <param name="directory"></param>
-	/// <returns></returns>
-	public static async Task<Remote> GetRemote(string directory)
-	{
-		var rep = await Instance();
-		return rep.GetNode<Remote>($"./{directory}");
-	}
 }

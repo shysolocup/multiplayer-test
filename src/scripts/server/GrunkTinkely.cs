@@ -1,7 +1,6 @@
 using Godot;
 using System;
 
-[Tool]
 public partial class GrunkTinkely : Behavior
 {
 	// Called when the script node and its dependencies are ready.

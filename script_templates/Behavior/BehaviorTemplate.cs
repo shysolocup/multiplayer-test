@@ -5,7 +5,6 @@
 using _BINDINGS_NAMESPACE_;
 using System;
 
-[Tool]
 public partial class _CLASS_ : _BASE_
 {
     // Called when the script node and its dependencies are ready.

@@ -24,9 +24,9 @@ public partial class Client : Singleton<Client>
 		}
 	}
 
-    public override void _ExitTree()
-    {
-        base._ExitTree();
+	public override void _ExitTree()
+	{
+		base._ExitTree();
 
 		// dotnet security
 		Gui = null;
@@ -35,7 +35,7 @@ public partial class Client : Singleton<Client>
 		DiscordRPC = null;
 		Replicator = null;
 		Mouse = null;
-    }
+	}
 
 
 	// Called when the node enters the scene tree for the first time.
@@ -47,11 +47,6 @@ public partial class Client : Singleton<Client>
 		DiscordRPC ??= await DiscordSystem.Instance();
 		Replicator ??= await Replicator.Instance();
 		Mouse ??= await Mouse.Instance();
-
-		// if ran from the server it'll say it loaded the host player
-		var server = await Server.Instance();
-
-		server.RpcId(1, Server.MethodName.JoinGame);
 	}
 
 

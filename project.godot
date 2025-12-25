@@ -31,7 +31,7 @@ project/assembly_name="multiplayer test"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/csg_converter/plugin.cfg", "res://addons/csg_terrain/plugin.cfg", "res://addons/csgtomesh/plugin.cfg", "res://addons/discord-rpc-gd/plugin.cfg", "res://addons/fancy_folder_colors/plugin.cfg", "res://addons/gdscript2all/plugin.cfg", "res://addons/phantom_camera/plugin.cfg", "res://addons/script-ide/plugin.cfg", "res://addons/script-tabs/plugin.cfg", "res://addons/terrain_3d/plugin.cfg")
+enabled=PackedStringArray("res://addons/csg_converter/plugin.cfg", "res://addons/csg_terrain/plugin.cfg", "res://addons/csgtomesh/plugin.cfg", "res://addons/discord-rpc-gd/plugin.cfg", "res://addons/fancy_folder_colors/plugin.cfg", "res://addons/gdscript2all/plugin.cfg", "res://addons/phantom_camera/plugin.cfg", "res://addons/script-ide/plugin.cfg", "res://addons/terrain_3d/plugin.cfg")
 
 [input]
 

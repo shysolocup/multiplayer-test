@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Godot;
 
 
-[Tool]
 [GlobalClass, Icon("uid://dme3m2uv5jaju")]
 public partial class Behavior : Node
 {

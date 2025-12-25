@@ -32,13 +32,6 @@ public abstract partial class Singleton<T> : Node
         }
 
         Me = (T)(object)this;
-
-        Me.TreeExiting += static () => Me = null;
-
-        if (!Engine.IsEditorHint())
-        {
-            Owner = GetTree().Root;
-        }
     }
 
     public override void _ExitTree()

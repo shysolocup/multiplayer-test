@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=3 uid="uid://cg6684xj7fjx"]
+[gd_scene load_steps=25 format=3 uid="uid://cg6684xj7fjx"]
 
 [ext_resource type="Script" uid="uid://dj3d8j4qfl1st" path="res://src/scripts/core/Game.cs" id="1_covw0"]
 [ext_resource type="Script" uid="uid://c5frf4qgle4bf" path="res://src/scripts/core/GuiSystem.cs" id="2_276xm"]
@@ -12,11 +12,9 @@
 [ext_resource type="Script" uid="uid://dcblggjtpvjin" path="res://src/scripts/core/Client.cs" id="6_gh3at"]
 [ext_resource type="Script" uid="uid://csjccrhj5wnx7" path="res://addons/phantom_camera/scripts/phantom_camera/phantom_camera_3d.gd" id="7_nm604"]
 [ext_resource type="Script" uid="uid://8umksf8e80fw" path="res://addons/phantom_camera/scripts/resources/tween_resource.gd" id="8_3ucld"]
-[ext_resource type="PackedScene" uid="uid://dojnw3howwwu3" path="res://src/maps/default.tscn" id="8_kcfyl"]
 [ext_resource type="Script" uid="uid://iqerivcko5tq" path="res://src/scripts/core/CameraSystem.cs" id="9_44dqv"]
 [ext_resource type="Script" uid="uid://clxq4bmgf2uqd" path="res://src/scripts/core/Players.cs" id="9_bd8mh"]
 [ext_resource type="Script" uid="uid://bvm3ns805u1wd" path="res://src/scripts/core/discord/DiscordSystem.cs" id="9_h2mn8"]
-[ext_resource type="PackedScene" uid="uid://bo0rl4wd6webr" path="res://src/lightings/default.tscn" id="10_pm1mm"]
 [ext_resource type="PackedScene" uid="uid://c3w57vg3x48cu" path="res://src/scenes/server_scripts.tscn" id="14_44dqv"]
 [ext_resource type="Script" uid="uid://bd046eokvcnu2" path="res://addons/phantom_camera/scripts/phantom_camera_host/phantom_camera_host.gd" id="16_3ucld"]
 [ext_resource type="Script" uid="uid://da68dgxcsirv3" path="res://src/scripts/core/Mouse.cs" id="17_p02ep"]
@@ -32,15 +30,11 @@ script = ExtResource("8_3ucld")
 [node name="game" type="Node"]
 script = ExtResource("1_covw0")
 
-[node name="workspace" type="Node3D" parent="." node_paths=PackedStringArray("Spawn", "_spawn")]
+[node name="workspace" type="Node3D" parent="." node_paths=PackedStringArray("Spawn")]
 unique_name_in_owner = true
 script = ExtResource("2_lcg6w")
 Spawn = NodePath("spawn")
 Gravity = 9.8
-_spawn = NodePath("spawn")
-Lighting = null
-Map = null
-Characters = null
 
 [node name="characters" type="Node3D" parent="workspace" node_paths=PackedStringArray("StarterCharacter")]
 script = ExtResource("3_0fcgq")
@@ -59,20 +53,11 @@ tween_resource = SubResource("Resource_lkrtx")
 follow_offset = Vector3(0, 1, 3)
 metadata/_custom_type_script = "uid://csjccrhj5wnx7"
 
-[node name="map" type="Node3D" parent="workspace" node_paths=PackedStringArray("Map")]
+[node name="map" type="Node3D" parent="workspace"]
 script = ExtResource("3_tnd0m")
-mapScene = ExtResource("8_kcfyl")
-Map = NodePath("Default")
 
-[node name="lighting" type="Node3D" parent="workspace" node_paths=PackedStringArray("SceneWorld", "SceneSun", "World", "Sun")]
+[node name="lighting" type="Node3D" parent="workspace"]
 script = ExtResource("6_5dxuo")
-lighting = ExtResource("10_pm1mm")
-TempLighting = null
-CurrentLighting = null
-SceneWorld = NodePath("")
-SceneSun = NodePath("")
-World = NodePath("WorldEnvironment")
-Sun = NodePath("DirectionalLight3D")
 
 [node name="audios" type="Node3D" parent="workspace"]
 script = ExtResource("2_yufto")
@@ -80,16 +65,14 @@ metadata/_custom_type_script = "uid://dd1he2wiyd6x4"
 
 [node name="spawn" type="Marker3D" parent="workspace"]
 
-[node name="players" type="Node" parent="."]
+[node name="players" type="Node" parent="." node_paths=PackedStringArray("StarterPlayer")]
 unique_name_in_owner = true
 script = ExtResource("9_bd8mh")
+StarterPlayer = NodePath("../global/starterPlayer")
 
 [node name="server" type="Node" parent="."]
 unique_name_in_owner = true
 script = ExtResource("5_lcg6w")
-Port = null
-DefaultServerIP = null
-MaxPlayers = null
 
 [node name="scripts" parent="server" instance=ExtResource("14_44dqv")]
 
@@ -128,11 +111,11 @@ script = ExtResource("19_lkrtx")
 metadata/_custom_type_script = "uid://3u0cd6x7v7xf"
 
 [node name="starterPlayer" parent="global" instance=ExtResource("20_44dqv")]
+PlayerName = "Player"
+Id = 0
 
 [node name="starterCharacter" parent="global" instance=ExtResource("4_lkrtx")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6189446, 1, 2.8367674)
-Speed = null
-JumpVelocity = null
 
 [node name="replicator" type="Node" parent="."]
 script = ExtResource("22_p02ep")

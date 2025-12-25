@@ -129,4 +129,10 @@ public partial class SurfaceGui : Sprite3D
             Scale = new Vector3(meteredAdornee.X / meteredViewport.X, meteredAdornee.Y / meteredViewport.Y, 1) + ScaleOffset;
         }
     }
+
+    public override void _ExitTree()
+    {
+        ChildOrderChanged -= _viewportChange;
+        base._ExitTree();
+    }
 }

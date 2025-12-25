@@ -189,9 +189,8 @@ public partial class LightingSystem : Singleton3D<LightingSystem>
 
 	public override void _ExitTree()
 	{
-		base._ExitTree();
-		DisposeLightings();
-   	}
+		Disconnect(Node3D.SignalName.VisibilityChanged, new Callable(this, MethodName.OnVisibilityChanged));
+	}
 
 	public void OnVisibilityChanged() 
 	{
@@ -213,7 +212,9 @@ public partial class LightingSystem : Singleton3D<LightingSystem>
 	public override async void _Ready()
 	{
 		base._Ready();
-		_ = Connect(SignalName.VisibilityChanged, new Callable(this, MethodName.OnVisibilityChanged));
+		
+		Connect(Node3D.SignalName.VisibilityChanged, new Callable(this, MethodName.OnVisibilityChanged));
+		
 		await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
 
 		switch(AutoVisibility) {

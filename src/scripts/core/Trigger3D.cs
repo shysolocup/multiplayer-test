@@ -79,4 +79,14 @@ public partial class Trigger3D : Area3D
 
 		return flagged;
 	}
+
+	public override void _ExitTree()
+	{
+		base._ExitTree();
+		
+		BodyEntered -= TouchedHandle;
+		BodyExited -= TouchEndedHandle;
+		Touched -= _Touched;
+		TouchEnded -= _TouchEnded;
+	}
 }

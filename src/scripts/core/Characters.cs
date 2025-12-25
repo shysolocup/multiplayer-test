@@ -70,13 +70,16 @@ public partial class Characters : Singleton3D<Characters>
 		}
 	}
 
-	private void _removedEmitter(Node node)
+    private void _removedEmitter(Node node)
 	{
 		if (node is Character character)
 		{
 			EmitSignalCharacterRemoved(character);
 		}
 	}
+
+	private Callable _spawnCall => new(this, MethodName._spawnEmitter);
+	private Callable _remCall => new(this, MethodName._removedEmitter);
 
 
 	// Called when the node enters the scene tree for the first time.
@@ -86,8 +89,8 @@ public partial class Characters : Singleton3D<Characters>
 		
 		StarterCharacter ??= replication.GetNode<Character>("./starterCharacter");
 
-		ChildEnteredTree += _spawnEmitter;
-		ChildExitingTree += _removedEmitter;
+		Connect(Node.SignalName.ChildEnteredTree, _spawnCall);
+		Connect(Node.SignalName.ChildExitingTree, _remCall);
 	}
 
     public override void _ExitTree()
@@ -95,8 +98,8 @@ public partial class Characters : Singleton3D<Characters>
         base._ExitTree();
 
 		// dotnet security
-		ChildEnteredTree -= _spawnEmitter;
-		ChildExitingTree -= _removedEmitter;
+		Disconnect(Node.SignalName.ChildEnteredTree, _spawnCall);
+		Disconnect(Node.SignalName.ChildExitingTree, _remCall);
     }
 
 
@@ -107,12 +110,15 @@ public partial class Characters : Singleton3D<Characters>
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	private static async Task<Character> SpawnDummy(Player player)
 	{
+
 		var inst = await Instance();
 		var workspace = await Workspace.Instance();
 
 		Character character = inst.StarterCharacter.Duplicate() as Character;
 		character.GlobalTransform = workspace.Spawn.GlobalTransform;
 		character.Name = player.GetPlayerName();
+
+		GD.PushWarning("spawned dummy, is server?: ", inst.Multiplayer.IsServer());
 
 		inst.CallDeferred(Node.MethodName.AddChild, inst);
 
@@ -133,6 +139,8 @@ public partial class Characters : Singleton3D<Characters>
 
 		player.SetCharacter(character);
 		player.EmitSignal(Player.SignalName.Spawned, character);
+
+		GD.PushWarning($"spawned {player.GetPlayerName()}'s character, is server?: ", player.Multiplayer.IsServer());
 
 		return character;
 	}

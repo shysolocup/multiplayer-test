@@ -35,6 +35,9 @@ public partial class Players : Singleton<Players>
 		}
 	}
 
+	private Callable _joinedCall => new(this, MethodName._joinedEmitter);
+	private Callable _leftCall => new (this, MethodName._leftEmitter);
+
 
 	public override async void _Ready()
 	{
@@ -42,15 +45,15 @@ public partial class Players : Singleton<Players>
 		
 		StarterPlayer ??= replication.GetNode<Player>("./starterPlayer");
 
-		ChildEnteredTree += _joinedEmitter;
-		ChildExitingTree += _leftEmitter;
+		Connect(Node.SignalName.ChildEnteredTree, _joinedCall);
+		Connect(Node.SignalName.ChildExitingTree, _leftCall);
 	}
 
     public override void _ExitTree()
     {
         base._ExitTree();
-		ChildEnteredTree -= _joinedEmitter;
-		ChildExitingTree -= _leftEmitter;
+		Disconnect(Node.SignalName.ChildEnteredTree, _joinedCall);
+		Disconnect(Node.SignalName.ChildExitingTree, _leftCall);
     }
 
 
@@ -90,6 +93,8 @@ public partial class Players : Singleton<Players>
 		player.SetPlayerName($"player:${id}");
 
 		inst.CallDeferred(Node.MethodName.AddChild, player);
+
+		GD.PushWarning("spawned player, is server?: ", inst.Multiplayer.IsServer());
 
 		await Characters.Spawn(player);
 		

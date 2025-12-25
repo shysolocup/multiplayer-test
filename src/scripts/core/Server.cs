@@ -29,7 +29,6 @@ public partial class Server : Singleton<Server>
 
 	public ENetMultiplayerPeer ServerHost;
 
-
 	public override async void _Ready()
 	{
 		Multiplayer.PeerConnected += OnPlayerConnected;
@@ -57,7 +56,7 @@ public partial class Server : Singleton<Server>
 	}
 
 
-	private Error JoinGame(string address = "")
+	public Error JoinGame(string address = "")
 	{
 		if (string.IsNullOrEmpty(address))
 		{
@@ -73,10 +72,13 @@ public partial class Server : Singleton<Server>
 		}
 
 		Multiplayer.MultiplayerPeer = peer;
+
+		GD.PushWarning("created client");
+
 		return Error.Ok;
 	}
 
-	public Error CreateGame()
+	private Error CreateGame()
 	{
 		// server peer
 		ServerHost = new ENetMultiplayerPeer();
@@ -89,6 +91,8 @@ public partial class Server : Singleton<Server>
 
 		Multiplayer.MultiplayerPeer = ServerHost;
 		LocalPlayerDatas[1] = BasePlayerInfo;
+
+		GD.PushWarning("created game");
 		
 		EmitSignal(SignalName.PlayerConnected, 1, BasePlayerInfo);
 		
@@ -114,6 +118,8 @@ public partial class Server : Singleton<Server>
 			{
 				PlayersLoaded = 0;
 			}
+
+			GD.PushWarning("player loaded");
 		}
 	}
 
@@ -139,6 +145,7 @@ public partial class Server : Singleton<Server>
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
 	private void RegisterPlayer(Godot.Collections.Dictionary<string, string> newPlayerInfo)
 	{
+		GD.PushWarning("player registered");
 		int id = Multiplayer.GetRemoteSenderId();
 		LocalPlayerDatas[id] = newPlayerInfo;
 		EmitSignal(SignalName.PlayerConnected, id);
@@ -152,6 +159,7 @@ public partial class Server : Singleton<Server>
 
 	private void OnConnectOk()
 	{
+		GD.PushWarning("server connected");
 		int peerId = Multiplayer.GetUniqueId();
 		LocalPlayerDatas[peerId] = BasePlayerInfo;
 		EmitSignal(SignalName.PlayerConnected, peerId, BasePlayerInfo);
@@ -159,11 +167,13 @@ public partial class Server : Singleton<Server>
 
 	private void OnConnectionFail()
 	{
+		GD.PushWarning("server failed");
 		Multiplayer.MultiplayerPeer = null;
 	}
 
 	private void OnServerDisconnected()
 	{
+		GD.PushWarning("server disconnected");
 		Multiplayer.MultiplayerPeer = null;
 		LocalPlayerDatas.Clear();
 		EmitSignal(SignalName.ServerDisconnected);

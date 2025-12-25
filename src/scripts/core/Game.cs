@@ -1,7 +1,6 @@
 using System.Threading.Tasks;
 using Godot;
 
-[Tool]
 [GlobalClass, Icon("uid://boo8iw5pvoaa8")]
 public partial class Game : Singleton<Game>
 {
@@ -58,13 +57,16 @@ public partial class Game : Singleton<Game>
     {
         base._Ready();
 
-		// load singleton systems
-		Load();
+		if (Engine.IsEditorHint())
+		{
+			// load singleton systems
+			Load();
 
-		// run to tell the server that the player loaded
-		await Server.Run(Server.MethodName.PlayerLoaded);
+			// run to tell the server that the player loaded
+			await Server.Run(Server.MethodName.PlayerLoaded);
 
-		IsLoaded = true;
+			IsLoaded = true;	
+		}
     }
 
 	public override void _Notification(int what)
