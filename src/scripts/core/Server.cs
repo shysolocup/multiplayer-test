@@ -44,9 +44,9 @@ public partial class Server : Singleton<Server>
 		Replicator = await Replicator.Instance();
 	}
 
-    public override void _ExitTree()
-    {
-        base._ExitTree();
+	public override void _ExitTree()
+	{
+		base._ExitTree();
 
 		// dotnet security
 		Multiplayer.PeerConnected -= OnPlayerConnected;
@@ -54,7 +54,7 @@ public partial class Server : Singleton<Server>
 		Multiplayer.ConnectedToServer -= OnConnectOk;
 		Multiplayer.ServerDisconnected -= OnServerDisconnected;
 		Multiplayer.ConnectionFailed -= OnConnectionFail;
-    }
+	}
 
 
 	private Error JoinGame(string address = "")
