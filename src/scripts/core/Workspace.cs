@@ -22,13 +22,15 @@ public partial class Workspace : Singleton3D<Workspace>
 	}
 	
 	[ExportToolButton("Reset Lights & Map")] 
-	public Callable ResetCall => Callable.From(() => {
+	private Callable ResetCall => Callable.From(_resetCall);
+	private void _resetCall()
+	{
 		Lighting ??= GetNode<LightingSystem>("./lighting");
 		Map ??= GetNode<MapSystem>("./map");
 
 		Map.ResetApply();
 		Lighting.ResetApply();
-	});
+	}
 	
 	
 	public LightingSystem Lighting;

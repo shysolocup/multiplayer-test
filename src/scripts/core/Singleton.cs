@@ -40,4 +40,10 @@ public abstract partial class Singleton<T> : Node
             Owner = GetTree().Root;
         }
     }
+
+    public override void _ExitTree()
+    {
+        Me?.QueueFree();
+        Me = null;
+    }
 }

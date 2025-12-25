@@ -24,6 +24,20 @@ public partial class Client : Singleton<Client>
 		}
 	}
 
+    public override void _ExitTree()
+    {
+        base._ExitTree();
+
+		// dotnet security
+		Gui = null;
+		Camera = null;
+		Scripts = null;
+		DiscordRPC = null;
+		Replicator = null;
+		Mouse = null;
+    }
+
+
 	// Called when the node enters the scene tree for the first time.
 	public override async void _Ready()
 	{

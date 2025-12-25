@@ -41,4 +41,10 @@ public abstract partial class Singleton3D<T> : Node3D
             Owner = GetTree().Root;
         }
     }
+
+    public override void _ExitTree()
+    {
+        Me?.QueueFree();
+        Me = null;
+    }
 }

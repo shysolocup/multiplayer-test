@@ -40,4 +40,10 @@ public abstract partial class SingletonControl<T> : Control
             Owner = GetTree().Root;
         }
     }
+
+    public override void _ExitTree()
+    {
+        Me?.QueueFree();
+        Me = null;
+    }
 }

@@ -44,6 +44,19 @@ public partial class Server : Singleton<Server>
 		Replicator = await Replicator.Instance();
 	}
 
+    public override void _ExitTree()
+    {
+        base._ExitTree();
+
+		// dotnet security
+		Multiplayer.PeerConnected -= OnPlayerConnected;
+		Multiplayer.PeerDisconnected -= OnPlayerDisconnected;
+		Multiplayer.ConnectedToServer -= OnConnectOk;
+		Multiplayer.ServerDisconnected -= OnServerDisconnected;
+		Multiplayer.ConnectionFailed -= OnConnectionFail;
+    }
+
+
 	private Error JoinGame(string address = "")
 	{
 		if (string.IsNullOrEmpty(address))
@@ -63,7 +76,7 @@ public partial class Server : Singleton<Server>
 		return Error.Ok;
 	}
 
-	private Error CreateGame()
+	public Error CreateGame()
 	{
 		// server peer
 		ServerHost = new ENetMultiplayerPeer();
@@ -91,7 +104,7 @@ public partial class Server : Singleton<Server>
 
 	// Every peer will call this when they have loaded the game scene.
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-	private void PlayerLoaded()
+	public void PlayerLoaded()
 	{
 		if (Multiplayer.IsServer())
 		{
@@ -101,8 +114,6 @@ public partial class Server : Singleton<Server>
 			{
 				PlayersLoaded = 0;
 			}
-
-			var id = Multiplayer.GetRemoteSenderId();
 		}
 	}
 

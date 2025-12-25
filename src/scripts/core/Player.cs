@@ -60,38 +60,4 @@ public partial class Player : Node
 			Character = character;	
 		}
 	}
-	
-
-	/// <summary>
-	/// Spawns a character for the given player.
-	/// <para/>@server
-	/// </summary>
-	public override async void _Ready()
-	{
-		base._Ready();
-
-		if (GetParent() is not Players)
-		{
-			var players = await Players.Instance();
-			players.AddChild(this);
-		}
-	}
-
-
-	/// <summary>
-	/// Spawns a character for the given player.
-	/// <para/>@server
-	/// </summary>
-	[Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = false, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-	public async static Task<Character> Spawn(Player player)
-	{
-		player.Character?.QueueFree();
-
-		var character = await Characters.MakeCharacter(player);
-		
-		player.EmitSignal(SignalName.Spawned, character);
-		player.Character = character;
-
-		return character;
-	}
 }

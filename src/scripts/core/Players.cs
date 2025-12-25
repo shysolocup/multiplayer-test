@@ -19,26 +19,41 @@ public partial class Players : Singleton<Players>
 	public delegate void LocalPlayerChangedEventHandler(Player player);
 
 
+	private void _joinedEmitter(Node node)
+	{
+		if (node is Player player)
+		{
+			EmitSignalPlayerJoined(player);
+		}
+	}
+
+	private void _leftEmitter(Node node)
+	{
+		if (node is Player player)
+		{
+			EmitSignalPlayerLeft(player);
+		}
+	}
+
+
 	public override async void _Ready()
 	{
 		var replication = await GlobalStorage.Instance();
 		
 		StarterPlayer ??= replication.GetNode<Player>("./starterPlayer");
 
-		ChildEnteredTree += node => {
-			if (node is Player player)
-			{
-				EmitSignalPlayerJoined(player);
-			}
-		};
-
-		ChildExitingTree += node => {
-			if (node is Player player)
-			{
-				EmitSignalPlayerLeft(player);
-			}
-		};
+		ChildEnteredTree += _joinedEmitter;
+		ChildExitingTree += _leftEmitter;
 	}
+
+    public override void _ExitTree()
+    {
+        base._ExitTree();
+		ChildEnteredTree -= _joinedEmitter;
+		ChildExitingTree -= _leftEmitter;
+    }
+
+
 
 	#region replicated
 
@@ -75,6 +90,8 @@ public partial class Players : Singleton<Players>
 		player.SetPlayerName($"player:${id}");
 
 		inst.CallDeferred(Node.MethodName.AddChild, player);
+
+		await Characters.Spawn(player);
 		
 		return player;
 	}

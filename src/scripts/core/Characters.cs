@@ -62,6 +62,23 @@ public partial class Characters : Singleton3D<Characters>
 	#endregion
 
 
+	private void _spawnEmitter(Node node)
+	{
+		if (node is Character character)
+		{
+			EmitSignalCharacterSpawned(character);
+		}
+	}
+
+	private void _removedEmitter(Node node)
+	{
+		if (node is Character character)
+		{
+			EmitSignalCharacterRemoved(character);
+		}
+	}
+
+
 	// Called when the node enters the scene tree for the first time.
 	public override async void _Ready()
 	{
@@ -69,29 +86,26 @@ public partial class Characters : Singleton3D<Characters>
 		
 		StarterCharacter ??= replication.GetNode<Character>("./starterCharacter");
 
-		ChildEnteredTree += node => {
-			if (node is Character character)
-			{
-				EmitSignalCharacterSpawned(character);
-			}
-		};
-
-		ChildExitingTree += node => {
-			if (node is Character character)
-			{
-				EmitSignalCharacterRemoved(character);
-			}
-		};
+		ChildEnteredTree += _spawnEmitter;
+		ChildExitingTree += _removedEmitter;
 	}
+
+    public override void _ExitTree()
+    {
+        base._ExitTree();
+
+		// dotnet security
+		ChildEnteredTree -= _spawnEmitter;
+		ChildExitingTree -= _removedEmitter;
+    }
+
 
 	#region utility
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	/// Non-Replicated Utility Methods ///
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	[Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-	public static async Task<Character> MakeCharacter(Player player)
+	private static async Task<Character> SpawnDummy(Player player)
 	{
 		var inst = await Instance();
 		var workspace = await Workspace.Instance();
@@ -100,9 +114,25 @@ public partial class Characters : Singleton3D<Characters>
 		character.GlobalTransform = workspace.Spawn.GlobalTransform;
 		character.Name = player.GetPlayerName();
 
-		player.SetCharacter(character);
-
 		inst.CallDeferred(Node.MethodName.AddChild, inst);
+
+		return character;  
+	}
+
+
+	/// <summary>
+	/// Spawns a character for the given player.
+	/// <para/>@server
+	/// </summary>
+	[Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = false, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+	public async static Task<Character> Spawn(Player player)
+	{
+		player.GetCharacter()?.QueueFree();
+
+		var character = await SpawnDummy(player);
+
+		player.SetCharacter(character);
+		player.EmitSignal(Player.SignalName.Spawned, character);
 
 		return character;
 	}

@@ -4,4 +4,6 @@
 
 [node name="starterPlayer" type="Node"]
 script = ExtResource("1_01g1l")
+PlayerName = null
+Id = null
 metadata/_custom_type_script = "uid://frnpgkvyxvtv"

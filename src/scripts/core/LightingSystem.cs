@@ -43,7 +43,8 @@ public partial class LightingSystem : Singleton3D<LightingSystem>
 	public DirectionalLight3D Sun;
 
 	[ExportToolButton("Reset / Apply")] 
-	public Callable ResetCall => Callable.From(() => ResetApply());
+	private Callable ResetCall => Callable.From(_resetCall);
+	private void _resetCall() => ResetApply();
 
 	public bool LightingIs(string name) => Lighting is PackedScene light && light.ResourcePath.Contains(name);
 	public bool TempLightingIs(string name) => TempLighting is PackedScene temp && temp.ResourcePath.Contains(name);

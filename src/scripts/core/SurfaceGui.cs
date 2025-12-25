@@ -43,6 +43,11 @@ public partial class SurfaceGui : Sprite3D
         }
     }
 
+    private void _viewportChange()
+    {
+        Viewport = GetChildOrNull<SubViewport>(0);
+    }
+
     public override void _Ready()
     {
         base._Ready();
@@ -54,7 +59,7 @@ public partial class SurfaceGui : Sprite3D
 
         Texture ??= new ViewportTexture();
 
-        ChildOrderChanged += () => Viewport = GetChildOrNull<SubViewport>(0);
+        ChildOrderChanged += _viewportChange;
         Viewport = GetChildOrNull<SubViewport>(0);
     }
 

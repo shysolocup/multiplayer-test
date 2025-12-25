@@ -30,7 +30,8 @@ public partial class MapSystem : Singleton3D<MapSystem>
 	public Node Map;
 
 	[ExportToolButton("Reset / Apply")] 
-	public Callable ResetCall => Callable.From(() => ResetApply());
+	private Callable ResetCall => Callable.From(_resetCall);
+	private void _resetCall() => ResetApply();
 
 	public MapSystem DisposeMap() 
 	{

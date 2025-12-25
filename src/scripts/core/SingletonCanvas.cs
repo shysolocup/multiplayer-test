@@ -40,4 +40,10 @@ public abstract partial class SingletonCanvas<T> : CanvasLayer
             Owner = GetTree().Root;
         }
     }
+
+    public override void _ExitTree()
+    {
+        Me?.QueueFree();
+        Me = null;
+    }
 }
