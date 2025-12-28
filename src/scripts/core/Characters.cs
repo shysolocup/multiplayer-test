@@ -86,6 +86,7 @@ public partial class Characters : Singleton3D<Characters>
 	public override async void _Ready()
 	{
 		base._Ready();
+		
 		var replication = await GlobalStorage.Instance();
 		
 		StarterCharacter ??= replication.GetNode<Character>("./starterCharacter");

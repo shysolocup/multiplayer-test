@@ -11,13 +11,6 @@ public partial class JoinButton : Behavior
 
 		var button = GetParent<Button>();
 
-		button.Pressed += async () =>
-		{
-			var server = await Server.Instance();
-
-			warn("loaded client stuff");
-
-			await server.Join(server.HostId);
-		};
+		button.Pressed += async () => await server.Join(server.HostId);
 	}
 }

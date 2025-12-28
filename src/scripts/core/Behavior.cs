@@ -97,6 +97,7 @@ public partial class Behavior : Node
 	#region dependencies
 
 	public Client client;
+	public Server server;
 	public AudioSystem audios;
 	public CameraSystem cameras;
 	public Characters characters;
@@ -125,6 +126,7 @@ public partial class Behavior : Node
 		if (isEditor()) return;
 
 		client = await Client.Instance();
+		server = await Server.Instance();
 		audios = await AudioSystem.Instance();
 		cameras = await CameraSystem.Instance();
 		characters = await Characters.Instance();
