@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=3 uid="uid://cg6684xj7fjx"]
+[gd_scene load_steps=26 format=3 uid="uid://cg6684xj7fjx"]
 
 [ext_resource type="Script" uid="uid://dj3d8j4qfl1st" path="res://src/scripts/core/Game.cs" id="1_covw0"]
 [ext_resource type="Script" uid="uid://c5frf4qgle4bf" path="res://src/scripts/core/GuiSystem.cs" id="2_276xm"]
@@ -17,13 +17,10 @@
 [ext_resource type="Script" uid="uid://bvm3ns805u1wd" path="res://src/scripts/core/discord/DiscordSystem.cs" id="9_h2mn8"]
 [ext_resource type="PackedScene" uid="uid://c3w57vg3x48cu" path="res://src/scenes/server_scripts.tscn" id="14_44dqv"]
 [ext_resource type="Script" uid="uid://bd046eokvcnu2" path="res://addons/phantom_camera/scripts/phantom_camera_host/phantom_camera_host.gd" id="16_3ucld"]
-[ext_resource type="Script" uid="uid://t3gdsy50jy21" path="res://src/scripts/core/classes/UDim2Anchor.cs" id="16_kcfyl"]
 [ext_resource type="Script" uid="uid://da68dgxcsirv3" path="res://src/scripts/core/Mouse.cs" id="17_p02ep"]
-[ext_resource type="Script" uid="uid://cqry1e042h0c8" path="res://src/scripts/core/classes/UDim2.cs" id="17_pm1mm"]
 [ext_resource type="PackedScene" uid="uid://ds6x2baksbent" path="res://src/scenes/shaders.tscn" id="18_44dqv"]
 [ext_resource type="PackedScene" uid="uid://by5f8a6nan5nk" path="res://src/scenes/client_scripts.tscn" id="19_3xp0n"]
 [ext_resource type="Script" uid="uid://3u0cd6x7v7xf" path="res://src/scripts/core/GlobalStorage.cs" id="19_lkrtx"]
-[ext_resource type="Script" uid="uid://43ya7151320l" path="res://src/scripts/client/JoinButton.cs" id="19_pm1mm"]
 [ext_resource type="PackedScene" uid="uid://cx461ggiitbpu" path="res://src/scenes/starter_player.tscn" id="20_44dqv"]
 [ext_resource type="Script" uid="uid://bxtd783k615yg" path="res://src/scripts/core/Replicator.cs" id="22_p02ep"]
 
@@ -32,16 +29,6 @@ script = ExtResource("8_t2yr7")
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_kcfyl"]
 blend_mode = 2
-
-[sub_resource type="Resource" id="Resource_pm1mm"]
-script = ExtResource("17_pm1mm")
-X = Vector2(0.5, 0)
-Y = Vector2(0.5, 0)
-
-[sub_resource type="Resource" id="Resource_tnxn1"]
-script = ExtResource("17_pm1mm")
-X = Vector2(0.5, 0)
-Y = Vector2(0.5, 0)
 
 [node name="game" type="Node"]
 script = ExtResource("1_covw0")
@@ -97,7 +84,6 @@ script = ExtResource("16_3ucld")
 metadata/_custom_type_script = "uid://bd046eokvcnu2"
 
 [node name="gui" type="Control" parent="client"]
-unique_name_in_owner = true
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -110,46 +96,43 @@ metadata/_edit_use_anchors_ = true
 [node name="shaders" parent="client/gui" instance=ExtResource("18_44dqv")]
 layer = -1
 
-[node name="ColorRect" type="ColorRect" parent="client/gui"]
+[node name="rect" type="ColorRect" parent="client/gui"]
 material = SubResource("CanvasItemMaterial_kcfyl")
-layout_mode = 0
-offset_left = 288.0
-offset_top = 162.0
-offset_right = 864.0
-offset_bottom = 486.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -288.0
+offset_top = -162.0
+offset_right = 288.0
+offset_bottom = 162.0
+grow_horizontal = 2
+grow_vertical = 2
 pivot_offset = Vector2(288, 162)
 color = Color(0.12225223, 0.12225223, 0.12225223, 1)
 
-[node name="anchor" type="Node" parent="client/gui/ColorRect" node_paths=PackedStringArray("Adornee")]
-script = ExtResource("16_kcfyl")
-Adornee = NodePath("..")
-AnchorSize = true
-AnchorPosition = true
-AnchorPivot = true
-Size = SubResource("Resource_pm1mm")
-Position = SubResource("Resource_tnxn1")
-metadata/_custom_type_script = "uid://t3gdsy50jy21"
-
-[node name="container" type="VBoxContainer" parent="client/gui/ColorRect"]
+[node name="container" type="VBoxContainer" parent="client/gui/rect"]
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
+anchors_preset = -1
+anchor_left = 0.3
+anchor_right = 0.7
 anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset = Vector2(144, 81)
+metadata/_edit_use_anchors_ = true
 
-[node name="label" type="Label" parent="client/gui/ColorRect/container"]
+[node name="label" type="Label" parent="client/gui/rect/container"]
 layout_mode = 2
 text = "agh"
 
-[node name="joinButton" type="Button" parent="client/gui/ColorRect/container"]
+[node name="lobbyId" type="LineEdit" parent="client/gui/rect/container"]
+layout_mode = 2
+placeholder_text = "lobby id"
+alignment = 1
+
+[node name="joinButton" type="Button" parent="client/gui/rect/container"]
 layout_mode = 2
 text = "join"
-
-[node name="script" type="Node" parent="client/gui/ColorRect/container/joinButton"]
-script = ExtResource("19_pm1mm")
-metadata/_custom_type_script = "uid://c3lflpkmclxja"
 
 [node name="mouse" type="Node" parent="client"]
 script = ExtResource("17_p02ep")
@@ -183,6 +166,7 @@ script = ExtResource("9_bd8mh")
 StarterPlayer = NodePath("../global/starterPlayer")
 
 [node name="replicator" type="Node" parent="."]
+unique_name_in_owner = true
 script = ExtResource("22_p02ep")
 
 [node name="worldSpawner" type="MultiplayerSpawner" parent="replicator"]

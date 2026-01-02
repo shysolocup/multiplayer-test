@@ -6,11 +6,14 @@ public partial class JoinButton : Behavior
 	// Called when the script node and its dependencies are ready.
 	public override void OnReady()
 	{
-		warn("Hello World!");
-		warn(workspace);
+		var container = gui.GetNode("./rect/container");
 
-		var button = GetParent<Button>();
+		var button = container.GetNode<Button>("joinButton");
+		var lobby = container.GetNode<LineEdit>("lobbyId");
 
-		button.Pressed += async () => await server.Join(server.HostId);
+		button.Pressed += async () => {
+			print("got it boss");
+			await server.Join(lobby.Text);
+		};
 	}
 }
