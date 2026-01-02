@@ -29,18 +29,9 @@ public abstract partial class SingletonControl<T> : Control
 
         if (Me != null && Me != this)
         {
-            QueueFree();
             return;
         }
 
         Me = (T)(object)this;
-    }
-
-    public override void _ExitTree()
-    {
-        base._ExitTree();
-
-        Me?.QueueFree();
-        Me = null;
     }
 }

@@ -51,14 +51,6 @@ public partial class Players : Singleton<Players>
 		Connect(Node.SignalName.ChildExitingTree, _leftCall);
 	}
 
-    public override void _ExitTree()
-    {
-        base._ExitTree();
-		
-		Disconnect(Node.SignalName.ChildEnteredTree, _joinedCall);
-		Disconnect(Node.SignalName.ChildExitingTree, _leftCall);
-    }
-
 
 
 	#region replicated

@@ -17,9 +17,6 @@ public partial class GuiSystem : SingletonControl<GuiSystem>
 	public override void _ExitTree()
     {
         base._ExitTree();
-
-		// dotnet security
-		Shaders = null;
     }
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.

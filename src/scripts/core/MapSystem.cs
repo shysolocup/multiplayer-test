@@ -102,11 +102,20 @@ public partial class MapSystem : Singleton3D<MapSystem>
 		base._ExitTree();
 		DisposeMap();
    	}
+	
+	public override void _EnterTree()
+	{
+		base._EnterTree();
+
+		if (Engine.IsEditorHint())
+			ResetApply();
+	}
 
 	public override async void _Ready()
 	{
 		base._Ready();
 		await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+		
 		ResetApply();
 	}
 }

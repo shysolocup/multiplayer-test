@@ -1,25 +1,25 @@
-[gd_scene load_steps=30 format=3 uid="uid://cg6684xj7fjx"]
+[gd_scene load_steps=31 format=3 uid="uid://cg6684xj7fjx"]
 
 [ext_resource type="Script" uid="uid://dj3d8j4qfl1st" path="res://src/scripts/core/Game.cs" id="1_covw0"]
 [ext_resource type="Script" uid="uid://c5frf4qgle4bf" path="res://src/scripts/core/GuiSystem.cs" id="2_276xm"]
-[ext_resource type="Script" uid="uid://d0t5vb0wvm7b6" path="res://src/scripts/core/Workspace.cs" id="2_lcg6w"]
-[ext_resource type="Script" uid="uid://dd1he2wiyd6x4" path="res://src/scripts/core/AudioSystem.cs" id="2_yufto"]
-[ext_resource type="Script" uid="uid://hilik46ime86" path="res://src/scripts/core/Characters.cs" id="3_0fcgq"]
-[ext_resource type="Script" uid="uid://c3yamjsvvi4eo" path="res://src/scripts/core/MapSystem.cs" id="3_tnd0m"]
+[ext_resource type="Script" uid="uid://d0t5vb0wvm7b6" path="res://src/scripts/core/Workspace.cs" id="2_ta85g"]
+[ext_resource type="Script" uid="uid://c3yamjsvvi4eo" path="res://src/scripts/core/MapSystem.cs" id="3_44dqv"]
+[ext_resource type="Script" uid="uid://hilik46ime86" path="res://src/scripts/core/Characters.cs" id="3_kcfyl"]
+[ext_resource type="Script" uid="uid://cv04eaa2q8bhx" path="res://src/scripts/core/LightingSystem.cs" id="4_44dqv"]
 [ext_resource type="PackedScene" uid="uid://dtwjgai1ljwtw" path="res://src/scenes/starter_character.tscn" id="4_lkrtx"]
 [ext_resource type="Script" uid="uid://d1k532y44p2cq" path="res://src/scripts/core/Server.cs" id="5_lcg6w"]
-[ext_resource type="Script" uid="uid://cv04eaa2q8bhx" path="res://src/scripts/core/LightingSystem.cs" id="6_5dxuo"]
 [ext_resource type="Script" uid="uid://dcblggjtpvjin" path="res://src/scripts/core/Client.cs" id="6_gh3at"]
-[ext_resource type="Script" uid="uid://csjccrhj5wnx7" path="res://addons/phantom_camera/scripts/phantom_camera/phantom_camera_3d.gd" id="7_nm604"]
-[ext_resource type="Script" uid="uid://8umksf8e80fw" path="res://addons/phantom_camera/scripts/resources/tween_resource.gd" id="8_3ucld"]
-[ext_resource type="Script" uid="uid://iqerivcko5tq" path="res://src/scripts/core/CameraSystem.cs" id="9_44dqv"]
+[ext_resource type="Script" uid="uid://iqerivcko5tq" path="res://src/scripts/core/CameraSystem.cs" id="6_pm1mm"]
+[ext_resource type="Script" uid="uid://dd1he2wiyd6x4" path="res://src/scripts/core/AudioSystem.cs" id="7_pm1mm"]
+[ext_resource type="Script" uid="uid://csjccrhj5wnx7" path="res://addons/phantom_camera/scripts/phantom_camera/phantom_camera_3d.gd" id="7_tnxn1"]
+[ext_resource type="Script" uid="uid://8umksf8e80fw" path="res://addons/phantom_camera/scripts/resources/tween_resource.gd" id="8_t2yr7"]
 [ext_resource type="Script" uid="uid://clxq4bmgf2uqd" path="res://src/scripts/core/Players.cs" id="9_bd8mh"]
 [ext_resource type="Script" uid="uid://bvm3ns805u1wd" path="res://src/scripts/core/discord/DiscordSystem.cs" id="9_h2mn8"]
 [ext_resource type="PackedScene" uid="uid://c3w57vg3x48cu" path="res://src/scenes/server_scripts.tscn" id="14_44dqv"]
 [ext_resource type="Script" uid="uid://bd046eokvcnu2" path="res://addons/phantom_camera/scripts/phantom_camera_host/phantom_camera_host.gd" id="16_3ucld"]
-[ext_resource type="Script" uid="uid://t3gdsy50jy21" path="res://src/scripts/core/UDim2Anchor.cs" id="16_kcfyl"]
+[ext_resource type="Script" uid="uid://t3gdsy50jy21" path="res://src/scripts/core/classes/UDim2Anchor.cs" id="16_kcfyl"]
 [ext_resource type="Script" uid="uid://da68dgxcsirv3" path="res://src/scripts/core/Mouse.cs" id="17_p02ep"]
-[ext_resource type="Script" uid="uid://cqry1e042h0c8" path="res://src/scripts/core/UDim2.cs" id="17_pm1mm"]
+[ext_resource type="Script" uid="uid://cqry1e042h0c8" path="res://src/scripts/core/classes/UDim2.cs" id="17_pm1mm"]
 [ext_resource type="PackedScene" uid="uid://ds6x2baksbent" path="res://src/scenes/shaders.tscn" id="18_44dqv"]
 [ext_resource type="PackedScene" uid="uid://by5f8a6nan5nk" path="res://src/scenes/client_scripts.tscn" id="19_3xp0n"]
 [ext_resource type="Script" uid="uid://3u0cd6x7v7xf" path="res://src/scripts/core/GlobalStorage.cs" id="19_lkrtx"]
@@ -27,72 +27,68 @@
 [ext_resource type="PackedScene" uid="uid://cx461ggiitbpu" path="res://src/scenes/starter_player.tscn" id="20_44dqv"]
 [ext_resource type="Script" uid="uid://bxtd783k615yg" path="res://src/scripts/core/Replicator.cs" id="22_p02ep"]
 
-[sub_resource type="Resource" id="Resource_lkrtx"]
-script = ExtResource("8_3ucld")
+[sub_resource type="Resource" id="Resource_kcfyl"]
+script = ExtResource("8_t2yr7")
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_kcfyl"]
+blend_mode = 2
 
 [sub_resource type="Resource" id="Resource_pm1mm"]
 script = ExtResource("17_pm1mm")
-X = Vector2(0, 200)
-Y = Vector2(0, 200)
+X = Vector2(0.5, 0)
+Y = Vector2(0.5, 0)
 
 [sub_resource type="Resource" id="Resource_tnxn1"]
 script = ExtResource("17_pm1mm")
+X = Vector2(0.5, 0)
+Y = Vector2(0.5, 0)
 
 [node name="game" type="Node"]
 script = ExtResource("1_covw0")
 
 [node name="workspace" type="Node3D" parent="." node_paths=PackedStringArray("Spawn")]
 unique_name_in_owner = true
-script = ExtResource("2_lcg6w")
+script = ExtResource("2_ta85g")
 Spawn = NodePath("spawn")
 Gravity = 9.8
+metadata/_custom_type_script = "uid://d0t5vb0wvm7b6"
 
 [node name="characters" type="Node3D" parent="workspace" node_paths=PackedStringArray("StarterCharacter")]
-script = ExtResource("3_0fcgq")
+script = ExtResource("3_kcfyl")
 StarterCharacter = NodePath("../../global/starterCharacter")
-
-[node name="cameras" type="Node3D" parent="workspace"]
-script = ExtResource("9_44dqv")
-
-[node name="primary" type="Node3D" parent="workspace/cameras"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 4)
-script = ExtResource("7_nm604")
-priority = 1
-follow_mode = 6
-look_at_mode = 1
-tween_resource = SubResource("Resource_lkrtx")
-follow_offset = Vector3(0, 1, 3)
-metadata/_custom_type_script = "uid://csjccrhj5wnx7"
+metadata/_custom_type_script = "uid://hilik46ime86"
 
 [node name="map" type="Node3D" parent="workspace"]
-script = ExtResource("3_tnd0m")
+script = ExtResource("3_44dqv")
+metadata/_custom_type_script = "uid://c3yamjsvvi4eo"
 
 [node name="lighting" type="Node3D" parent="workspace"]
-script = ExtResource("6_5dxuo")
+script = ExtResource("4_44dqv")
+metadata/_custom_type_script = "uid://cv04eaa2q8bhx"
+
+[node name="cameras" type="Node3D" parent="workspace"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.430248, 1.2825328, 0)
+script = ExtResource("6_pm1mm")
+metadata/_custom_type_script = "uid://iqerivcko5tq"
 
 [node name="audios" type="Node3D" parent="workspace"]
-script = ExtResource("2_yufto")
+script = ExtResource("7_pm1mm")
 metadata/_custom_type_script = "uid://dd1he2wiyd6x4"
 
 [node name="spawn" type="Marker3D" parent="workspace"]
 
-[node name="players" type="Node" parent="." node_paths=PackedStringArray("StarterPlayer")]
-unique_name_in_owner = true
-script = ExtResource("9_bd8mh")
-StarterPlayer = NodePath("../global/starterPlayer")
-
-[node name="server" type="Node" parent="."]
-unique_name_in_owner = true
-script = ExtResource("5_lcg6w")
-
-[node name="scripts" parent="server" instance=ExtResource("14_44dqv")]
+[node name="mainCamera" type="Node3D" parent="workspace/spawn"]
+transform = Transform3D(-0.17005466, 0, -0.98543465, 0, 1, 0, 0.98543465, 0, -0.17005466, -2.7628002, 1.2825328, 1.2334036)
+script = ExtResource("7_tnxn1")
+tween_resource = SubResource("Resource_kcfyl")
+metadata/_custom_type_script = "uid://csjccrhj5wnx7"
 
 [node name="client" type="Node" parent="."]
 unique_name_in_owner = true
 script = ExtResource("6_gh3at")
 
 [node name="camera" type="Camera3D" parent="client"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 4)
+transform = Transform3D(-0.17005466, 0, -0.98543465, 0, 1, 0, 0.98543465, 0, -0.17005466, -2.7628002, 1.2825328, 1.2334036)
 
 [node name="cameraHost" type="Node" parent="client/camera"]
 process_priority = 300
@@ -112,16 +108,19 @@ script = ExtResource("2_276xm")
 metadata/_edit_use_anchors_ = true
 
 [node name="shaders" parent="client/gui" instance=ExtResource("18_44dqv")]
+layer = -1
 
-[node name="container" type="VBoxContainer" parent="client/gui"]
+[node name="ColorRect" type="ColorRect" parent="client/gui"]
+material = SubResource("CanvasItemMaterial_kcfyl")
 layout_mode = 0
-offset_left = -100.0
-offset_top = -100.0
-offset_right = 100.0
-offset_bottom = 100.0
-pivot_offset = Vector2(100, 100)
+offset_left = 288.0
+offset_top = 162.0
+offset_right = 864.0
+offset_bottom = 486.0
+pivot_offset = Vector2(288, 162)
+color = Color(0.12225223, 0.12225223, 0.12225223, 1)
 
-[node name="anchor" type="Node" parent="client/gui/container" node_paths=PackedStringArray("Adornee")]
+[node name="anchor" type="Node" parent="client/gui/ColorRect" node_paths=PackedStringArray("Adornee")]
 script = ExtResource("16_kcfyl")
 Adornee = NodePath("..")
 AnchorSize = true
@@ -131,15 +130,24 @@ Size = SubResource("Resource_pm1mm")
 Position = SubResource("Resource_tnxn1")
 metadata/_custom_type_script = "uid://t3gdsy50jy21"
 
-[node name="label" type="Label" parent="client/gui/container"]
+[node name="container" type="VBoxContainer" parent="client/gui/ColorRect"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(144, 81)
+
+[node name="label" type="Label" parent="client/gui/ColorRect/container"]
 layout_mode = 2
 text = "agh"
 
-[node name="joinButton" type="Button" parent="client/gui/container"]
+[node name="joinButton" type="Button" parent="client/gui/ColorRect/container"]
 layout_mode = 2
 text = "join"
 
-[node name="script" type="Node" parent="client/gui/container/joinButton"]
+[node name="script" type="Node" parent="client/gui/ColorRect/container/joinButton"]
 script = ExtResource("19_pm1mm")
 metadata/_custom_type_script = "uid://c3lflpkmclxja"
 
@@ -150,6 +158,12 @@ script = ExtResource("17_p02ep")
 
 [node name="discordrpc" type="Node" parent="client"]
 script = ExtResource("9_h2mn8")
+
+[node name="server" type="Node" parent="."]
+unique_name_in_owner = true
+script = ExtResource("5_lcg6w")
+
+[node name="scripts" parent="server" instance=ExtResource("14_44dqv")]
 
 [node name="global" type="Node" parent="."]
 unique_name_in_owner = true
@@ -162,6 +176,11 @@ Id = 0
 
 [node name="starterCharacter" parent="global" instance=ExtResource("4_lkrtx")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6189446, 1, 2.8367674)
+
+[node name="players" type="Node" parent="." node_paths=PackedStringArray("StarterPlayer")]
+unique_name_in_owner = true
+script = ExtResource("9_bd8mh")
+StarterPlayer = NodePath("../global/starterPlayer")
 
 [node name="replicator" type="Node" parent="."]
 script = ExtResource("22_p02ep")

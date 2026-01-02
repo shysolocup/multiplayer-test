@@ -74,16 +74,4 @@ public partial class Game : Singleton<Game>
 			GetTree().Quit();
 		}
 	}
-
-    public override void _ExitTree()
-    {
-		// dotnet security
-        Workspace = null;
-		Players = null;
-		Server = null;
-		Client = null;
-		GlobalStorage = null;
-		Replicator = null;
-    }
-
 }

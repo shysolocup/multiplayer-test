@@ -29,18 +29,9 @@ public abstract partial class SingletonCanvas<T> : CanvasLayer
 
         if (Me != null && Me != this)
         {
-            QueueFree();
             return;
         }
 
         Me = (T)(object)this;
-    }
-
-    public override void _ExitTree()
-    {
-        base._ExitTree();
-
-        Me?.QueueFree();
-        Me = null;
     }
 }

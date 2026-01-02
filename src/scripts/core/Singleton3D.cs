@@ -30,18 +30,9 @@ public abstract partial class Singleton3D<T> : Node3D
 
         if (Me != null && Me != this)
         {
-            QueueFree();
             return;
         }
 
         Me = (T)(object)this;
-    }
-
-    public override void _ExitTree()
-    {
-        base._ExitTree();
-
-        Me?.QueueFree();
-        Me = null;
     }
 }

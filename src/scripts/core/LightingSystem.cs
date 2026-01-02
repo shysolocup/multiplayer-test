@@ -190,7 +190,6 @@ public partial class LightingSystem : Singleton3D<LightingSystem>
 	public override void _ExitTree()
 	{
 		base._ExitTree();
-		Disconnect(Node3D.SignalName.VisibilityChanged, new Callable(this, MethodName.OnVisibilityChanged));
 	}
 
 	public void OnVisibilityChanged() 
@@ -208,6 +207,32 @@ public partial class LightingSystem : Singleton3D<LightingSystem>
 		}
 
 		EmitSignalLightingDisabled();
+	}
+
+	public override void _EnterTree()
+	{
+		base._EnterTree();
+		
+		if (Engine.IsEditorHint())
+		{
+			switch(AutoVisibility) {
+				case 2: { // editor only
+					if (Engine.IsEditorHint()) {
+						Visible = true;
+					}
+					break;
+				}
+
+				case 3: { // runtime only
+					if (!Engine.IsEditorHint()) {
+						Visible = true;
+					}
+					break;
+				}
+			}
+
+			ResetApply();
+		}
 	}
 
 	public override async void _Ready()
