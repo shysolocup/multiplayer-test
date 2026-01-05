@@ -116,9 +116,13 @@ color = Color(0.12225223, 0.12225223, 0.12225223, 1)
 [node name="container" type="VBoxContainer" parent="client/gui/rect"]
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.3
-anchor_right = 0.7
+anchor_left = 0.25
+anchor_right = 0.75000006
 anchor_bottom = 1.0
+offset_right = -3.0517578e-05
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
 metadata/_edit_use_anchors_ = true
 
 [node name="label" type="Label" parent="client/gui/rect/container"]

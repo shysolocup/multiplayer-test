@@ -53,9 +53,9 @@ public partial class Game : Singleton<Game>
 		await Mouse.Instance();
 	}
 
-    public override async void _Ready()
-    {
-        base._Ready();
+	public override async void _Ready()
+	{
+		base._Ready();
 
 		if (Engine.IsEditorHint())
 		{
@@ -64,7 +64,7 @@ public partial class Game : Singleton<Game>
 
 			IsLoaded = true;	
 		}
-    }
+	}
 
 	public override void _Notification(int what)
 	{

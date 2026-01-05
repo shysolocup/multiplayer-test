@@ -24,6 +24,7 @@ PhantomCameraManager="*res://addons/phantom_camera/scripts/managers/phantom_came
 [display]
 
 window/subwindows/embed_subwindows=false
+window/stretch/mode="canvas_items"
 
 [dotnet]
 
