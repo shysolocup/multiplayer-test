@@ -1,5 +1,4 @@
 using Godot;
-using System;
 
 [GlobalClass, Icon("uid://bhib8x7fhxxwd")]
 public partial class DiscordSystem : Singleton<DiscordSystem>

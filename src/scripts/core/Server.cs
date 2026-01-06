@@ -1,6 +1,5 @@
 using Core;
 using Godot;
-using System;
 using System.Threading.Tasks;
 
 [GlobalClass, Icon("uid://cx7nfcxc0as46")]
@@ -14,13 +13,15 @@ public partial class Server : Singleton<Server>
 	[Signal] public delegate void PlayerDisconnectedEventHandler(int peerId, string response);
 	[Signal] public delegate void ServerDisconnectedEventHandler(string response);
 
+	[Signal] public delegate void StartedHostingEventHandler(string hostId);
+
 	[Export] private int Port = 9998;
 	[Export] private string DefaultServerAddress = "relay.nodetunnel.io"; 
 	[Export] private int MaxPlayers = 20;
 
 	public MultiplayerPeer Peer { get; set; }
 
-	public string HostId { get; set;}
+	public string HostId { get; set; }
 
 	private async Task Init()
 	{
@@ -43,7 +44,9 @@ public partial class Server : Singleton<Server>
 		await NodeTunnelBridge.Hosting(Peer);
 
 		HostId = NodeTunnelBridge.GetOnlineId(Peer);
-		DisplayServer.ClipboardSet(HostId.ToString());
+		// DisplayServer.ClipboardSet(HostId.ToString());
+
+		EmitSignalStartedHosting(HostId);
 
 		GD.PushWarning($"started hosting at id {HostId}");	
 	}
@@ -90,7 +93,6 @@ public partial class Server : Singleton<Server>
 		};
 
 		await Init();
-		await Host();
 
 		Scripts = await ServerScriptSystem.Instance();
 		Replicator = await Replicator.Instance();

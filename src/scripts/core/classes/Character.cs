@@ -1,11 +1,20 @@
 using Godot;
-using System;
 
 [GlobalClass]
 public partial class Character : CharacterBody3D
 {
 	
-	public MeshInstance3D Mesh { get; set; }
+	public Node3D Mesh { get; set; }
+	public Node3D Rig { get; set; }
+	
+	public MeshInstance3D Face { get; set; }
+	public MeshInstance3D Head { get; set; }
+	public MeshInstance3D LeftArm { get; set; }
+	public MeshInstance3D LeftLeg { get; set; }
+	public MeshInstance3D RightArm { get; set; }
+	public MeshInstance3D RightLeg { get; set; }
+	public MeshInstance3D Torso { get; set; }
+
 	public CollisionShape3D Collision { get; set; }
 
 
@@ -17,7 +26,16 @@ public partial class Character : CharacterBody3D
 	{
 		base._Ready();
 		
-		Mesh = GetNode<MeshInstance3D>("./mesh");
+		Mesh = GetNode<Node3D>("./mesh");
 		Collision = GetNode<CollisionShape3D>("./collision");
+
+		Face = Mesh.GetNode<MeshInstance3D>("./Face");
+		Head = Mesh.GetNode<MeshInstance3D>("./Head");
+		LeftArm = Mesh.GetNode<MeshInstance3D>("./Left Arm");
+		LeftLeg = Mesh.GetNode<MeshInstance3D>("./Left Leg");
+		Rig = Mesh.GetNode<Node3D>("./Rig");
+		RightArm = Mesh.GetNode<MeshInstance3D>("./Right Arm");
+		RightLeg = Mesh.GetNode<MeshInstance3D>("./Right Leg");
+		Torso = Mesh.GetNode<MeshInstance3D>("./Torso");
 	}
 }

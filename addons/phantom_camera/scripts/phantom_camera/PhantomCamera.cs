@@ -1,5 +1,4 @@
 ﻿using Godot;
-using PhantomCamera.Noise;
 
 #nullable enable
 

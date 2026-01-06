@@ -1,10 +1,12 @@
 using System;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Godot;
 
 
+/// <summary>
+/// a physical script node with useful global dependencies
+/// </summary>
 [GlobalClass, Icon("uid://dme3m2uv5jaju")]
 public partial class Behavior : Node
 {
@@ -96,20 +98,156 @@ public partial class Behavior : Node
 	#endregion
 	#region dependencies
 
+
+	/// <summary>
+	/// global script variable for accessing the client
+	/// </summary>
 	public Client client;
+
+	/// <summary>
+	/// global script variable for accessing the server
+	/// </summary>
 	public Server server;
+
+	/// <summary>
+	/// global script variable for accessing the audios inside the workspace
+	/// <para/><b>REPLICATED:</b> nodes inside players are automatically synced
+	/// </summary>
 	public AudioSystem audios;
+
+	/// <summary>
+	/// global script variable for accessing the cameras controller inside the workspace
+	/// <para/><code>
+	/// game
+	///	└── client
+	///	    └── cameras
+	/// </code>
+	/// </summary>
 	public CameraSystem cameras;
+
+	/// <summary>
+	/// global script variable for accessing the characters inside the workspace
+	/// <para/><code>
+	/// game
+	///	└── workspace
+	///	    └── characters
+	/// </code>
+	/// <para/><b>REPLICATED:</b> nodes inside players are automatically synced
+	/// </summary>
 	public Characters characters;
+
+	/// <summary>
+	/// global script variable for accessing the game
+	/// <para/>the root singleton
+	/// </summary>
 	public Game game;
+
+	/// <summary>
+	/// global script variable for accessing the global storage
+	/// <para/><code>
+	/// game
+	///	└── global
+	/// </code>
+	/// <para/><b>REPLICATED:</b> nodes inside players are automatically synced
+	/// </summary>
 	public GlobalStorage global;
+
+	/// <summary>
+	/// global script variable for accessing the lighting inside the workspace
+	/// <para/><code>
+	/// game
+	///	└── workspace
+	///	    └── lighting
+	/// </code>
+	/// <para/><b>REPLICATED:</b> nodes inside players are automatically synced
+	/// </summary>
 	public LightingSystem lighting;
+
+	/// <summary>
+	/// global script variable for accessing the map controller inside the workspace
+	/// <para/><code>
+	/// game
+	///	└── workspace
+	///	    └── map
+	/// </code>
+	/// <para/><b>REPLICATED:</b> nodes inside players are automatically synced
+	/// </summary>
 	public MapSystem map;
+
+	/// <summary>
+	/// global script variable for accessing the players
+	/// <para/><code>
+	/// game
+	///	└── players
+	/// </code>
+	/// <para/><b>REPLICATED:</b> nodes inside players are automatically synced
+	/// </summary>
 	public Players players;
+	
+	/// <summary>
+	/// global script variable for accessing the client's script singleton
+	/// <para/>this is where most scripts ran on the client are stored
+	/// <para/><code>
+	/// game
+	///	└── client
+	///	    └── scripts
+	/// </code>
+	/// <para/>@client
+	/// </summary>
 	public ClientScriptSystem clientScripts;
+
+	/// <summary>
+	/// global script variable for accessing the workspace
+	/// <para/>workspace is the main place for anything 3D including character models, maps, lighting, cameras, and spatial audio
+	/// <para/><code>
+	/// game
+	///	└── workspace
+	///	    ├── characters
+	///	    ├── map
+	///	    ├── lighting
+	///	    ├── cameras
+	///	    └── audios
+	/// </code>
+	/// </summary>
 	public Workspace workspace;
+
+	/// <summary>
+	/// global script variable for accessing the client's gui
+	/// <para/>this is where ui is handled
+	/// <para/><b>NOTE:</b> shaders are contained within the gui since they're technically ui
+	/// <para/><code>
+	/// game
+	///	└── client
+	/// 	└── gui
+	///	    	└── shaders
+	/// </code>
+	/// <para/>@client
+	/// </summary>
 	public GuiSystem gui;
+
+	/// <summary>
+	/// global script variable for accessing the client's shaders
+	/// <para/>this is where canvas shaders are implemented
+	/// <para/><b>NOTE:</b> shaders are technically ui so it's stored in <see cref="GuiSystem"/>
+	/// <para/><code>
+	/// game
+	///	└── client
+	/// 	└── gui
+	///	    	└── shaders
+	/// </code>
+	/// <para/>@client
+	/// </summary>
 	public ShaderSystem shaders;
+	
+	/// <summary>
+	/// global script variable for accessing the client's mouse
+	/// <para/><code>
+	/// game
+	///	└── client
+	///	    └── mouse
+	/// </code>
+	/// <para/>@client
+	/// </summary>
 	public Mouse mouse;
 
 	public override async void _Ready()

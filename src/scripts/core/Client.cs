@@ -1,6 +1,4 @@
-using Core;
 using Godot;
-using System;
 using System.Threading.Tasks;
 
 [GlobalClass, Icon("uid://rqxgol7tuknt")]
@@ -9,7 +7,8 @@ public partial class Client : Singleton<Client>
 	private static Player _localPlayer;
 
 	public static GuiSystem Gui { get; set; }
-	public static Camera3D Camera { get; set; }
+	public static CameraSystem Cameras { get; set; }
+	public static Camera3D Camera { get => Cameras.Camera; }
 	public static ClientScriptSystem Scripts { get; set; }
 	public static DiscordSystem DiscordRPC { get; set; }
 	public static Replicator Replicator { get; set; }
@@ -25,19 +24,6 @@ public partial class Client : Singleton<Client>
 		}
 	}
 
-	public override void _ExitTree()
-	{
-		base._ExitTree();
-
-		// dotnet security
-		Gui = null;
-		Camera = null;
-		Scripts = null;
-		DiscordRPC = null;
-		Replicator = null;
-		Mouse = null;
-	}
-
 
 	// Called when the node enters the scene tree for the first time.
 	public override async void _Ready()
@@ -45,13 +31,52 @@ public partial class Client : Singleton<Client>
 		base._Ready();
 
 		Gui ??= await GuiSystem.Instance();
-		Camera ??= GetNode<Camera3D>("./camera");
+		Cameras ??= GetNode<CameraSystem>("./cameras");
 		Scripts ??= await ClientScriptSystem.Instance();
 		DiscordRPC ??= await DiscordSystem.Instance();
 		Replicator ??= await Replicator.Instance();
 		Mouse ??= await Mouse.Instance();
 
 		GD.PushWarning("loaded client stuff");
+	}
+
+
+	private void _setLocalPlayer(Player player) => LocalPlayer = player;
+
+
+	/// <summary>
+	/// Sets the local player of the client using the player's built in id
+	/// <para/>@server
+	/// </summary>
+	[Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+	public static async Task<Error> SetLocalPlayer(Player player)
+	{
+		var client = await Instance();
+		return client.RpcId(player.GetId(), MethodName._setLocalPlayer, player);
+	}
+
+
+	/// <summary>
+	/// Sets the local player of the client using a given id
+	/// <para/>@server
+	/// </summary>
+	[Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+	public static async Task<Error> SetLocalPlayer(string id, Player player)
+	{
+		var client = await Instance();
+		return client.RpcId(long.Parse(id), MethodName._setLocalPlayer, player);
+	}
+
+
+	/// <summary>
+	/// Sets the local player of the client using a given id
+	/// <para/>@server
+	/// </summary>
+	[Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+	public static async Task<Error> SetLocalPlayer(long id, Player player)
+	{
+		var client = await Instance();
+		return client.RpcId(id, MethodName._setLocalPlayer, player);
 	}
 
 
@@ -64,6 +89,18 @@ public partial class Client : Singleton<Client>
 	{
 		var client = await Instance();
 		return client.RpcId(id, method, args);
+	}
+
+
+	/// <summary>
+	/// More easily run a function directly to the client
+	/// <para/>@server
+	/// </summary>
+	[Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = false, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+	public static async Task<Error> Run(string id, StringName method, params Variant[] args)
+	{
+		var client = await Instance();
+		return client.RpcId(long.Parse(id), method, args);
 	}
 
 

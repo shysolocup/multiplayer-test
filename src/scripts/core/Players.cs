@@ -4,11 +4,19 @@ using System.Linq;
 using System.Threading.Tasks;
 using Godot.Collections;
 
+/// <summary>
+/// replicated singleton that contains and manages players
+/// </summary>
 [GlobalClass, Icon("uid://cyipqyv61ywf6")]
 public partial class Players : Singleton<Players>
 {
 	[Export]
 	public Player StarterPlayer;
+
+	public Player LocalPlayer
+	{
+		get => Client.LocalPlayer;
+	}
 
 
 	[Signal]
@@ -146,6 +154,17 @@ public partial class Players : Singleton<Players>
 		var players = inst.GetChildren<Player>();
 
 		return players.FirstOrDefault(p => p is Player player && player.GetId() == id);
+	}
+
+	/// <summary>
+	/// Gets a player by their peer id
+	/// </summary>
+	public static async Task<Player> GetPlayerById(string id)
+	{
+		var inst = await Instance();
+		var players = inst.GetChildren<Player>();
+
+		return players.FirstOrDefault(p => p is Player player && player.GetId() == long.Parse(id));
 	}
 
 	/// <summary>

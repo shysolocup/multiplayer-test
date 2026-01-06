@@ -24,7 +24,7 @@
 [ext_resource type="PackedScene" uid="uid://cx461ggiitbpu" path="res://src/scenes/starter_player.tscn" id="20_44dqv"]
 [ext_resource type="Script" uid="uid://bxtd783k615yg" path="res://src/scripts/core/Replicator.cs" id="22_p02ep"]
 
-[sub_resource type="Resource" id="Resource_kcfyl"]
+[sub_resource type="Resource" id="Resource_p02ep"]
 script = ExtResource("8_t2yr7")
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_kcfyl"]
@@ -53,31 +53,32 @@ metadata/_custom_type_script = "uid://c3yamjsvvi4eo"
 script = ExtResource("4_44dqv")
 metadata/_custom_type_script = "uid://cv04eaa2q8bhx"
 
-[node name="cameras" type="Node3D" parent="workspace"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.430248, 1.2825328, 0)
-script = ExtResource("6_pm1mm")
-metadata/_custom_type_script = "uid://iqerivcko5tq"
-
 [node name="audios" type="Node3D" parent="workspace"]
 script = ExtResource("7_pm1mm")
 metadata/_custom_type_script = "uid://dd1he2wiyd6x4"
 
 [node name="spawn" type="Marker3D" parent="workspace"]
 
-[node name="mainCamera" type="Node3D" parent="workspace/spawn"]
-transform = Transform3D(-0.17005466, 0, -0.98543465, 0, 1, 0, 0.98543465, 0, -0.17005466, -2.7628002, 1.2825328, 1.2334036)
-script = ExtResource("7_tnxn1")
-tween_resource = SubResource("Resource_kcfyl")
-metadata/_custom_type_script = "uid://csjccrhj5wnx7"
-
 [node name="client" type="Node" parent="."]
 unique_name_in_owner = true
 script = ExtResource("6_gh3at")
 
-[node name="camera" type="Camera3D" parent="client"]
-transform = Transform3D(-0.17005466, 0, -0.98543465, 0, 1, 0, 0.98543465, 0, -0.17005466, -2.7628002, 1.2825328, 1.2334036)
+[node name="cameras" type="Node3D" parent="client"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.430248, 1.2825328, 0)
+script = ExtResource("6_pm1mm")
+metadata/_custom_type_script = "uid://iqerivcko5tq"
 
-[node name="cameraHost" type="Node" parent="client/camera"]
+[node name="main" type="Node3D" parent="client/cameras"]
+transform = Transform3D(-0.17455947, 0, -0.9846467, 0, 1, 0, 0.9846467, 0, -0.17455947, 0, 0, 0)
+script = ExtResource("7_tnxn1")
+priority = 1
+tween_resource = SubResource("Resource_p02ep")
+metadata/_custom_type_script = "uid://csjccrhj5wnx7"
+
+[node name="camera" type="Camera3D" parent="client/cameras"]
+transform = Transform3D(-0.17455947, 0, -0.9846467, 0, 1, 0, 0.9846467, 0, -0.17455947, 0, 0, 0)
+
+[node name="cameraHost" type="Node" parent="client/cameras/camera"]
 process_priority = 300
 process_physics_priority = 300
 script = ExtResource("16_3ucld")
@@ -129,6 +130,14 @@ metadata/_edit_use_anchors_ = true
 layout_mode = 2
 text = "agh"
 
+[node name="hostButton" type="Button" parent="client/gui/rect/container"]
+layout_mode = 2
+text = "host
+"
+
+[node name="separater" type="HSeparator" parent="client/gui/rect/container"]
+layout_mode = 2
+
 [node name="lobbyId" type="LineEdit" parent="client/gui/rect/container"]
 layout_mode = 2
 placeholder_text = "lobby id"
@@ -162,7 +171,7 @@ PlayerName = "Player"
 Id = 0
 
 [node name="starterCharacter" parent="global" instance=ExtResource("4_lkrtx")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6189446, 1, 2.8367674)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6189446, 0.01726067, 2.8367674)
 
 [node name="players" type="Node" parent="." node_paths=PackedStringArray("StarterPlayer")]
 unique_name_in_owner = true

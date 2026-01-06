@@ -1,5 +1,4 @@
 using Godot;
-using System;
 
 [Tool]
 [GlobalClass, Icon("uid://cr2l07lnbg74c")]

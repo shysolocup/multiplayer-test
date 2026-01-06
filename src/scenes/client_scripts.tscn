@@ -1,16 +1,11 @@
-[gd_scene load_steps=4 format=3 uid="uid://by5f8a6nan5nk"]
+[gd_scene load_steps=3 format=3 uid="uid://by5f8a6nan5nk"]
 
 [ext_resource type="Script" uid="uid://bb5na7uref4ps" path="res://src/scripts/core/ClientScriptSystem.cs" id="1_k2q7g"]
-[ext_resource type="Script" uid="uid://brxcpgmp23vds" path="res://src/scripts/server/GrunkTinkely.cs" id="2_y0jk5"]
-[ext_resource type="Script" uid="uid://43ya7151320l" path="res://src/scripts/client/JoinButton.cs" id="3_pbjuy"]
+[ext_resource type="Script" uid="uid://43ya7151320l" path="res://src/scripts/client/LobbyButtons.cs" id="3_pbjuy"]
 
 [node name="scripts" type="Node"]
 script = ExtResource("1_k2q7g")
 
-[node name="GrunkTinkely" type="Node" parent="."]
-script = ExtResource("2_y0jk5")
-metadata/_custom_type_script = "uid://c3lflpkmclxja"
-
-[node name="joinbutton" type="Node" parent="."]
+[node name="lobbyButtons" type="Node" parent="."]
 script = ExtResource("3_pbjuy")
 metadata/_custom_type_script = "uid://c3lflpkmclxja"

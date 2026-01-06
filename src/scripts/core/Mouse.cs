@@ -1,5 +1,4 @@
 using Godot;
-using System;
 using System.Threading.Tasks;
 
 [GlobalClass, Icon("uid://bd2ep30fvfeix")]
@@ -15,8 +14,9 @@ public partial class Mouse : Singleton<Mouse>
 
 	public async Task<T> GetTarget<T>(int range = 1000) where T : Node3D
 	{
-		var origin = Client.Camera.ProjectRayOrigin(Position);
-		var end = Client.Camera.ProjectRayNormal(Position) * range;
+		var camera = Client.Camera;
+		var origin = camera.ProjectRayOrigin(Position);
+		var end = camera.ProjectRayNormal(Position) * range;
 
 		var transform = Ray.GlobalTransform;
 		transform.Origin = origin;

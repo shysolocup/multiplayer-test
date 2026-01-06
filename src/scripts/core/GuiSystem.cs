@@ -1,5 +1,4 @@
 using Godot;
-using System;
 
 [GlobalClass, Icon("uid://7xxdvadqtbc3")]
 public partial class GuiSystem : SingletonControl<GuiSystem>
