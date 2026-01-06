@@ -1,0 +1,139 @@
+[gd_resource type="ShaderMaterial" load_steps=18 format=3 uid="uid://7wuop4abysij"]
+
+[ext_resource type="Shader" uid="uid://b1jfi8tqdl1n5" path="res://src/core/assets/sky/sky.default.gdshader" id="1_befvq"]
+[ext_resource type="CompressedCubemap" uid="uid://bs78evs1saajk" path="res://src/core/assets/sky/stars.hdr" id="2_kqxb2"]
+[ext_resource type="Texture2D" uid="uid://bdvkmjuer3q65" path="res://src/core/assets/sky/moon.png" id="2_xqwns"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_n8vuu"]
+seed = 2
+fractal_octaves = 1
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_cr3qf"]
+noise = SubResource("FastNoiseLite_n8vuu")
+seamless = true
+seamless_blend_skirt = 0.3
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_tp4ps"]
+seed = 2
+fractal_octaves = 1
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_6phjt"]
+noise = SubResource("FastNoiseLite_tp4ps")
+seamless = true
+seamless_blend_skirt = 0.3
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_14vxn"]
+fractal_octaves = 3
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_3m110"]
+noise = SubResource("FastNoiseLite_14vxn")
+seamless = true
+seamless_blend_skirt = 0.3
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_cr3qf"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_tp4ps"]
+noise = SubResource("FastNoiseLite_cr3qf")
+seamless = true
+seamless_blend_skirt = 0.3
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_kqxb2"]
+frequency = 0.0285
+
+[sub_resource type="NoiseTexture3D" id="NoiseTexture3D_kqxb2"]
+width = 128
+height = 128
+depth = 128
+noise = SubResource("FastNoiseLite_kqxb2")
+seamless = true
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_xqwns"]
+noise_type = 2
+frequency = 0.0231
+
+[sub_resource type="NoiseTexture3D" id="NoiseTexture3D_n8vuu"]
+width = 128
+height = 128
+depth = 128
+noise = SubResource("FastNoiseLite_xqwns")
+seamless = true
+invert = true
+
+[sub_resource type="Gradient" id="Gradient_xqwns"]
+offsets = PackedFloat32Array(0, 0.468165, 0.677903, 0.838951, 1)
+colors = PackedColorArray(1, 0, 0, 1, 1, 0.867188, 0, 1, 0, 1, 0.109375, 1, 0, 0.34375, 1, 1, 0.195313, 0, 1, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_n8vuu"]
+gradient = SubResource("Gradient_xqwns")
+width = 32
+
+[resource]
+shader = ExtResource("1_befvq")
+shader_parameter/use_debanding = true
+shader_parameter/atmosphere_sample_count = 32
+shader_parameter/elevation = 0.0
+shader_parameter/rayleigh_strength = 1.0
+shader_parameter/mie_strength = 1.0
+shader_parameter/ozone_strength = 1.0
+shader_parameter/mie_anisotropy_factor = 0.75
+shader_parameter/atmosphere_density = 1.0
+shader_parameter/exposure = 13.0
+shader_parameter/sun_disc_feather = 0.5
+shader_parameter/sundisc_intensity = 30.0
+shader_parameter/stars_hdr = ExtResource("2_kqxb2")
+shader_parameter/stars_exposure = 3.0
+shader_parameter/stars_rotation = Basis(1, 0, 0, 0, 0.886866, 0.462027, 0, -0.462027, 0.886866)
+shader_parameter/dim_stars_at_day = true
+shader_parameter/moon_dist = PackedFloat32Array(1000, 2000, 5000, 0)
+shader_parameter/moon_uv_x_offset = PackedFloat32Array(0.62, 0.8, -0.435)
+shader_parameter/moon_textures = Array[Texture2D]([ExtResource("2_xqwns"), ExtResource("2_xqwns")])
+shader_parameter/hole_in_center = true
+shader_parameter/hole_radius = 5.0
+shader_parameter/hole_feather = 10.0
+shader_parameter/cloud_falloff_coeff = 0.3
+shader_parameter/clouds_alpha_lower_bound = 0.0
+shader_parameter/clouds_alpha_upper_bound = 0.15
+shader_parameter/cloud_color_texture = SubResource("NoiseTexture2D_tp4ps")
+shader_parameter/cloud_base_color = Color(0.765381, 0.788879, 0.859375, 1)
+shader_parameter/cloud_overcast_color = Color(0.764706, 0.788235, 0.858824, 1)
+shader_parameter/coverage = 0.35
+shader_parameter/cloud_smoothness = 0.05
+shader_parameter/apply_stochastic_jitter = false
+shader_parameter/stochastic_jitter_amount = 0.2
+shader_parameter/cloud_base_march_dist = 10.0
+shader_parameter/cloud_marches = 64
+shader_parameter/density_coeff = 1.5
+shader_parameter/cloud_noise_factor = 0.2
+shader_parameter/cloud_shape = SubResource("NoiseTexture3D_n8vuu")
+shader_parameter/cloud_shape_size = 3.0
+shader_parameter/cloud_shape_offset = Vector3(0, 0, 0)
+shader_parameter/cloud_noise = SubResource("NoiseTexture3D_kqxb2")
+shader_parameter/cloud_noise_size = 12.0
+shader_parameter/cloud_noise_offset = Vector3(0, 0, 0)
+shader_parameter/clouds_anisotropy_factor = 0.15
+shader_parameter/light_marches = 8
+shader_parameter/light_max_dist = 5.0
+shader_parameter/light_strength = 25.0
+shader_parameter/use_cirrus = true
+shader_parameter/cirrus_texture = SubResource("NoiseTexture2D_3m110")
+shader_parameter/cirrus_squish = Vector2(4, 1)
+shader_parameter/cirrus_scale = 0.2
+shader_parameter/cirrus_treshold = 0.8
+shader_parameter/cirrus_feather = 0.25
+shader_parameter/cirrus_offset = Vector2(0, 0)
+shader_parameter/cirrus_distortion_texture = SubResource("NoiseTexture2D_cr3qf")
+shader_parameter/cirrus_distortion_scale = 0.04
+shader_parameter/cirrus_distortion_strength = 0.4
+shader_parameter/cirrus_distortion_offset = Vector2(0.4, 0)
+shader_parameter/cirrus_mask_texture = SubResource("NoiseTexture2D_6phjt")
+shader_parameter/cirrus_mask_scale = 0.05
+shader_parameter/cirrus_mask_treshold = 0.6
+shader_parameter/cirrus_mask_feather = 0.4
+shader_parameter/cirrus_opacity = 0.2
+shader_parameter/use_rainbow = true
+shader_parameter/behind_clouds = false
+shader_parameter/rainbow_gradient = SubResource("GradientTexture1D_n8vuu")
+shader_parameter/rainbow_width = 0.02
+shader_parameter/rainbow_offset = 0.81
+shader_parameter/rainbow_opacity = 0.15
+shader_parameter/double_rainbow = true

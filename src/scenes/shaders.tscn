@@ -1,8 +1,8 @@
 [gd_scene load_steps=5 format=3 uid="uid://ds6x2baksbent"]
 
-[ext_resource type="Script" uid="uid://css84aji0fro1" path="res://src/scripts/core/ShaderSystem.cs" id="1_r63nx"]
+[ext_resource type="Script" uid="uid://css84aji0fro1" path="res://src/core/ShaderSystem.cs" id="1_r63nx"]
 [ext_resource type="Shader" uid="uid://dvoxvdndgot3u" path="res://src/assets/shaders/canvas.test.gdshader" id="2_qwnq1"]
-[ext_resource type="Script" uid="uid://c6ojy70kwl7os" path="res://src/scripts/core/classes/ShaderRect.cs" id="3_qwnq1"]
+[ext_resource type="Script" uid="uid://c6ojy70kwl7os" path="res://src/core/classes/ShaderRect.cs" id="3_qwnq1"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_wp0mi"]
 shader = ExtResource("2_qwnq1")

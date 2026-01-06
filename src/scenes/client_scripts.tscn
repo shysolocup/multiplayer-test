@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://by5f8a6nan5nk"]
 
-[ext_resource type="Script" uid="uid://bb5na7uref4ps" path="res://src/scripts/core/ClientScriptSystem.cs" id="1_k2q7g"]
+[ext_resource type="Script" uid="uid://bb5na7uref4ps" path="res://src/core/ClientScriptSystem.cs" id="1_k2q7g"]
 [ext_resource type="Script" uid="uid://43ya7151320l" path="res://src/scripts/client/LobbyButtons.cs" id="3_pbjuy"]
 
 [node name="scripts" type="Node"]

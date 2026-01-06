@@ -1,23 +1,51 @@
 [gd_scene load_steps=4 format=3 uid="uid://bo0rl4wd6webr"]
 
-[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_cmxtc"]
-sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
-ground_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
+[ext_resource type="Material" uid="uid://7wuop4abysij" path="res://src/core/assets/sky/material.sky.tres" id="1_kw2do"]
 
 [sub_resource type="Sky" id="Sky_kw2do"]
-sky_material = SubResource("ProceduralSkyMaterial_cmxtc")
+sky_material = ExtResource("1_kw2do")
 
 [sub_resource type="Environment" id="Environment_i2xtl"]
 background_mode = 2
 sky = SubResource("Sky_kw2do")
-tonemap_mode = 2
+tonemap_mode = 3
+ssao_enabled = true
+ssao_radius = 4.45
+ssao_intensity = 5.34
+ssil_enabled = true
+sdfgi_enabled = true
+sdfgi_use_occlusion = true
 glow_enabled = true
 
 [node name="Default" type="Node"]
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 0, 0)
+[node name="Marker3D" type="Marker3D" parent="."]
+
+[node name="Sun" type="DirectionalLight3D" parent="Marker3D"]
+transform = Transform3D(1, 0, 0, 0, 0.88686615, 0.46202654, 0, -0.46202657, 0.88686615, 0, 0, 0)
+light_color = Color(1, 0.886177, 0.793626, 1)
+light_angular_distance = 1.5
 shadow_enabled = true
+
+[node name="Moon" type="DirectionalLight3D" parent="Marker3D"]
+transform = Transform3D(0.16094995, -0.5227911, 0.83712876, 0.08725907, 0.85240304, 0.5155531, -0.9830976, -0.009931155, 0.1828125, 0, 0, 0)
+light_energy = 0.6
+light_angular_distance = 21.1
+light_cull_mask = 4293918720
+
+[node name="Moon2" type="DirectionalLight3D" parent="Marker3D"]
+transform = Transform3D(-0.07171593, -0.59667385, 0.79927295, 0.2686071, 0.76017857, 0.59159017, -0.9605764, 0.25711685, 0.10575393, 0, 0, 0)
+light_color = Color(0.886719, 0.486142, 0.432968, 1)
+light_energy = 0.6
+light_angular_distance = 66.43
+light_cull_mask = 4293918720
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_i2xtl")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="."]
+transform = Transform3D(2.4190516, 0, 0, 0, -0.100000024, 0, 0, 0, 2.3271165, 0, -0.09151659, 0)
+use_collision = true
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="."]
+transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 0.6183623, 0.10848346, 0)

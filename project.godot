@@ -18,7 +18,7 @@ config/icon="res://icon.svg"
 [autoload]
 
 DiscordRPCLoader="*res://addons/discord-rpc-gd/nodes/discord_autoload.gd"
-Ext="*res://src/scripts/core/libs/Ext.cs"
+Ext="*res://src/core/libs/Ext.cs"
 PhantomCameraManager="*res://addons/phantom_camera/scripts/managers/phantom_camera_manager.gd"
 
 [display]
