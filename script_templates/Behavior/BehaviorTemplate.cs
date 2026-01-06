@@ -5,6 +5,7 @@
 using _BINDINGS_NAMESPACE_;
 using System;
 
+// check the hover text for the base Behavior class for method names
 public partial class _CLASS_ : _BASE_
 {
     // Called when the script node and its dependencies are ready.

@@ -11,16 +11,22 @@ public partial class LobbyButtons : Behavior
 		var hostButton = container.GetNode<Button>("hostButton");
 		var lobby = container.GetNode<LineEdit>("lobbyId");
 
+		server.StartedHosting += id =>
+		{
+			print(id);
+			lobby.Text = id;
+		};
+
 		joinButton.Pressed += async () => 
 		{
 			print("got it boss, joining!!");
-			await server.Join(lobby.Text);
+			await rep.Join(lobby.Text);
 		};
 
 		hostButton.Pressed += async () =>
 		{
 			print("got it boss, hosting!!");
-			await server.Host();
+			await rep.Host();
 		};
 	}
 }

@@ -16,10 +16,12 @@ ssil_enabled = true
 sdfgi_enabled = true
 sdfgi_use_occlusion = true
 glow_enabled = true
+volumetric_fog_density = 0.01
 
 [node name="Default" type="Node"]
 
 [node name="Marker3D" type="Marker3D" parent="."]
+transform = Transform3D(0.94807416, 0, -0.31804955, 0, 1, 0, 0.31804955, 0, 0.94807416, 0, 0, 0)
 
 [node name="Sun" type="DirectionalLight3D" parent="Marker3D"]
 transform = Transform3D(1, 0, 0, 0, 0.88686615, 0.46202654, 0, -0.46202657, 0.88686615, 0, 0, 0)
@@ -31,13 +33,6 @@ shadow_enabled = true
 transform = Transform3D(0.16094995, -0.5227911, 0.83712876, 0.08725907, 0.85240304, 0.5155531, -0.9830976, -0.009931155, 0.1828125, 0, 0, 0)
 light_energy = 0.6
 light_angular_distance = 21.1
-light_cull_mask = 4293918720
-
-[node name="Moon2" type="DirectionalLight3D" parent="Marker3D"]
-transform = Transform3D(-0.07171593, -0.59667385, 0.79927295, 0.2686071, 0.76017857, 0.59159017, -0.9605764, 0.25711685, 0.10575393, 0, 0, 0)
-light_color = Color(0.886719, 0.486142, 0.432968, 1)
-light_energy = 0.6
-light_angular_distance = 66.43
 light_cull_mask = 4293918720
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]

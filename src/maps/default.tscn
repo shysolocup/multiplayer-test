@@ -1,7 +1,10 @@
-[gd_scene format=3 uid="uid://dojnw3howwwu3"]
+[gd_scene load_steps=2 format=3 uid="uid://dojnw3howwwu3"]
 
-[node name="Default" type="Node3D"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5jbrw"]
 
-[node name="CSGBox3D" type="CSGBox3D" parent="."]
-transform = Transform3D(10.0809, 0, 0, 0, 1, 0, 0, 0, 10.6231, 0, -0.50715, 0)
+[node name="default" type="Node3D"]
+
+[node name="baseplate" type="CSGBox3D" parent="."]
+transform = Transform3D(71.41875, 0, 0, 0, 1, 0, 0, 0, 77.255035, 0, -0.50715, 0)
 use_collision = true
+material = SubResource("StandardMaterial3D_5jbrw")

@@ -3,10 +3,156 @@ using System.Linq;
 using System.Threading.Tasks;
 using Godot;
 
-
+#region hellish summary
 /// <summary>
-/// a physical script node with useful global dependencies
+/// a physical script node with useful global dependencies and events
+/// 
+/// <para/> Global variables and dependencies:
+/// 
+/// <list type="bullet">
+/// <item>
+/// 
+/// <description>
+/// <b>game:</b>
+/// <c><see cref="Game"/></c> 
+/// root game
+/// </description>
+///
+/// </item><item>
+/// 
+/// <description>
+/// <b>workspace:</b> 
+/// <c><see cref="Workspace"/></c>
+/// place for things in 3D space
+/// </description>
+/// 
+/// </item><item>
+/// 
+/// <description>
+/// <b>cameras:</b> 
+/// <c><see cref="CameraSystem"/></c>
+/// camera storage and controller
+/// </description>
+/// 
+/// </item><item>
+/// 
+/// <description>
+/// <b>lighting:</b> 
+/// <c><see cref="LightingSystem"/></c>
+/// lighting controller
+/// </description>
+/// 
+/// </item><item>
+/// 
+/// <description>
+/// <b>maps:</b> 
+/// <c><see cref="MapSystem"/></c>
+/// map controller
+/// </description>
+/// 
+/// </item><item>
+/// 
+/// <description>
+/// <b>characters:</b> 
+/// <c><see cref="Characters"/></c>
+/// character model storage and controller
+/// </description>
+/// 
+/// </item><item>
+/// 
+/// <description>
+/// <b>players:</b> 
+/// <c><see cref="Players"/></c>
+/// player storage and controller
+/// </description>
+/// 
+/// </item><item>
+/// 
+/// <description>
+/// <b>gui:</b> 
+/// <c><see cref="GuiSystem"/></c>
+/// ui storage and controller
+/// </description>
+/// 
+/// </item><item>
+/// 
+/// <description>
+/// <b>audios:</b> 
+/// <c><see cref="AudioSystem"/></c>
+/// audio storage and controller
+/// </description>
+/// 
+/// </item><item>
+/// 
+/// <description>
+/// <b>shaders:</b> 
+/// <c><see cref="ShaderSystem"/></c>
+/// shader storage and controller
+/// </description>
+/// 
+/// </item><item>
+/// 
+/// <description>
+/// <b>global:</b> 
+/// <c><see cref="GlobalStorage"/></c>
+/// global replicated storage
+/// </description>
+/// 
+/// </item><item>
+/// 
+/// <description>
+/// <b>client:</b> 
+/// <c><see cref="Client"/></c>
+/// client singleton 
+/// </description>
+/// 
+/// </item><item>
+/// 
+/// <description>
+/// <b>server:</b> 
+/// <c><see cref="Server"/></c>
+/// server singleton 
+/// </description>
+/// 
+/// </item><item>
+/// 
+/// <description>
+/// <b>rep:</b> 
+/// <c><see cref="Replicator"/></c>
+/// replicator singleton 
+/// </description>
+/// 
+/// </item></list>
+/// 
+/// <para/> Basic event functions:
+/// 
+/// <para/><c> + OnReady() </c> when the script node and its dependencies are ready
+/// <para/><c> + OnProcess(double delta) </c> ran every frame, delta is the time between frames
+/// <para/><c> + OnPhysics(double delta) </c> ran every physics simulation, delta is the time between frames
+/// 
+/// <para/> Context event functions:
+/// 
+/// <para/><c> + OnLoaded() </c> ran when the client loads
+/// 
+/// <para/> Input event functions:
+/// 
+/// <para/><c> + OnKeyPressed(InputEventKey key) </c>
+/// <para/><c> + OnKeyReleased(InputEventKey key) </c>
+/// <para/><c> + OnInput(InputEvent @event) </c>
+/// 
+/// <para/> Tab event functions:
+/// 
+/// <para/><c> + OnTabbedIn() </c> when the user tabs back into of the window
+/// <para/><c> + OnTabbedOut() </c> when the user tabs out of the window
+/// 
+/// <para/> Init event functions:
+/// 
+/// <para/><c> + OnCreation() </c> when the script is created/reloaded
+/// <para/><c> + OnDeletion() </c> whne the script is deleted/reloaded
+/// 
 /// </summary>
+#endregion
+
 [GlobalClass, Icon("uid://dme3m2uv5jaju")]
 public partial class Behavior : Node
 {
@@ -28,26 +174,15 @@ public partial class Behavior : Node
 	{
 	}
 
+	public virtual void OnInput(InputEvent @event)
+	{
+	}
+
 	public virtual void OnTabbedIn()
 	{
 	}
 
 	public virtual void OnTabbedOut()
-	{
-	}
-
-	/// <summary>
-	/// Overridable event function that only runs on the server
-	/// </summary>
-	[Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = false)]
-	public virtual void OnServer()
-	{   
-	}
-
-	/// <summary>
-	/// Overridable event function that only runs on the client
-	/// </summary>
-	public virtual void OnClient()
 	{
 	}
 
@@ -95,25 +230,30 @@ public partial class Behavior : Node
 	{
 	}
 
+
 	#endregion
 	#region dependencies
 
 
 	/// <summary>
+	/// global script variable for accessing the replicator/lobby controls
+	/// </summary>
+	public static Replicator rep;
+	/// <summary>
 	/// global script variable for accessing the client
 	/// </summary>
-	public Client client;
+	public static Client client;
 
 	/// <summary>
 	/// global script variable for accessing the server
 	/// </summary>
-	public Server server;
+	public static Server server;
 
 	/// <summary>
 	/// global script variable for accessing the audios inside the workspace
 	/// <para/><b>REPLICATED:</b> nodes inside players are automatically synced
 	/// </summary>
-	public AudioSystem audios;
+	public static AudioSystem audios;
 
 	/// <summary>
 	/// global script variable for accessing the cameras controller inside the workspace
@@ -123,7 +263,7 @@ public partial class Behavior : Node
 	///	    └── cameras
 	/// </code>
 	/// </summary>
-	public CameraSystem cameras;
+	public static CameraSystem cameras;
 
 	/// <summary>
 	/// global script variable for accessing the characters inside the workspace
@@ -134,13 +274,13 @@ public partial class Behavior : Node
 	/// </code>
 	/// <para/><b>REPLICATED:</b> nodes inside players are automatically synced
 	/// </summary>
-	public Characters characters;
+	public static Characters characters;
 
 	/// <summary>
 	/// global script variable for accessing the game
 	/// <para/>the root singleton
 	/// </summary>
-	public Game game;
+	public static Game game;
 
 	/// <summary>
 	/// global script variable for accessing the global storage
@@ -150,7 +290,7 @@ public partial class Behavior : Node
 	/// </code>
 	/// <para/><b>REPLICATED:</b> nodes inside players are automatically synced
 	/// </summary>
-	public GlobalStorage global;
+	public static GlobalStorage global;
 
 	/// <summary>
 	/// global script variable for accessing the lighting inside the workspace
@@ -161,7 +301,7 @@ public partial class Behavior : Node
 	/// </code>
 	/// <para/><b>REPLICATED:</b> nodes inside players are automatically synced
 	/// </summary>
-	public LightingSystem lighting;
+	public static LightingSystem lighting;
 
 	/// <summary>
 	/// global script variable for accessing the map controller inside the workspace
@@ -172,7 +312,7 @@ public partial class Behavior : Node
 	/// </code>
 	/// <para/><b>REPLICATED:</b> nodes inside players are automatically synced
 	/// </summary>
-	public MapSystem map;
+	public static MapSystem map;
 
 	/// <summary>
 	/// global script variable for accessing the players
@@ -182,19 +322,7 @@ public partial class Behavior : Node
 	/// </code>
 	/// <para/><b>REPLICATED:</b> nodes inside players are automatically synced
 	/// </summary>
-	public Players players;
-	
-	/// <summary>
-	/// global script variable for accessing the client's script singleton
-	/// <para/>this is where most scripts ran on the client are stored
-	/// <para/><code>
-	/// game
-	///	└── client
-	///	    └── scripts
-	/// </code>
-	/// <para/>@client
-	/// </summary>
-	public ClientScriptSystem clientScripts;
+	public static Players players;
 
 	/// <summary>
 	/// global script variable for accessing the workspace
@@ -209,7 +337,7 @@ public partial class Behavior : Node
 	///	    └── audios
 	/// </code>
 	/// </summary>
-	public Workspace workspace;
+	public static Workspace workspace;
 
 	/// <summary>
 	/// global script variable for accessing the client's gui
@@ -223,7 +351,7 @@ public partial class Behavior : Node
 	/// </code>
 	/// <para/>@client
 	/// </summary>
-	public GuiSystem gui;
+	public static GuiSystem gui;
 
 	/// <summary>
 	/// global script variable for accessing the client's shaders
@@ -237,7 +365,7 @@ public partial class Behavior : Node
 	/// </code>
 	/// <para/>@client
 	/// </summary>
-	public ShaderSystem shaders;
+	public static ShaderSystem shaders;
 	
 	/// <summary>
 	/// global script variable for accessing the client's mouse
@@ -248,7 +376,7 @@ public partial class Behavior : Node
 	/// </code>
 	/// <para/>@client
 	/// </summary>
-	public Mouse mouse;
+	public static Mouse mouse;
 
 	public override async void _Ready()
 	{
@@ -263,34 +391,25 @@ public partial class Behavior : Node
 
 		if (isEditor()) return;
 
-		client = await Client.Instance();
-		server = await Server.Instance();
-		audios = await AudioSystem.Instance();
-		cameras = await CameraSystem.Instance();
-		characters = await Characters.Instance();
-		game = await Game.Instance();
-		global = await GlobalStorage.Instance();
-		lighting = await LightingSystem.Instance();
-		map = await MapSystem.Instance();
-		players = await Players.Instance();
-		clientScripts = await ClientScriptSystem.Instance();
-		workspace = await Workspace.Instance();
-		gui = await GuiSystem.Instance();
-		shaders = await ShaderSystem.Instance();
-		mouse = await Mouse.Instance();
+		rep ??= await Replicator.Instance();
+		client ??= await Client.Instance();
+		server ??= await Server.Instance();
+		audios ??= await AudioSystem.Instance();
+		cameras ??= await CameraSystem.Instance();
+		characters ??= await Characters.Instance();
+		game ??= await Game.Instance();
+		global ??= await GlobalStorage.Instance();
+		lighting ??= await LightingSystem.Instance();
+		map ??= await MapSystem.Instance();
+		players ??= await Players.Instance();
+		workspace ??= await Workspace.Instance();
+		gui ??= await GuiSystem.Instance();
+		shaders ??= await ShaderSystem.Instance();
+		mouse ??= await Mouse.Instance();
 
 		// it's specifically just in this order so ready fires before processes
 		// this might lead to issues but we ball
 		OnReady();
-
-		if (isServer())
-		{
-			OnServer();
-		}
-		else
-		{
-			OnClient();
-		}
 		
 		ScriptReady = true;
 	}
@@ -316,6 +435,8 @@ public partial class Behavior : Node
 	public override void _UnhandledInput(InputEvent @event)
 	{
 		base._UnhandledInput(@event);
+
+		OnInput(@event);
 
 		if (@event is InputEventKey key)
 		{

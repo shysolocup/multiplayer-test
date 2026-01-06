@@ -1,3 +1,4 @@
+using Core;
 using Godot;
 using System.Threading.Tasks;
 
@@ -5,6 +6,8 @@ using System.Threading.Tasks;
 public partial class Client : Singleton<Client>
 {
 	private static Player _localPlayer;
+
+	public string GetId() => NodeTunnelBridge.GetOnlineId();
 
 	public static GuiSystem Gui { get; set; }
 	public static CameraSystem Cameras { get; set; }
@@ -41,6 +44,12 @@ public partial class Client : Singleton<Client>
 	}
 
 
+	[
+		Rpc(
+			MultiplayerApi.RpcMode.Authority,
+			TransferMode = MultiplayerPeer.TransferModeEnum.Reliable
+		)
+	]
 	private void _setLocalPlayer(Player player) => LocalPlayer = player;
 
 
@@ -48,7 +57,13 @@ public partial class Client : Singleton<Client>
 	/// Sets the local player of the client using the player's built in id
 	/// <para/>@server
 	/// </summary>
-	[Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+	[
+		Rpc(
+			MultiplayerApi.RpcMode.Authority, 
+			TransferMode = MultiplayerPeer.TransferModeEnum.Reliable
+		)
+	]
+	
 	public static async Task<Error> SetLocalPlayer(Player player)
 	{
 		var client = await Instance();
@@ -60,7 +75,13 @@ public partial class Client : Singleton<Client>
 	/// Sets the local player of the client using a given id
 	/// <para/>@server
 	/// </summary>
-	[Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+	[
+		Rpc(
+			MultiplayerApi.RpcMode.Authority, 
+			TransferMode = MultiplayerPeer.TransferModeEnum.Reliable
+		)
+	]
+
 	public static async Task<Error> SetLocalPlayer(string id, Player player)
 	{
 		var client = await Instance();
@@ -72,7 +93,13 @@ public partial class Client : Singleton<Client>
 	/// Sets the local player of the client using a given id
 	/// <para/>@server
 	/// </summary>
-	[Rpc(MultiplayerApi.RpcMode.Authority, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+	[
+		Rpc(
+			MultiplayerApi.RpcMode.Authority, 
+			TransferMode = MultiplayerPeer.TransferModeEnum.Reliable
+		)
+	]
+	
 	public static async Task<Error> SetLocalPlayer(long id, Player player)
 	{
 		var client = await Instance();
@@ -84,7 +111,14 @@ public partial class Client : Singleton<Client>
 	/// More easily run a function directly to the client
 	/// <para/>@server
 	/// </summary>
-	[Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = false, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+	[
+		Rpc(
+			MultiplayerApi.RpcMode.Authority, 
+			CallLocal = false,
+			TransferMode = MultiplayerPeer.TransferModeEnum.Reliable
+		)
+	]
+
 	public static async Task<Error> Run(long id, StringName method, params Variant[] args)
 	{
 		var client = await Instance();
@@ -96,7 +130,14 @@ public partial class Client : Singleton<Client>
 	/// More easily run a function directly to the client
 	/// <para/>@server
 	/// </summary>
-	[Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = false, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+	[
+		Rpc(
+			MultiplayerApi.RpcMode.Authority, 
+			CallLocal = false,
+			TransferMode = MultiplayerPeer.TransferModeEnum.Reliable
+		)
+	]
+
 	public static async Task<Error> Run(string id, StringName method, params Variant[] args)
 	{
 		var client = await Instance();
@@ -108,7 +149,14 @@ public partial class Client : Singleton<Client>
 	/// More easily run a function directly to the server
 	/// <para/>@server
 	/// </summary>
-	[Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = false, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+	[
+		Rpc(
+			MultiplayerApi.RpcMode.Authority, 
+			CallLocal = false,
+			TransferMode = MultiplayerPeer.TransferModeEnum.Reliable
+		)
+	]
+	
 	public static async Task<Error> Run(Player player, StringName method, params Variant[] args)
 	{
 		return await Run(player.GetId(), method, args);

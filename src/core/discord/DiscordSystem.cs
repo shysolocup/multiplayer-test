@@ -30,7 +30,7 @@ public partial class DiscordSystem : Singleton<DiscordSystem>
 	{
 		base._Ready();
 
-		GDScript rpcscript = GD.Load<GDScript>("res://src/scripts/core/discord/DiscordRPCNode.gd");
+		GDScript rpcscript = GD.Load<GDScript>("res://src/core/discord/DiscordRPCNode.gd");
 		DiscordRPCNode = (Node)rpcscript.New();
 		
 		CallDeferred(Node.MethodName.AddChild, DiscordRPCNode);

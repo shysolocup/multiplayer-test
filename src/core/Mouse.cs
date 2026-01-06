@@ -11,10 +11,14 @@ public partial class Mouse : Singleton<Mouse>
 		get => GetViewport().GetMousePosition();
 	}
 
+	#nullable enable
 
-	public async Task<T> GetTarget<T>(int range = 1000) where T : Node3D
+	public async Task<T?> GetTarget<T>(int range = 1000) where T : Node3D
 	{
 		var camera = Client.Camera;
+		
+		if (camera is null) return null;
+
 		var origin = camera.ProjectRayOrigin(Position);
 		var end = camera.ProjectRayNormal(Position) * range;
 
@@ -31,6 +35,8 @@ public partial class Mouse : Singleton<Mouse>
 
 		return null;
 	}
+
+	#nullable disable
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
