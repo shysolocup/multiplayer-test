@@ -39,9 +39,11 @@ public partial class UDim2 : Resource
 	static public UDim2 DefaultSize { get => new(0, 200, 0, 200); }
 
 
-	public UDim2 Lerp(UDim2 to, float weight) => new(X.Lerp(to.X, weight), Y.Lerp(to.Y, weight));
+	public UDim2 Lerp(UDim2 to, float weight) => 
+		new(X.Lerp(to.X, weight), Y.Lerp(to.Y, weight));
 
-	public Vector2 ToVector2(Vector2 AdorneeSize) => new((Scale.X * AdorneeSize.X) + Offset.X, (Scale.Y * AdorneeSize.Y) + Offset.Y);
+	public Vector2 ToVector2(Vector2 AdorneeSize) => 
+		new((Scale.X * AdorneeSize.X) + Offset.X, (Scale.Y * AdorneeSize.Y) + Offset.Y);
 
 
 	public UDim2() : base() { }
