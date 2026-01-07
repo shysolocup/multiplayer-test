@@ -121,6 +121,7 @@ pivot_offset = Vector2(288, 162)
 color = Color(0.12225223, 0.12225223, 0.12225223, 1)
 
 [node name="container" type="VBoxContainer" parent="client/gui/rect"]
+visible = false
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.25
@@ -150,6 +151,38 @@ placeholder_text = "lobby id"
 alignment = 1
 
 [node name="joinButton" type="Button" parent="client/gui/rect/container"]
+layout_mode = 2
+text = "join"
+
+[node name="container2" type="VBoxContainer" parent="client/gui/rect"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.23958333
+anchor_right = 0.7395833
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="label" type="Label" parent="client/gui/rect/container2"]
+layout_mode = 2
+text = "agh"
+
+[node name="hostButton" type="Button" parent="client/gui/rect/container2"]
+layout_mode = 2
+text = "host
+"
+
+[node name="separater" type="HSeparator" parent="client/gui/rect/container2"]
+layout_mode = 2
+
+[node name="lobbyId" type="LineEdit" parent="client/gui/rect/container2"]
+layout_mode = 2
+placeholder_text = "lobby id"
+alignment = 1
+
+[node name="joinButton" type="Button" parent="client/gui/rect/container2"]
 layout_mode = 2
 text = "join"
 
