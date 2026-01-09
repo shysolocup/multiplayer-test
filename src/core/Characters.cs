@@ -14,7 +14,7 @@ public partial class Characters : Singleton3D<Characters>
 	[Signal]
 	public delegate void CharacterRemovedEventHandler(Character character);
 
-	private CameraSystem cameras { get; set; }
+	static private CameraSystem cameras { get; set; }
 	private Camera3D cam { get; set; }
 
 
@@ -42,17 +42,26 @@ public partial class Characters : Singleton3D<Characters>
 				velocity += chara.GetGravity() * (float)delta;
 			}
 
-			if (Input.IsActionJustPressed("ui_accept") && chara.IsOnFloor())
+			if (Input.IsActionPressed("ui_accept") && chara.IsOnFloor())
 			{
 				velocity.Y = chara.JumpVelocity;
 			}
 
 			Vector2 inputDir = Input.GetVector("ui_left", "ui_right", "ui_up", "ui_down");
-			Vector3 direction = (chara.Transform.Basis * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized();
+
+			if (cameras.ShiftLocked)
+			{
+				Vector3 forward = cam.GlobalTransform.Basis.Z;
+
+				float yaw = Mathf.Atan2(-forward.X, -forward.Z);
+				yaw = Mathf.LerpAngle(chara.Rotation.Y, yaw, (float)delta * 50f);
+				
+				chara.Rotation = new Vector3(chara.Rotation.X, yaw, chara.Rotation.Z);
+
+			}
 
 			if (inputDir != Vector2.Zero)
 			{
-				// Camera forward/right
 				Vector3 camForward = -cam.GlobalTransform.Basis.Z;
 				camForward.Y = 0;
 				camForward = camForward.Normalized();
@@ -61,29 +70,25 @@ public partial class Characters : Singleton3D<Characters>
 				camRight.Y = 0;
 				camRight = camRight.Normalized();
 
-				// Flip Y input so forward moves forward
 				Vector3 moveDir = (camRight * inputDir.X + camForward * -inputDir.Y).Normalized();
 
-				// Rotate character to face movement direction
-				float yaw = Mathf.Atan2(moveDir.X, moveDir.Z); // correct signs
-				yaw = Mathf.LerpAngle(chara.Rotation.Y, yaw, (float)delta * 10f);
+				if (!cameras.ShiftLocked)
+				{
+					float yaw = Mathf.Atan2(moveDir.X, moveDir.Z);
+					yaw = Mathf.LerpAngle(chara.Rotation.Y, yaw, (float)delta * 10f);
 
-				chara.Rotation = new Vector3(chara.Rotation.X, yaw, chara.Rotation.Z);
+					chara.Rotation = new Vector3(chara.Rotation.X, yaw, chara.Rotation.Z);		
+				}
 
-				// Apply movement
 				velocity.X = moveDir.X * chara.Speed;
 				velocity.Z = moveDir.Z * chara.Speed;
 			}
 
-
-			
 			else
 			{
 				velocity.X = Mathf.MoveToward(chara.Velocity.X, 0, chara.Speed);
 				velocity.Z = Mathf.MoveToward(chara.Velocity.Z, 0, chara.Speed);
 			}
-
-			GD.Print(velocity);
 
 			chara.Velocity = velocity;
 			chara.MoveAndSlide();		
@@ -119,7 +124,7 @@ public partial class Characters : Singleton3D<Characters>
 		
 		var storage = await GlobalStorage.Instance();
 		cameras = await CameraSystem.Instance();
-		cam = cameras.Camera;
+		cam = cameras.CurrentCamera;
 		
 		StarterCharacter ??= storage.GetNode<Character>("./starterCharacter");
 
@@ -172,11 +177,12 @@ public partial class Characters : Singleton3D<Characters>
 		var character = await SpawnDummy(player);
 
 		player.SetCharacter(character);
-		CameraSystem.SetTarget(character);
 
 		player.EmitSignal(Player.SignalName.Spawned, character);
 
 		GD.PushWarning($"spawned {player.GetPlayerName()}'s character");
+
+		cameras.Target = character;
 
 		return character;
 	}

@@ -11,20 +11,15 @@
 [ext_resource type="Script" uid="uid://dcblggjtpvjin" path="res://src/core/Client.cs" id="6_gh3at"]
 [ext_resource type="Script" uid="uid://iqerivcko5tq" path="res://src/core/CameraSystem.cs" id="6_pm1mm"]
 [ext_resource type="Script" uid="uid://dd1he2wiyd6x4" path="res://src/core/AudioSystem.cs" id="7_pm1mm"]
-[ext_resource type="Script" uid="uid://csjccrhj5wnx7" path="res://addons/phantom_camera/scripts/phantom_camera/phantom_camera_3d.gd" id="7_tnxn1"]
-[ext_resource type="Script" uid="uid://8umksf8e80fw" path="res://addons/phantom_camera/scripts/resources/tween_resource.gd" id="8_t2yr7"]
 [ext_resource type="Script" uid="uid://clxq4bmgf2uqd" path="res://src/core/Players.cs" id="9_bd8mh"]
+[ext_resource type="Texture2D" uid="uid://dt4t7trtn334h" path="res://src/core/assets/shiftlock.png" id="10_ta85g"]
 [ext_resource type="PackedScene" uid="uid://c3w57vg3x48cu" path="res://src/scenes/server_scripts.tscn" id="14_44dqv"]
 [ext_resource type="Script" uid="uid://i1i7viij1r0d" path="res://src/core/discord/DiscordRPCNode.gd" id="15_3xp0n"]
-[ext_resource type="Script" uid="uid://bd046eokvcnu2" path="res://addons/phantom_camera/scripts/phantom_camera_host/phantom_camera_host.gd" id="16_3ucld"]
 [ext_resource type="PackedScene" uid="uid://ds6x2baksbent" path="res://src/scenes/shaders.tscn" id="18_44dqv"]
 [ext_resource type="PackedScene" uid="uid://by5f8a6nan5nk" path="res://src/scenes/client_scripts.tscn" id="19_3xp0n"]
 [ext_resource type="Script" uid="uid://3u0cd6x7v7xf" path="res://src/core/GlobalStorage.cs" id="19_lkrtx"]
 [ext_resource type="PackedScene" uid="uid://cx461ggiitbpu" path="res://src/scenes/starter_player.tscn" id="20_44dqv"]
 [ext_resource type="Script" uid="uid://bxtd783k615yg" path="res://src/core/Replicator.cs" id="22_p02ep"]
-
-[sub_resource type="Resource" id="Resource_p02ep"]
-script = ExtResource("8_t2yr7")
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_kcfyl"]
 blend_mode = 2
@@ -36,7 +31,7 @@ script = ExtResource("1_covw0")
 unique_name_in_owner = true
 script = ExtResource("2_ta85g")
 Spawn = NodePath("spawn")
-Gravity = 9.8
+Gravity = 50.0
 metadata/_custom_type_script = "uid://d0t5vb0wvm7b6"
 
 [node name="part" type="CSGBox3D" parent="workspace" unique_id=2068811283]
@@ -73,22 +68,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.430248, 1.2825328, 0)
 script = ExtResource("6_pm1mm")
 metadata/_custom_type_script = "uid://iqerivcko5tq"
 
-[node name="main" type="Node3D" parent="client/cameras" unique_id=827169902]
-transform = Transform3D(-0.17455947, 0, -0.9846467, 0, 1, 0, 0.9846467, 0, -0.17455947, 0, 0, 0)
-script = ExtResource("7_tnxn1")
-priority = 1
-follow_mode = 6
-tween_resource = SubResource("Resource_p02ep")
-metadata/_custom_type_script = "uid://csjccrhj5wnx7"
+[node name="spring" type="SpringArm3D" parent="client/cameras" unique_id=584183116]
+spring_length = 6.0
 
-[node name="camera" type="Camera3D" parent="client/cameras" unique_id=327295395]
-transform = Transform3D(-0.17455947, 0, -0.9846467, 0, 1, 0, 0.9846467, 0, -0.17455947, 0, 0, 0)
-
-[node name="cameraHost" type="Node" parent="client/cameras/camera" unique_id=1246044827]
-process_priority = 300
-process_physics_priority = 300
-script = ExtResource("16_3ucld")
-metadata/_custom_type_script = "uid://bd046eokvcnu2"
+[node name="thirdPerson" type="Camera3D" parent="client/cameras/spring" unique_id=327295395]
+physics_interpolation_mode = 1
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4.7691236)
 
 [node name="gui" type="Control" parent="client" unique_id=1451391840]
 layout_mode = 3
@@ -154,6 +139,28 @@ alignment = 1
 layout_mode = 2
 text = "join"
 
+[node name="game" type="CanvasLayer" parent="client/gui" unique_id=1829049335]
+layer = -1
+
+[node name="crosshair" type="TextureRect" parent="client/gui/game" unique_id=1695338719]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -12.5
+offset_top = -12.5
+offset_right = 12.5
+offset_bottom = 12.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("10_ta85g")
+expand_mode = 1
+stretch_mode = 4
+metadata/_edit_use_anchors_ = true
+
 [node name="scripts" parent="client" unique_id=2143214803 instance=ExtResource("19_3xp0n")]
 
 [node name="discord" type="Node" parent="client" unique_id=266666037]
@@ -195,3 +202,5 @@ spawn_path = NodePath("../../players")
 
 [node name="globalSpawner" type="MultiplayerSpawner" parent="replicator" unique_id=235417015]
 spawn_path = NodePath("../../global")
+
+[editable path="global/starterCharacter"]

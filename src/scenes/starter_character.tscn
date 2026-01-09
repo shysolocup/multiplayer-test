@@ -270,14 +270,14 @@ blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_kpl5v")
 
 [sub_resource type="Animation" id="Animation_ceh73"]
-length = 0.001
+length = 5.0
 tracks/0/type = "rotation_3d"
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/path = NodePath("__PrimaryArmature/Skeleton3D:LeftHand")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
-tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1)
+tracks/0/keys = PackedFloat32Array(0.033333335, 1, 0.855, 0, 0, 1, 5.0333333, 1, 0, 0, 0, 1)
 
 [sub_resource type="Animation" id="Animation_w13qu"]
 resource_name = "__PrimaryArmature|ArmatureAction"
@@ -407,7 +407,7 @@ mesh = SubResource("ArrayMesh_0dndi")
 skeleton = NodePath("")
 
 [node name="Head" type="MeshInstance3D" parent="mesh" unique_id=458425425]
-transform = Transform3D(-98.76784, -1.2835164, -15.597002, -1.3422053, 99.99062, 0.27102098, 15.592059, 0.47702533, -98.77581, -0.005112957, 4.4266505, 0.0023197606)
+transform = Transform3D(100, 0, 0, 0, 100, 0, 1.8189894e-12, 0, 100.00001, 0, 4.441292, 0)
 mesh = SubResource("ArrayMesh_s6q6b")
 skeleton = NodePath("")
 
@@ -1324,7 +1324,7 @@ bones/87/parent = 84
 bones/87/rest = Transform3D(1.0728836e-06, 0.01977733, -0.9998043, 1, 3.5762793e-07, 1.0728835e-06, 3.5762787e-07, -0.9998045, -0.019777296, -0.00012363707, 0.0085035805, 2.8912327e-08)
 bones/87/enabled = true
 bones/87/position = Vector3(-0.00012363707, 0.0085035805, 2.8912327e-08)
-bones/87/rotation = Quaternion(0, 0, 0, -1)
+bones/87/rotation = Quaternion(0, 0, 0, 1)
 bones/87/scale = Vector3(1, 1.0000001, 0.9999999)
 bones/88/name = "LeftHand_end"
 bones/88/parent = 87

@@ -501,25 +501,12 @@ public partial class Behavior : Node
 
 	#endregion
 
-	private bool _enabled = true;
-
 	[Export]
-	public bool Enabled
-	{
-		get => _enabled;
-		set
-		{
-			if (value)
-			{
-				ProcessMode = ProcessModeEnum.Inherit;   
-			}
-			else
-			{
-				ProcessMode = ProcessModeEnum.Disabled;
-			}
-			_enabled = value;
-		}
-	}
+    public bool Enabled
+    {
+        get => ProcessMode != ProcessModeEnum.Disabled;
+        set => ProcessMode = value ? ProcessModeEnum.Inherit : ProcessModeEnum.Disabled;
+    }
 
 	#region methods
 

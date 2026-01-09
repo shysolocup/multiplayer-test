@@ -11,7 +11,7 @@ public partial class Client : Singleton<Client>
 
 	public static GuiSystem Gui { get; set; }
 	public static CameraSystem Cameras { get; set; }
-	public static Camera3D Camera { get => Cameras.Camera; }
+	public static Camera3D CurrentCamera { get => Cameras.CurrentCamera; }
 	public static ClientScriptSystem Scripts { get; set; }
 	public static Replicator Replicator { get; set; }
 

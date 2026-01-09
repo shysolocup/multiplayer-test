@@ -15,7 +15,7 @@ public partial class Mouse : Singleton<Mouse>
 
 	public async Task<T?> GetTarget<T>(int range = 1000) where T : Node3D
 	{
-		var camera = Client.Camera;
+		var camera = Client.CurrentCamera;
 		
 		if (camera is null) return null;
 
