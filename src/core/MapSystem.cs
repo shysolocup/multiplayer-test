@@ -9,7 +9,7 @@ public partial class MapSystem : Singleton3D<MapSystem>
 	[Signal] public delegate void MapChangedEventHandler();
 
 	static public readonly string SceneDir = "res://src/maps";
-    static public string DefaultScene = "default";
+	static public string DefaultScene = "default";
 
 	public static Dictionary<string, PackedScene> SceneCache = new() {
 		["default"] = ResourceLoader.Load<PackedScene>($"{SceneDir}/{DefaultScene}.tscn", "", ResourceLoader.CacheMode.Replace)
@@ -27,6 +27,7 @@ public partial class MapSystem : Singleton3D<MapSystem>
 		}
 	}
 
+	[Export]
 	public Node Map;
 
 	[ExportToolButton("Reset / Apply")] 
@@ -107,8 +108,11 @@ public partial class MapSystem : Singleton3D<MapSystem>
 	{
 		base._EnterTree();
 
-		if (Engine.IsEditorHint())
+		if (Engine.IsEditorHint()) {
 			ResetApply();
+
+			Map ??= GetChild(0);
+		}
 	}
 
 	public override async void _Ready()

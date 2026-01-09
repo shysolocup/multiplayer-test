@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Godot;
 
 /// <summary>
@@ -36,6 +37,36 @@ public partial class CameraSystem : Singleton3D<CameraSystem>
 		} 
 	}
 
+	[
+		Rpc(
+			MultiplayerApi.RpcMode.AnyPeer,
+			CallLocal = true
+		)
+	]
+	private void _setTarget(Player player)
+	{
+		if (Multiplayer.GetUniqueId() == Multiplayer.GetRemoteSenderId())
+		{
+			Target = player.GetCharacter();	
+		}
+	}
+
+	/// <summary>
+	/// Sets the local player of the client using the player's built in id
+	/// <para/>@server
+	/// </summary>
+	[
+		Rpc(
+			MultiplayerApi.RpcMode.Authority, 
+			TransferMode = MultiplayerPeer.TransferModeEnum.Reliable
+		)
+	]
+	
+	public Error SetTarget(Player player)
+	{
+		return RpcId(player.GetPeerId(), MethodName._setTarget, player);
+	}
+
 	public override void _Ready()
 	{
 		base._Ready();
@@ -71,10 +102,10 @@ public partial class CameraSystem : Singleton3D<CameraSystem>
 			if (ShiftLocked)
 			{
 				newPos += right * ShiftLockOffset;
-				newPos += up * ShiftLockOffset;
+				newPos += up * (ShiftLockOffset/2);
 			}
 
-			ThirdPersonSpring.GlobalPosition = pos.Lerp(newPos, 20*(float)delta);
+			ThirdPersonSpring.GlobalPosition = pos.Lerp(newPos, 50*(float)delta);
 		}
 
 		ThirdPersonSpring.SpringLength = Mathf.Lerp(ThirdPersonSpring.SpringLength, TargetZoom, 20 * (float)delta);
@@ -109,8 +140,8 @@ public partial class CameraSystem : Singleton3D<CameraSystem>
 		base._Input(@event);
 
 		if (
-			@event is InputEventMouseMotion motion && 
-			(Input.IsActionPressed("camera_move") || ShiftLocked) && 
+			@event is InputEventMouseMotion mouse && 
+			(Input.IsActionPressed("camera_move") || ShiftLocked) && // if shiftlocked or holding rmb move camera to mouse relative
 			Target is not null && 
 			ThirdPersonCamera.Current
 		)
@@ -119,10 +150,10 @@ public partial class CameraSystem : Singleton3D<CameraSystem>
 
 			var realSens = Sensitivity;
 
-			rot.Y -= motion.Relative.X * realSens;
+			rot.Y -= mouse.Relative.X * realSens;
 			rot.Y = Mathf.Wrap(rot.Y, 0, float.Tau);
 
-			rot.X -= motion.Relative.Y * realSens;
+			rot.X -= mouse.Relative.Y * realSens;
 			rot.X = Mathf.Clamp(rot.X, -float.Pi/2, float.Pi/4);
 
 			ThirdPersonSpring.Rotation = rot;

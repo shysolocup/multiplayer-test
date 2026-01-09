@@ -58,8 +58,11 @@ public partial class Client : Singleton<Client>
 	]
 	private void _setLocalPlayer(Player player)
 	{
-		GD.Print(Multiplayer.GetRemoteSenderId());
-		LocalPlayer = player;
+		if (Multiplayer.GetUniqueId() == Multiplayer.GetRemoteSenderId())
+		{
+			GD.Print("set local player");
+			LocalPlayer = player;	
+		}
 	}
 
 
@@ -77,6 +80,7 @@ public partial class Client : Singleton<Client>
 	public static async Task<Error> SetLocalPlayer(Player player)
 	{
 		var client = await Instance();
+		GD.Print(player.GetPeerId());
 		return client.RpcId(player.GetPeerId(), MethodName._setLocalPlayer, player);
 	}
 

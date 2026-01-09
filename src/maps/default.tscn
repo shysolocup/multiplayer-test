@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://dojnw3howwwu3"]
+[gd_scene load_steps=3 format=3 uid="uid://dojnw3howwwu3"]
 
 [ext_resource type="Texture2D" uid="uid://choqkivw23fvp" path="res://src/core/assets/mat_placeholder_0.png" id="1_te6v8"]
 
@@ -8,9 +8,9 @@ albedo_texture = ExtResource("1_te6v8")
 uv1_triplanar = true
 uv1_world_triplanar = true
 
-[node name="default" type="Node3D" unique_id=1495469931]
+[node name="default" type="Node3D"]
 
-[node name="baseplate" type="CSGBox3D" parent="." unique_id=1042971314]
+[node name="baseplate" type="CSGBox3D" parent="."]
 transform = Transform3D(71.41875, 0, 0, 0, 1, 0, 0, 0, 77.255035, 0, -0.50715, 0)
 use_collision = true
 material = SubResource("StandardMaterial3D_5jbrw")

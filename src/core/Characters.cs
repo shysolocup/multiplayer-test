@@ -54,7 +54,6 @@ public partial class Characters : Singleton3D<Characters>
 				Vector3 forward = cam.GlobalTransform.Basis.Z;
 
 				float yaw = Mathf.Atan2(-forward.X, -forward.Z);
-				yaw = Mathf.LerpAngle(chara.Rotation.Y, yaw, (float)delta * 50f);
 				
 				chara.Rotation = new Vector3(chara.Rotation.X, yaw, chara.Rotation.Z);
 
@@ -182,7 +181,7 @@ public partial class Characters : Singleton3D<Characters>
 
 		GD.PushWarning($"spawned {player.GetPlayerName()}'s character");
 
-		cameras.Target = character;
+		cameras.SetTarget(player);
 
 		return character;
 	}

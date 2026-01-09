@@ -1,24 +1,24 @@
-[gd_scene format=3 uid="uid://by5f8a6nan5nk"]
+[gd_scene load_steps=5 format=3 uid="uid://by5f8a6nan5nk"]
 
 [ext_resource type="Script" uid="uid://bb5na7uref4ps" path="res://src/core/ClientScriptSystem.cs" id="1_k2q7g"]
 [ext_resource type="Script" uid="uid://cyc4es7ctr5a8" path="res://src/core/classes/BehaviorFolder.cs" id="2_l3bay"]
 [ext_resource type="Script" uid="uid://c1pivl6apxqk5" path="res://src/scripts/client/DeathButton.cs" id="3_l3bay"]
 [ext_resource type="Script" uid="uid://43ya7151320l" path="res://src/scripts/client/LobbyButtons.cs" id="3_pbjuy"]
 
-[node name="scripts" type="Node" unique_id=1252155242]
+[node name="scripts" type="Node"]
 script = ExtResource("1_k2q7g")
 
-[node name="test buttons" type="Node" parent="." unique_id=1138027718]
+[node name="test buttons" type="Node" parent="."]
 script = ExtResource("2_l3bay")
 Enabled = true
 metadata/_custom_type_script = "uid://cyc4es7ctr5a8"
 
-[node name="lobbyButtons" type="Node" parent="test buttons" unique_id=225508420]
+[node name="lobbyButtons" type="Node" parent="test buttons"]
 script = ExtResource("3_pbjuy")
 Enabled = true
 metadata/_custom_type_script = "uid://c3lflpkmclxja"
 
-[node name="deathButton" type="Node" parent="test buttons" unique_id=1750230223]
+[node name="deathButton" type="Node" parent="test buttons"]
 script = ExtResource("3_l3bay")
 Enabled = true
 metadata/_custom_type_script = "uid://c3lflpkmclxja"

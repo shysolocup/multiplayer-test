@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://cg6684xj7fjx"]
+[gd_scene load_steps=23 format=3 uid="uid://cg6684xj7fjx"]
 
 [ext_resource type="Script" uid="uid://dj3d8j4qfl1st" path="res://src/core/Game.cs" id="1_covw0"]
 [ext_resource type="Script" uid="uid://c5frf4qgle4bf" path="res://src/core/GuiSystem.cs" id="2_276xm"]
@@ -8,6 +8,7 @@
 [ext_resource type="Script" uid="uid://cv04eaa2q8bhx" path="res://src/core/LightingSystem.cs" id="4_44dqv"]
 [ext_resource type="PackedScene" uid="uid://dtwjgai1ljwtw" path="res://src/scenes/starter_character.tscn" id="4_lkrtx"]
 [ext_resource type="Script" uid="uid://d1k532y44p2cq" path="res://src/core/Server.cs" id="5_lcg6w"]
+[ext_resource type="Material" uid="uid://7wuop4abysij" path="res://src/assets/resources/skies/res_sky_realistic.tres" id="6_44dqv"]
 [ext_resource type="Script" uid="uid://dcblggjtpvjin" path="res://src/core/Client.cs" id="6_gh3at"]
 [ext_resource type="Script" uid="uid://iqerivcko5tq" path="res://src/core/CameraSystem.cs" id="6_pm1mm"]
 [ext_resource type="Script" uid="uid://dd1he2wiyd6x4" path="res://src/core/AudioSystem.cs" id="7_pm1mm"]
@@ -24,58 +25,64 @@
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_kcfyl"]
 blend_mode = 2
 
-[node name="game" type="Node" unique_id=688565353]
+[node name="game" type="Node"]
 script = ExtResource("1_covw0")
 
-[node name="workspace" type="Node3D" parent="." unique_id=1406642227 node_paths=PackedStringArray("Spawn")]
+[node name="workspace" type="Node3D" parent="." node_paths=PackedStringArray("Spawn")]
 unique_name_in_owner = true
 script = ExtResource("2_ta85g")
 Spawn = NodePath("spawn")
 Gravity = 50.0
 metadata/_custom_type_script = "uid://d0t5vb0wvm7b6"
 
-[node name="part" type="CSGBox3D" parent="workspace" unique_id=2068811283]
+[node name="part" type="CSGBox3D" parent="workspace"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.35986328, 0)
 use_collision = true
 size = Vector3(1.12, 0.28, 0.56)
 
-[node name="characters" type="Node3D" parent="workspace" unique_id=587741002 node_paths=PackedStringArray("StarterCharacter")]
+[node name="characters" type="Node3D" parent="workspace" node_paths=PackedStringArray("StarterCharacter")]
 script = ExtResource("3_kcfyl")
 StarterCharacter = NodePath("../../global/starterCharacter")
 metadata/_custom_type_script = "uid://hilik46ime86"
 
-[node name="map" type="Node3D" parent="workspace" unique_id=108882975]
+[node name="map" type="Node3D" parent="workspace" node_paths=PackedStringArray("Map")]
 transform = Transform3D(-0.99987966, 0, -0.015515357, 0, 1, 0, 0.015515357, 0, -0.99987966, 0, 0, 0)
 script = ExtResource("3_44dqv")
+Map = NodePath("default")
 metadata/_custom_type_script = "uid://c3yamjsvvi4eo"
 
-[node name="lighting" type="Node3D" parent="workspace" unique_id=1727037146]
+[node name="lighting" type="Node3D" parent="workspace" node_paths=PackedStringArray("World", "Lights")]
+transform = Transform3D(0.111295596, -0.9937876, 0, 0.99378705, 0.111295655, 0, 0, 0, 1, 0, 0, 0)
 script = ExtResource("4_44dqv")
+TimeOfDay = 17.574
+SkyMaterial = ExtResource("6_44dqv")
+World = NodePath("world")
+Lights = NodePath("lights")
 metadata/_custom_type_script = "uid://cv04eaa2q8bhx"
 
-[node name="audios" type="Node3D" parent="workspace" unique_id=1442668334]
+[node name="audios" type="Node3D" parent="workspace"]
 script = ExtResource("7_pm1mm")
 metadata/_custom_type_script = "uid://dd1he2wiyd6x4"
 
-[node name="spawn" type="Marker3D" parent="workspace" unique_id=590548405]
+[node name="spawn" type="Marker3D" parent="workspace"]
 
-[node name="client" type="Node" parent="." unique_id=628231270]
+[node name="client" type="Node" parent="."]
 unique_name_in_owner = true
 script = ExtResource("6_gh3at")
 
-[node name="cameras" type="Node3D" parent="client" unique_id=1541506035]
+[node name="cameras" type="Node3D" parent="client"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.430248, 1.2825328, 0)
 script = ExtResource("6_pm1mm")
 metadata/_custom_type_script = "uid://iqerivcko5tq"
 
-[node name="spring" type="SpringArm3D" parent="client/cameras" unique_id=584183116]
+[node name="spring" type="SpringArm3D" parent="client/cameras"]
 spring_length = 6.0
 
-[node name="thirdPerson" type="Camera3D" parent="client/cameras/spring" unique_id=327295395]
+[node name="thirdPerson" type="Camera3D" parent="client/cameras/spring"]
 physics_interpolation_mode = 1
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4.7691236)
 
-[node name="gui" type="Control" parent="client" unique_id=1451391840]
+[node name="gui" type="Control" parent="client"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -85,10 +92,10 @@ grow_vertical = 2
 script = ExtResource("2_276xm")
 metadata/_edit_use_anchors_ = true
 
-[node name="shaders" parent="client/gui" unique_id=385181056 instance=ExtResource("18_44dqv")]
+[node name="shaders" parent="client/gui" instance=ExtResource("18_44dqv")]
 layer = -1
 
-[node name="lobby" type="ColorRect" parent="client/gui" unique_id=226423897 groups=["lobbyui"]]
+[node name="lobby" type="ColorRect" parent="client/gui" groups=["lobbyui"]]
 material = SubResource("CanvasItemMaterial_kcfyl")
 layout_mode = 1
 anchors_preset = 8
@@ -105,7 +112,7 @@ grow_vertical = 2
 pivot_offset = Vector2(288, 162)
 color = Color(0.12225223, 0.12225223, 0.12225223, 1)
 
-[node name="container" type="VBoxContainer" parent="client/gui/lobby" unique_id=796903111]
+[node name="container" type="VBoxContainer" parent="client/gui/lobby"]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.25
@@ -114,35 +121,34 @@ anchor_bottom = 1.0
 offset_right = -3.0517578e-05
 grow_horizontal = 2
 grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
 alignment = 1
 metadata/_edit_use_anchors_ = true
 
-[node name="label" type="Label" parent="client/gui/lobby/container" unique_id=585078387]
+[node name="label" type="Label" parent="client/gui/lobby/container"]
 layout_mode = 2
 text = "agh"
 
-[node name="hostButton" type="Button" parent="client/gui/lobby/container" unique_id=1498331591]
+[node name="hostButton" type="Button" parent="client/gui/lobby/container"]
 layout_mode = 2
 text = "host
 "
 
-[node name="separater" type="HSeparator" parent="client/gui/lobby/container" unique_id=2006896515]
+[node name="separater" type="HSeparator" parent="client/gui/lobby/container"]
 layout_mode = 2
 
-[node name="lobbyId" type="LineEdit" parent="client/gui/lobby/container" unique_id=1032398651]
+[node name="lobbyId" type="LineEdit" parent="client/gui/lobby/container"]
 layout_mode = 2
 placeholder_text = "lobby id"
 alignment = 1
 
-[node name="joinButton" type="Button" parent="client/gui/lobby/container" unique_id=818697397]
+[node name="joinButton" type="Button" parent="client/gui/lobby/container"]
 layout_mode = 2
 text = "join"
 
-[node name="game" type="CanvasLayer" parent="client/gui" unique_id=1829049335]
+[node name="game" type="CanvasLayer" parent="client/gui"]
 layer = -1
 
-[node name="crosshair" type="TextureRect" parent="client/gui/game" unique_id=1695338719]
+[node name="crosshair" type="TextureRect" parent="client/gui/game"]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -161,46 +167,44 @@ expand_mode = 1
 stretch_mode = 4
 metadata/_edit_use_anchors_ = true
 
-[node name="scripts" parent="client" unique_id=2143214803 instance=ExtResource("19_3xp0n")]
+[node name="scripts" parent="client" instance=ExtResource("19_3xp0n")]
 
-[node name="discord" type="Node" parent="client" unique_id=266666037]
+[node name="discord" type="Node" parent="client"]
 script = ExtResource("15_3xp0n")
 metadata/_custom_type_script = "uid://i1i7viij1r0d"
 
-[node name="server" type="Node" parent="." unique_id=427710323]
+[node name="server" type="Node" parent="."]
 unique_name_in_owner = true
 script = ExtResource("5_lcg6w")
 
-[node name="scripts" parent="server" unique_id=1112204739 instance=ExtResource("14_44dqv")]
+[node name="scripts" parent="server" instance=ExtResource("14_44dqv")]
 
-[node name="global" type="Node" parent="." unique_id=2079289201]
+[node name="global" type="Node" parent="."]
 unique_name_in_owner = true
 script = ExtResource("19_lkrtx")
 metadata/_custom_type_script = "uid://3u0cd6x7v7xf"
 
-[node name="starterPlayer" parent="global" unique_id=1810727644 instance=ExtResource("20_44dqv")]
+[node name="starterPlayer" parent="global" instance=ExtResource("20_44dqv")]
 PlayerName = "Player"
 Id = ""
 
-[node name="starterCharacter" parent="global" unique_id=471553858 instance=ExtResource("4_lkrtx")]
+[node name="starterCharacter" parent="global" instance=ExtResource("4_lkrtx")]
 transform = Transform3D(-0.6024838, 0, -0.7981311, 0, 1, 0, 0.7981311, 0, -0.6024838, 2.6189446, 0.01726067, 2.8367674)
 
-[node name="players" type="Node" parent="." unique_id=1481857987 node_paths=PackedStringArray("StarterPlayer")]
+[node name="players" type="Node" parent="." node_paths=PackedStringArray("StarterPlayer")]
 unique_name_in_owner = true
 script = ExtResource("9_bd8mh")
 StarterPlayer = NodePath("../global/starterPlayer")
 
-[node name="replicator" type="Node" parent="." unique_id=2123300551]
+[node name="replicator" type="Node" parent="."]
 unique_name_in_owner = true
 script = ExtResource("22_p02ep")
 
-[node name="worldSpawner" type="MultiplayerSpawner" parent="replicator" unique_id=2017554939]
+[node name="worldSpawner" type="MultiplayerSpawner" parent="replicator"]
 spawn_path = NodePath("../../workspace")
 
-[node name="playerSpawner" type="MultiplayerSpawner" parent="replicator" unique_id=864233681]
+[node name="playerSpawner" type="MultiplayerSpawner" parent="replicator"]
 spawn_path = NodePath("../../players")
 
-[node name="globalSpawner" type="MultiplayerSpawner" parent="replicator" unique_id=235417015]
+[node name="globalSpawner" type="MultiplayerSpawner" parent="replicator"]
 spawn_path = NodePath("../../global")
-
-[editable path="global/starterCharacter"]

@@ -36,11 +36,136 @@ public partial class LightingSystem : Singleton3D<LightingSystem>
 
 	[ExportCategory("Sky")]
 
-	[Export(PropertyHint.Range, "0.0,1.0")]
-	public float TimeOfDay = 0;
+	private float timeofday = 12;
+
+	[Export(PropertyHint.Range, "0.0,24.0")]
+	public float TimeOfDay
+	{
+		get => timeofday;
+		set
+		{
+			DoTimeOfDay();
+			timeofday = value;
+		}
+	}
+
+	private float MidnightDistance()
+	{
+		var time = Mathf.PosMod(TimeOfDay, 24f); // wrap
+		return Mathf.Min(time, 24f - time); // 0 → 12
+	}
+
+	public void DoTimeOfDay()
+	{
+		if (World is null)
+			EnsureWorld();
+		if (Lights is null)
+			EnsureLights();
+
+		if (World is null || Lights is null) return;
+
+		var angle = (TimeOfDay - 12) / 24 * float.Tau;
+
+		float d = Mathf.Abs(TimeOfDay);
+		d = Mathf.Min(d, 24 - d);
+
+		// thje threshold where it starts fading
+		const float cumulusThreshold = 17;
+
+		float maxDistance = Mathf.Min(
+			Mathf.Abs(cumulusThreshold),
+			24 - Mathf.Abs(cumulusThreshold)
+		);
+
+		float t = Mathf.Clamp(d / maxDistance, 0, 1);
+		float baseValue = 1 - t;
+		baseValue = Mathf.SmoothStep(0, 1, baseValue);
+
+		float cumulus = Mathf.Lerp(0.7f, 10, baseValue);
+
+		const float cirrusFadeStart = 17;
+		const float cirrusFadeEnd = 10;
+
+		float cirrusBase = (TimeOfDay >= cirrusFadeStart)
+			? Mathf.InverseLerp(cirrusFadeStart, 20, TimeOfDay)
+			: (TimeOfDay <= cirrusFadeEnd)
+			? 1 - Mathf.InverseLerp(4, cirrusFadeEnd, TimeOfDay)
+			: 0;
+
+		cirrusBase = Mathf.Clamp(cirrusBase, 0, 1);
+		cirrusBase = Mathf.SmoothStep(0, 1, cirrusBase);
+
+		float cirrus = (1 - cirrusBase) * 0.2f;
+
+
+		SkyMaterial.SetShaderParameter("clouds_alpha_upper_bound", cumulus);
+		SkyMaterial.SetShaderParameter("cirrus_opacity", cirrus);
+
+		var sgugh = Lights.GetNode("sunlight");
+
+		if (sgugh is Sunlight sunlight)
+		{
+		}
+
+		Rotation = new Vector3(Rotation.X, Rotation.Y, angle);
+	}
+
+
+	public override void _Process(double delta)
+	{
+		base._Process(delta);
+
+		DoTimeOfDay();
+	}
+
+
+	public WorldEnvironment EnsureWorld()
+	{
+		if (World is null)
+		{
+			foreach (var node in GetChildren())
+			{
+				if (node is WorldEnvironment world)
+					World = world;
+					return World;
+			}	
+		}
+		else 
+			return World;
+
+		return null;
+	}
+
+	public Marker3D EnsureLights()
+	{
+		if (Lights is null)
+		{
+			foreach (var node in GetChildren())
+			{
+				if (node is Marker3D lights)
+					Lights = lights;
+					return Lights;
+			}	
+		}
+		else 
+			return Lights;
+
+		return null;
+	}
 
 	[Export]
-	public ShaderMaterial SkyMaterial { get; set; }
+	public ShaderMaterial SkyMaterial { 
+		get => EnsureWorld()?.Environment.Sky.SkyMaterial is ShaderMaterial shader ? shader : null; 
+		set
+		{	
+			EnsureWorld();
+
+			if (World is not null)
+			{
+				World.Environment.Sky.SkyMaterial = value; 		
+			}
+		}
+	}
 
 
 
@@ -48,7 +173,9 @@ public partial class LightingSystem : Singleton3D<LightingSystem>
 	public WorldEnvironment SceneWorld;
 	public Marker3D SceneLights;
 
+	[Export]
 	public WorldEnvironment World;
+	[Export]
 	public Marker3D Lights;
 
 	[ExportToolButton("Reset / Apply")] 
@@ -89,8 +216,14 @@ public partial class LightingSystem : Singleton3D<LightingSystem>
 				SceneWorld = null;
 				SceneLights = null;
 
-				SceneWorld = CurrentLighting.GetNodeOfType<WorldEnvironment>();
-				SceneLights = CurrentLighting.GetNodeOfType<Marker3D>();
+				foreach (var node in CurrentLighting.GetChildren())
+				{
+					if (node is WorldEnvironment world)
+						SceneWorld = world;
+					
+					if (node is Marker3D marker)
+						SceneLights = marker;
+				}
 
 				World = SceneWorld?.Duplicate<WorldEnvironment>();
 				Lights = SceneLights?.Duplicate<Marker3D>();
@@ -161,8 +294,14 @@ public partial class LightingSystem : Singleton3D<LightingSystem>
 				SceneWorld = null;
 				SceneLights = null;
 
-				SceneWorld = CurrentLighting.FindChild<WorldEnvironment>("T");
-				SceneLights = CurrentLighting.GetNodeOfType<Marker3D>();
+				foreach (var node in CurrentLighting.GetChildren())
+				{
+					if (node is WorldEnvironment world)
+						SceneWorld ??= world;
+					
+					if (node is Marker3D marker)
+						SceneLights ??= marker;
+				}
 
 				World = SceneWorld?.Duplicate<WorldEnvironment>();
 				Lights = SceneLights?.Duplicate<Marker3D>();
@@ -225,6 +364,21 @@ public partial class LightingSystem : Singleton3D<LightingSystem>
 		if (Engine.IsEditorHint())
 		{
 			ResetApply();
+
+			if (World is null || Lights is null)
+			{
+				foreach (var node in GetChildren())
+				{
+					if (node is WorldEnvironment world)
+						World ??= world;
+					
+					if (node is Marker3D marker)
+						Lights ??= marker;
+				}	
+			}
+
+			if (World is not null)
+				DoTimeOfDay();
 		}
 	}
 
