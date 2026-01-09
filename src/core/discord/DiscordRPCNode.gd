@@ -1,21 +1,22 @@
+@icon("uid://bhib8x7fhxxwd")
 class_name DiscordRPCNode
 extends Node
 
-var AppId: int = 1335860356379312178
-var Details: String = "Test"
-var State: String = "Test"
-var LargeImage: String = "placeholder"
-var LargeImageText: String = "placeholder"
-var SmallImage: String = "placeholder"
-var SmallImageText: String = "placeholder"
-var StartTimestamp: int
-var EndTimestamp: int
+@export var AppId: String = "1335860356379312178"
+@export var Details: String = "Test"
+@export var State: String = "Test"
+@export var LargeImage: String = "placeholder"
+@export var LargeImageText: String = "placeholder"
+@export var SmallImage: String = "placeholder"
+@export var SmallImageText: String = "placeholder"
+@export var StartTimestamp: int
+@export var EndTimestamp: int
 
 func IsWorking():
 	return DiscordRPC.get_is_discord_working()
 	
 func RefreshRPC():
-	DiscordRPC.app_id = AppId
+	DiscordRPC.app_id = int(AppId)
 	DiscordRPC.details = Details
 	DiscordRPC.state = State
 	DiscordRPC.large_image = LargeImage

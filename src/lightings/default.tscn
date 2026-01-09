@@ -1,9 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://bo0rl4wd6webr"]
+[gd_scene format=3 uid="uid://bo0rl4wd6webr"]
 
-[ext_resource type="Material" uid="uid://7wuop4abysij" path="res://src/core/assets/sky/material.sky.tres" id="1_kw2do"]
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_cmxtc"]
 
 [sub_resource type="Sky" id="Sky_kw2do"]
-sky_material = ExtResource("1_kw2do")
+sky_material = SubResource("ProceduralSkyMaterial_cmxtc")
 
 [sub_resource type="Environment" id="Environment_i2xtl"]
 background_mode = 2
@@ -18,29 +18,29 @@ sdfgi_use_occlusion = true
 glow_enabled = true
 volumetric_fog_density = 0.01
 
-[node name="Default" type="Node"]
+[node name="Default" type="Node" unique_id=1657048712]
 
-[node name="Marker3D" type="Marker3D" parent="."]
+[node name="Marker3D" type="Marker3D" parent="." unique_id=1356490096]
 transform = Transform3D(0.94807416, 0, -0.31804955, 0, 1, 0, 0.31804955, 0, 0.94807416, 0, 0, 0)
 
-[node name="Sun" type="DirectionalLight3D" parent="Marker3D"]
+[node name="Sun" type="DirectionalLight3D" parent="Marker3D" unique_id=1247619664]
 transform = Transform3D(1, 0, 0, 0, 0.88686615, 0.46202654, 0, -0.46202657, 0.88686615, 0, 0, 0)
 light_color = Color(1, 0.886177, 0.793626, 1)
 light_angular_distance = 1.5
 shadow_enabled = true
 
-[node name="Moon" type="DirectionalLight3D" parent="Marker3D"]
+[node name="Moon" type="DirectionalLight3D" parent="Marker3D" unique_id=1841754422]
 transform = Transform3D(0.16094995, -0.5227911, 0.83712876, 0.08725907, 0.85240304, 0.5155531, -0.9830976, -0.009931155, 0.1828125, 0, 0, 0)
 light_energy = 0.6
 light_angular_distance = 21.1
 light_cull_mask = 4293918720
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=160930909]
 environment = SubResource("Environment_i2xtl")
 
-[node name="CSGBox3D" type="CSGBox3D" parent="."]
+[node name="CSGBox3D" type="CSGBox3D" parent="." unique_id=1166977125]
 transform = Transform3D(2.4190516, 0, 0, 0, -0.100000024, 0, 0, 0, 2.3271165, 0, -0.09151659, 0)
 use_collision = true
 
-[node name="CSGBox3D2" type="CSGBox3D" parent="."]
+[node name="CSGBox3D2" type="CSGBox3D" parent="." unique_id=242027015]
 transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 0.6183623, 0.10848346, 0)

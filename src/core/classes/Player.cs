@@ -12,10 +12,12 @@ public partial class Player : Node
 	public delegate void SpawnedEventHandler(Character character);
 
 	[Export] private string PlayerName { get; set; } = "Player";
-	[Export] private long Id { get; set; }
+	[Export] private string Id { get; set; }
+	[Export] private long PeerId { get; set; }
 	[Export] private Character Character;
 
-	public long GetId() => Id;
+	public string GetId() => Id;
+	public long GetPeerId() => PeerId;
 	public string GetPlayerName() => PlayerName;
 	public Character GetCharacter() => Character;
 
@@ -27,10 +29,8 @@ public partial class Player : Node
 	[Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
 	public void SetPlayerName(string name)
 	{
-		if (Multiplayer.IsServer())
-		{
-			PlayerName = name;	
-		}
+		PlayerName = name;
+		Name = name;
 	}
 
 
@@ -39,12 +39,20 @@ public partial class Player : Node
 	/// <para/>@server
 	/// </summary>
 	[Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-	public void SetPlayerId(long id)
+	public void SetPlayerId(string id)
 	{
-		if (Multiplayer.IsServer())
-		{
-			Id = id;	
-		}
+		Id = id;
+	}
+
+
+	/// <summary>
+	/// sets the player's peer id
+	/// <para/>@server
+	/// </summary>
+	[Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+	public void SetPeerId(long id)
+	{
+		PeerId = id;
 	}
 
 	/// <summary>
@@ -54,9 +62,6 @@ public partial class Player : Node
 	[Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
 	public void SetCharacter(Character character)
 	{
-		if (Multiplayer.IsServer())
-		{
-			Character = character;	
-		}
+		Character = character;	
 	}
 }

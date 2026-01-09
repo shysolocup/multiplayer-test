@@ -1,7 +1,9 @@
+using Core;
 using Godot;
 using Godot.Collections;
 using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 // ignore this
@@ -14,6 +16,26 @@ public partial class Ext : Node {}
 /// </summary>
 public static class NodeE
 {
+
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	#region Debris
+
+	/// <summary>
+	/// Creates a new thread and deletes the given node after a given time.
+	/// </summary>
+	public static CancellationTokenSource Debris(Node node, float time)
+	{
+		return Chore.Delay(time, async token =>
+		{
+			if (!token.IsCancellationRequested)
+			{
+				node.QueueFree();
+			}
+		});
+	}
+
+	#endregion
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

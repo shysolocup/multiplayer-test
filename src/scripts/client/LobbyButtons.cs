@@ -1,21 +1,27 @@
+using System.Linq;
 using Godot;
 
 public partial class LobbyButtons : Behavior
 {
+	private void goaway()
+	{
+		foreach (var node in GetTree().GetNodesInGroup("lobbyui"))
+		{
+			if (node is Control control)
+			{
+				control.Visible = false;
+			}
+		}
+	}
+
 	// Called when the script node and its dependencies are ready.
 	public override void OnReady()
 	{
-		var container = gui.GetNode("./rect/container");
+		var container = gui.GetNode("./lobby/container");
 
 		var joinButton = container.GetNode<Button>("joinButton");
 		var hostButton = container.GetNode<Button>("hostButton");
 		var lobby = container.GetNode<LineEdit>("lobbyId");
-
-		server.StartedHosting += id =>
-		{
-			print(id);
-			lobby.Text = id;
-		};
 
 		joinButton.Pressed += async () => 
 		{
@@ -27,6 +33,18 @@ public partial class LobbyButtons : Behavior
 		{
 			print("got it boss, hosting!!");
 			await rep.Host();
+		};
+
+		rep.StartedHosting += id =>
+		{
+			DisplayServer.ClipboardSet(id);
+			lobby.Text = id;
+		};
+
+		rep.NewConnection += (id) =>
+		{
+			print(id);
+			goaway();
 		};
 	}
 }

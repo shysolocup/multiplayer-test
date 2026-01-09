@@ -33,6 +33,12 @@ namespace Core
 		public static void Join(string hostId) =>
 			Server.GetPeer().Call("join", hostId);
 
+		
+		public static void Leave(MultiplayerPeer peer) =>
+			peer.Call("leave_room");
+		public static void Leave() =>
+			Server.GetPeer().Call("leave_room");
+
 
 		public static string GetOnlineId(MultiplayerPeer peer) => 
 			peer.Get<string>("online_id");

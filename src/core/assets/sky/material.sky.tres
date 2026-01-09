@@ -1,4 +1,4 @@
-[gd_resource type="ShaderMaterial" load_steps=18 format=3 uid="uid://7wuop4abysij"]
+[gd_resource type="ShaderMaterial" format=3 uid="uid://7wuop4abysij"]
 
 [ext_resource type="Shader" uid="uid://b1jfi8tqdl1n5" path="res://src/core/assets/sky/sky.default.gdshader" id="1_befvq"]
 [ext_resource type="CompressedCubemap" uid="uid://bs78evs1saajk" path="res://src/core/assets/sky/stars.hdr" id="2_kqxb2"]

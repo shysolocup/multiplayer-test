@@ -52,9 +52,9 @@ public partial class Players : Singleton<Players>
 	{
 		base._Ready();
 
-		var replication = await GlobalStorage.Instance();
+		var storage = await GlobalStorage.Instance();
 		
-		StarterPlayer ??= replication.GetNode<Player>("./starterPlayer");
+		StarterPlayer ??= storage.GetNode<Player>("./starterPlayer");
 
 		Connect(Node.SignalName.ChildEnteredTree, _joinedCall);
 		Connect(Node.SignalName.ChildExitingTree, _leftCall);
@@ -80,21 +80,7 @@ public partial class Players : Singleton<Players>
 		)
 	]
 
-	public static async Task<Player> MakePlayer(string id) => await MakePlayer(long.Parse(id));
-
-	/// <summary>
-	/// Makes a new player and adds it to the player list
-	/// </summary>
-	
-	[
-		Rpc(
-			MultiplayerApi.RpcMode.Authority, 
-			CallLocal = false, 
-			TransferMode = MultiplayerPeer.TransferModeEnum.Reliable
-		)
-	]
-
-	public static async Task<Player> MakePlayer(long id)
+	public static async Task<Player> MakePlayer(long peerId, string id)
 	{
 		var inst = await Instance();
 
@@ -118,6 +104,7 @@ public partial class Players : Singleton<Players>
 
 		var player = inst.StarterPlayer.Duplicate<Player>();
 			player.ProcessMode = ProcessModeEnum.Inherit;
+			player.SetPeerId(peerId);
 			player.SetPlayerId(id);
 			player.SetPlayerName($"player:${id}");
 
@@ -125,6 +112,7 @@ public partial class Players : Singleton<Players>
 
 		GD.PushWarning("spawned player, is server?: ", inst.Multiplayer.IsServer());
 
+		await Client.SetLocalPlayer(player);
 		await Characters.Spawn(player);
 		
 		return player;
@@ -164,7 +152,7 @@ public partial class Players : Singleton<Players>
 		)
 	]
 
-	public static async Task RemovePlayer(long id)
+	public static async Task RemovePlayer(string id)
 	{
 		var inst = await Instance();
 
@@ -186,23 +174,17 @@ public partial class Players : Singleton<Players>
 	/// <summary>
 	/// Gets a player by their peer id
 	/// </summary>
-	public static async Task<Player> GetPlayerById(long id)
-	{
-		var inst = await Instance();
-		var players = inst.GetChildren<Player>();
-
-		return players.FirstOrDefault(p => p is Player player && player.GetId() == id);
-	}
-
-	/// <summary>
-	/// Gets a player by their peer id
-	/// </summary>
 	public static async Task<Player> GetPlayerById(string id)
 	{
 		var inst = await Instance();
-		var players = inst.GetChildren<Player>();
+		var players = await GetPlayers();
 
-		return players.FirstOrDefault(p => p is Player player && player.GetId() == long.Parse(id));
+		foreach (var player in players)
+		{
+			if (player.GetId() == id) return player;
+		}
+
+		return null;
 	}
 
 	/// <summary>
@@ -212,7 +194,12 @@ public partial class Players : Singleton<Players>
 	public static async Task<Array<Player>> GetPlayers()
 	{
 		var inst = await Instance();
-		return inst.GetChildren<Player>();
+		var result = new Array<Player>();
+		foreach (var player in inst.GetChildren().Where(n => n is Player).Cast<Player>())
+		{
+			result.Add(player);
+		}
+		return result;
 	}
 
 	/// <summary>
@@ -221,7 +208,12 @@ public partial class Players : Singleton<Players>
 	public static async Task<Player> GetPlayerByCharacter(Character character)
 	{
 		var players = await GetPlayers();
-		return players.FirstOrDefault(p => p.GetCharacter() == character);
+		foreach (var player in players)
+		{
+			if (player.GetCharacter() == character) return player;
+		}
+
+		return null;
 	}
 
 	#endregion

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 [GlobalClass, Icon("uid://rqxgol7tuknt")]
 public partial class Client : Singleton<Client>
 {
-	private static Player _localPlayer;
+	private static Player _localPlayer { get; set; }
 
 	public string GetId() => NodeTunnelBridge.GetOnlineId();
 
@@ -13,9 +13,7 @@ public partial class Client : Singleton<Client>
 	public static CameraSystem Cameras { get; set; }
 	public static Camera3D Camera { get => Cameras.Camera; }
 	public static ClientScriptSystem Scripts { get; set; }
-	public static DiscordSystem DiscordRPC { get; set; }
 	public static Replicator Replicator { get; set; }
-	public static Mouse Mouse { get; set; }
 
 	public static Player LocalPlayer
 	{
@@ -24,6 +22,16 @@ public partial class Client : Singleton<Client>
 		{
 			_localPlayer?.QueueFree();
 			_localPlayer = value;
+		}
+	}
+
+	[Export]
+	private Player _local_Player
+	{
+		get => LocalPlayer;
+		set
+		{
+			LocalPlayer = value;
 		}
 	}
 
@@ -36,9 +44,7 @@ public partial class Client : Singleton<Client>
 		Gui ??= await GuiSystem.Instance();
 		Cameras ??= GetNode<CameraSystem>("./cameras");
 		Scripts ??= await ClientScriptSystem.Instance();
-		DiscordRPC ??= await DiscordSystem.Instance();
 		Replicator ??= await Replicator.Instance();
-		Mouse ??= await Mouse.Instance();
 
 		GD.PushWarning("loaded client stuff");
 	}
@@ -46,11 +52,15 @@ public partial class Client : Singleton<Client>
 
 	[
 		Rpc(
-			MultiplayerApi.RpcMode.Authority,
-			TransferMode = MultiplayerPeer.TransferModeEnum.Reliable
+			MultiplayerApi.RpcMode.AnyPeer,
+			CallLocal = true
 		)
 	]
-	private void _setLocalPlayer(Player player) => LocalPlayer = player;
+	private void _setLocalPlayer(Player player)
+	{
+		GD.Print(Multiplayer.GetRemoteSenderId());
+		LocalPlayer = player;
+	}
 
 
 	/// <summary>
@@ -67,7 +77,7 @@ public partial class Client : Singleton<Client>
 	public static async Task<Error> SetLocalPlayer(Player player)
 	{
 		var client = await Instance();
-		return client.RpcId(player.GetId(), MethodName._setLocalPlayer, player);
+		return client.RpcId(player.GetPeerId(), MethodName._setLocalPlayer, player);
 	}
 
 

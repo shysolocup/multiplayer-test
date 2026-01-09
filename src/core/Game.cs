@@ -4,7 +4,6 @@ using Godot;
 [GlobalClass, Icon("uid://boo8iw5pvoaa8")]
 public partial class Game : Singleton<Game>
 {
-
 	public static Workspace Workspace { get; set; }
 	public static Players Players { get; set; }
 	public static Server Server { get; set; }
@@ -28,42 +27,72 @@ public partial class Game : Singleton<Game>
 	/// <summary>
 	/// loads singleton systems
 	/// </summary>
-	public async void Load()
+	public async Task Load()
 	{
+		GD.Print("started loading");
+
 		// children
 		Workspace = await Workspace.Instance();
-		Server = await Server.Instance();
-		Client = await Client.Instance();
-		Players = await Players.Instance();
-		GlobalStorage = await GlobalStorage.Instance();
-		Replicator = await Replicator.Instance();
+		GD.Print("loaded workspace");
 
-		// descendants
-		await Players.Instance();
+		Server = await Server.Instance();
+		GD.Print("loaded server");
+
+		Client = await Client.Instance();
+		GD.Print("loaded client");
+
+		Players = await Players.Instance();
+		GD.Print("loaded players");
+
+		GlobalStorage = await GlobalStorage.Instance();
+		GD.Print("loaded global storage");
+
+		Replicator = await Replicator.Instance();
+		GD.Print("loaded replicator");
+		
 		await ServerScriptSystem.Instance();
+		GD.Print("loaded server scripts");
+
 		await ClientScriptSystem.Instance();
-		await DiscordSystem.Instance();
+		GD.Print("loaded client scripts");
+
 		await GuiSystem.Instance();
+		GD.Print("loaded guis");
+
 		await ShaderSystem.Instance();
+		GD.Print("loaded shaders");
+
 		await Characters.Instance();
+		GD.Print("loaded characters");
+		
 		await CameraSystem.Instance();
+		GD.Print("loaded cameras");
+
 		await MapSystem.Instance();
+		GD.Print("loaded maps");
+
 		await LightingSystem.Instance();
+		GD.Print("loaded lightings");
+
 		await AudioSystem.Instance();
+		GD.Print("loaded audios");
+
 		await Mouse.Instance();
+		GD.Print("loaded mouse");
+
+		GD.Print("game loaded");
 	}
 
 	public override async void _Ready()
 	{
 		base._Ready();
 
-		if (Engine.IsEditorHint())
-		{
-			// load singleton systems
-			Load();
+		GD.Print("guh");
 
-			IsLoaded = true;	
-		}
+		// load singleton systems
+		await Load();
+
+		IsLoaded = true;	
 	}
 
 	public override void _Notification(int what)

@@ -1,6 +1,8 @@
 using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using Core;
 using Godot;
 
 #region hellish summary
@@ -132,7 +134,8 @@ using Godot;
 /// 
 /// <para/> Context event functions:
 /// 
-/// <para/><c> + OnLoaded() </c> ran when the client loads
+/// <para/><c> + OnJoin() </c> ran when the client joins
+/// <para/><c> + OnLeave </c> ran when the client leaves
 /// 
 /// <para/> Input event functions:
 /// 
@@ -378,6 +381,23 @@ public partial class Behavior : Node
 	/// </summary>
 	public static Mouse mouse;
 
+	/// <summary>
+	/// library of functions for threading and tasks
+	/// 
+	/// </summary>
+	public static TaskLib task;
+
+	/// <summary>
+	/// global script variable for easy use of the <c>.json</c> and <c>.jsonc</c> file extensions
+	/// </summary>
+	public static JsonLib json;
+
+	/// <summary>
+	/// global script variable for accessing and modifying local files
+	/// </summary>
+	public static FileLib files;
+
+
 	public override async void _Ready()
 	{
 		if (Enabled)
@@ -406,6 +426,10 @@ public partial class Behavior : Node
 		gui ??= await GuiSystem.Instance();
 		shaders ??= await ShaderSystem.Instance();
 		mouse ??= await Mouse.Instance();
+
+		task ??= await TaskLib.Instance();
+		json ??= await JsonLib.Instance();
+		files ??= await FileLib.Instance();
 
 		// it's specifically just in this order so ready fires before processes
 		// this might lead to issues but we ball

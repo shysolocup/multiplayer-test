@@ -6,43 +6,77 @@ using Godot;
 public partial class Replicator : Singleton<Replicator>
 {
 
-    private Server server { get; set; }
-    private Client client { get; set; }
+	[Signal] public delegate void StartedHostingEventHandler(string id);
+	[Signal] public delegate void NewConnectionEventHandler(string id);
+	[Signal] public delegate void LeftConnectionEventHandler(string id);
 
-    public override async void _Ready()
-    {
-        base._Ready();
+	private Server server { get; set; }
+	private Client client { get; set; }
 
-        server = await Server.Instance();
-        client = await Client.Instance();
-    }
-
-
-    [Rpc(MultiplayerApi.RpcMode.AnyPeer)]
-    public async Task Host()
+	public override async void _Ready()
 	{
-        var peer = Server.GetPeer();
+		base._Ready();
+
+		server = await Server.Instance();
+		client = await Client.Instance();
+	}
+
+
+	[
+		Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)
+	]
+	private async void _join(string id, string hostId)
+	{
+		var remote = Multiplayer.GetRemoteSenderId();
+		EmitSignalNewConnection(id);
+
+		GD.Print("emitted signal");
+
+		if (Multiplayer.IsServer())
+		{
+			GD.Print("trying to make the player");
+			var player = await Players.MakePlayer(remote, id);
+		}
+	}
+
+	[
+		Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)
+	]
+	private void _leave(string id)
+	{
+		var remote = Multiplayer.GetRemoteSenderId();
+		EmitSignalLeftConnection(id);
+	}
+
+
+	public async Task Host()
+	{
+		var peer = Server.GetPeer();
 
 		NodeTunnelBridge.Host(peer);
 
 		// await to be connected
 		await NodeTunnelBridge.Hosting(peer);
 
-        var id = NodeTunnelBridge.GetOnlineId(peer);
+		var id = NodeTunnelBridge.GetOnlineId(peer);
 
 		Server.HostId = id;
-        // DisplayServer.ClipboardSet(HostId.ToString());
+		// DisplayServer.ClipboardSet(HostId.ToString());
 
-        server.EmitSignal(Server.SignalName.StartedHosting, id);
+		EmitSignalStartedHosting(id);
+		
+		RpcId(1, MethodName._join, id, id);
 
 		GD.PushWarning($"started hosting at id {id}");	
 	}
 
 
-    [Rpc(MultiplayerApi.RpcMode.AnyPeer)]
+	[
+		Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)
+	]
 	public async Task Join(string hostId)
 	{
-        var peer = Server.GetPeer();
+		var peer = Server.GetPeer();
 
 		GD.PushWarning($"trying to join {hostId}");	
 		NodeTunnelBridge.Join(peer, hostId);
@@ -51,6 +85,24 @@ public partial class Replicator : Singleton<Replicator>
 
 		var id = Server.GetId();
 
+		RpcId(1, MethodName._join, id, hostId);
+
 		GD.PushWarning($"peer {id} has joined with the function");	
+	}
+
+
+	[
+		Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)
+	]
+	public async Task Leave()
+	{
+		var peer = Server.GetPeer();
+		var id = Server.GetId();
+
+		NodeTunnelBridge.Leave(peer);
+
+		RpcId(1, MethodName._leave, id);
+
+		GD.PushWarning($"leaving game");	
 	}
 }

@@ -8,8 +8,7 @@ public partial class Server : Singleton<Server>
 
 	public static Replicator Replicator { get; set; }
 	public static ServerScriptSystem Scripts { get; set; }
-
-	[Signal] public delegate void StartedHostingEventHandler(string hostId);
+	
 	[Signal] public delegate void PlayerConnectedEventHandler(string hostId);
 
 	private static MultiplayerPeer Peer { get; set; }

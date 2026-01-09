@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://ds6x2baksbent"]
+[gd_scene format=3 uid="uid://ds6x2baksbent"]
 
 [ext_resource type="Script" uid="uid://css84aji0fro1" path="res://src/core/ShaderSystem.cs" id="1_r63nx"]
 [ext_resource type="Shader" uid="uid://dvoxvdndgot3u" path="res://src/assets/shaders/canvas.test.gdshader" id="2_qwnq1"]
@@ -12,11 +12,11 @@ shader_parameter/colorC = Color(1, 0.2, 0.4, 1)
 shader_parameter/discomode = false
 shader_parameter/speed = 1.0
 
-[node name="shaders" type="CanvasLayer"]
+[node name="shaders" type="CanvasLayer" unique_id=1790867041]
 script = ExtResource("1_r63nx")
 metadata/_custom_type_script = "uid://css84aji0fro1"
 
-[node name="ShaderRect" type="ColorRect" parent="."]
+[node name="lobbyBackground" type="ColorRect" parent="." unique_id=575543256 groups=["lobbyui"]]
 material = SubResource("ShaderMaterial_wp0mi")
 anchors_preset = 15
 anchor_right = 1.0
