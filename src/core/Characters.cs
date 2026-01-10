@@ -33,7 +33,7 @@ public partial class Characters : Singleton3D<Characters>
 		var player = Client.LocalPlayer;
 		var chara = player?.GetCharacter();
 
-		if (chara is not null)
+		if (chara is not null && !cameras.FreecamActive)
 		{
 			Vector3 velocity = chara.Velocity;
 
@@ -61,15 +61,15 @@ public partial class Characters : Singleton3D<Characters>
 
 			if (inputDir != Vector2.Zero)
 			{
-				Vector3 camForward = -cam.GlobalTransform.Basis.Z;
-				camForward.Y = 0;
-				camForward = camForward.Normalized();
+				Vector3 forward = -cam.GlobalTransform.Basis.Z;
+				forward.Y = 0;
+				forward = forward.Normalized();
 
-				Vector3 camRight = cam.GlobalTransform.Basis.X;
-				camRight.Y = 0;
-				camRight = camRight.Normalized();
+				Vector3 right = cam.GlobalTransform.Basis.X;
+				right.Y = 0;
+				right = right.Normalized();
 
-				Vector3 moveDir = (camRight * inputDir.X + camForward * -inputDir.Y).Normalized();
+				Vector3 moveDir = (right * inputDir.X + forward * -inputDir.Y).Normalized();
 
 				if (!cameras.ShiftLocked)
 				{
@@ -181,7 +181,7 @@ public partial class Characters : Singleton3D<Characters>
 
 		GD.PushWarning($"spawned {player.GetPlayerName()}'s character");
 
-		cameras.SetTarget(player);
+		cameras.SetSubject(player);
 
 		return character;
 	}

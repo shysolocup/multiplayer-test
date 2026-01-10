@@ -102,7 +102,7 @@ public partial class Players : Singleton<Players>
 		}
 
 
-		var player = inst.StarterPlayer.Duplicate<Player>();
+		var player = (Player)inst.StarterPlayer.Duplicate();
 			player.ProcessMode = ProcessModeEnum.Inherit;
 			player.SetPeerId(peerId);
 			player.SetPlayerId(id);
@@ -195,10 +195,13 @@ public partial class Players : Singleton<Players>
 	{
 		var inst = await Instance();
 		var result = new Array<Player>();
-		foreach (var player in inst.GetChildren().Where(n => n is Player).Cast<Player>())
+
+		foreach (var node in inst.GetChildren())
 		{
-			result.Add(player);
+			if (node is Player player) 
+				result.Add(player);
 		}
+
 		return result;
 	}
 

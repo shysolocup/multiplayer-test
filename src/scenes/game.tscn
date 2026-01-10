@@ -13,7 +13,7 @@
 [ext_resource type="Script" uid="uid://iqerivcko5tq" path="res://src/core/CameraSystem.cs" id="6_pm1mm"]
 [ext_resource type="Script" uid="uid://dd1he2wiyd6x4" path="res://src/core/AudioSystem.cs" id="7_pm1mm"]
 [ext_resource type="Script" uid="uid://clxq4bmgf2uqd" path="res://src/core/Players.cs" id="9_bd8mh"]
-[ext_resource type="Texture2D" uid="uid://dt4t7trtn334h" path="res://src/core/assets/shiftlock.png" id="10_ta85g"]
+[ext_resource type="PackedScene" uid="uid://b3vie0tjo3arm" path="res://src/scenes/core_gui.tscn" id="11_44dqv"]
 [ext_resource type="PackedScene" uid="uid://c3w57vg3x48cu" path="res://src/scenes/server_scripts.tscn" id="14_44dqv"]
 [ext_resource type="Script" uid="uid://i1i7viij1r0d" path="res://src/core/discord/DiscordRPCNode.gd" id="15_3xp0n"]
 [ext_resource type="PackedScene" uid="uid://ds6x2baksbent" path="res://src/scenes/shaders.tscn" id="18_44dqv"]
@@ -52,9 +52,10 @@ Map = NodePath("default")
 metadata/_custom_type_script = "uid://c3yamjsvvi4eo"
 
 [node name="lighting" type="Node3D" parent="workspace" node_paths=PackedStringArray("World", "Lights")]
-transform = Transform3D(0.111295596, -0.9937876, 0, 0.99378705, 0.111295655, 0, 0, 0, 1, 0, 0, 0)
+transform = Transform3D(0.38449648, -0.9231264, 0, 0.92312604, 0.38449663, 0, 0, 0, 1, 0, 0, 0)
 script = ExtResource("4_44dqv")
-TimeOfDay = 17.574
+TargetTimeOfDay = 16.4925
+TimeOfDay = 16.4925
 SkyMaterial = ExtResource("6_44dqv")
 World = NodePath("world")
 Lights = NodePath("lights")
@@ -70,17 +71,21 @@ metadata/_custom_type_script = "uid://dd1he2wiyd6x4"
 unique_name_in_owner = true
 script = ExtResource("6_gh3at")
 
-[node name="cameras" type="Node3D" parent="client"]
+[node name="cameras" type="Node3D" parent="client" node_paths=PackedStringArray("CurrentCamera")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.430248, 1.2825328, 0)
 script = ExtResource("6_pm1mm")
+CurrentCamera = NodePath("thirdPerson")
 metadata/_custom_type_script = "uid://iqerivcko5tq"
 
-[node name="spring" type="SpringArm3D" parent="client/cameras"]
-spring_length = 6.0
+[node name="freecam" type="Camera3D" parent="client/cameras"]
+current = true
 
-[node name="thirdPerson" type="Camera3D" parent="client/cameras/spring"]
+[node name="firstPerson" type="Camera3D" parent="client/cameras"]
+transform = Transform3D(-0.22981189, 0, -0.9732351, 0, 1, 0, 0.9732351, 0, -0.22981189, 0, 0, 0)
+
+[node name="thirdPerson" type="Camera3D" parent="client/cameras"]
 physics_interpolation_mode = 1
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4.7691236)
+current = true
 
 [node name="gui" type="Control" parent="client"]
 layout_mode = 3
@@ -91,6 +96,8 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("2_276xm")
 metadata/_edit_use_anchors_ = true
+
+[node name="core" parent="client/gui" instance=ExtResource("11_44dqv")]
 
 [node name="shaders" parent="client/gui" instance=ExtResource("18_44dqv")]
 layer = -1
@@ -144,28 +151,6 @@ alignment = 1
 [node name="joinButton" type="Button" parent="client/gui/lobby/container"]
 layout_mode = 2
 text = "join"
-
-[node name="game" type="CanvasLayer" parent="client/gui"]
-layer = -1
-
-[node name="crosshair" type="TextureRect" parent="client/gui/game"]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -12.5
-offset_top = -12.5
-offset_right = 12.5
-offset_bottom = 12.5
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-texture = ExtResource("10_ta85g")
-expand_mode = 1
-stretch_mode = 4
-metadata/_edit_use_anchors_ = true
 
 [node name="scripts" parent="client" instance=ExtResource("19_3xp0n")]
 

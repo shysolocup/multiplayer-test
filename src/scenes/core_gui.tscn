@@ -1,0 +1,25 @@
+[gd_scene load_steps=2 format=3 uid="uid://b3vie0tjo3arm"]
+
+[ext_resource type="Texture2D" uid="uid://dt4t7trtn334h" path="res://src/core/assets/shiftlock.png" id="1_cm4xc"]
+
+[node name="core" type="CanvasLayer"]
+layer = -1
+
+[node name="crosshair" type="TextureRect" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -12.5
+offset_top = -12.5
+offset_right = 12.5
+offset_bottom = 12.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("1_cm4xc")
+expand_mode = 1
+stretch_mode = 4
+metadata/_edit_use_anchors_ = true

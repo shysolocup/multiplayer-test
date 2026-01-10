@@ -4,8 +4,12 @@ using System;
 /// <summary>
 /// class exclusively for light energy scaling
 /// </summary>
+[Tool]
+[GlobalClass]
 public partial class Sunlight : DirectionalLight3D
 {
 	[Export]
-	public float MaxEnergy = 1;
+	public float BaseEnergy = 1;
+	[Export]
+	public Color BaseColor = Colors.White;
 }

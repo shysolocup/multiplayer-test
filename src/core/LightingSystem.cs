@@ -38,25 +38,65 @@ public partial class LightingSystem : Singleton3D<LightingSystem>
 
 	private float timeofday = 12;
 
+	[Export(PropertyHint.Range, "0.0,24.0,0.0001")]
+	public float TargetTimeOfDay = 12;
+
 	[Export(PropertyHint.Range, "0.0,24.0")]
 	public float TimeOfDay
 	{
 		get => timeofday;
 		set
 		{
-			DoTimeOfDay();
-			timeofday = value;
+			DoTimeOfDay(-1);
+			TargetTimeOfDay = value;
 		}
 	}
 
+	[Export]
+	public float SkyEasing = 20;
+
 	private float MidnightDistance()
 	{
-		var time = Mathf.PosMod(TimeOfDay, 24f); // wrap
-		return Mathf.Min(time, 24f - time); // 0 → 12
+		var time = Mathf.PosMod(TimeOfDay, 24);
+		return Mathf.Min(time, 24 - time);
 	}
 
-	public void DoTimeOfDay()
+	private float DaylightFactor()
 	{
+		float t = Mathf.PosMod(TimeOfDay, 24f);
+
+		float morning = Mathf.InverseLerp(0f, 7f, t);
+		float evening = 1f - Mathf.InverseLerp(17f, 24f, t);
+
+		float daylight = Mathf.Min(morning, evening);
+		daylight = Mathf.Clamp(daylight, 0f, 1f);
+
+		// HARD falloff
+		daylight = Mathf.Pow(daylight, 25.0f); // ← increase for darker faster
+
+		return daylight;
+	}
+
+	private static float EaseOutCubic(float t)
+	{
+		return 1 - Mathf.Pow(1 - t, 3);
+	}
+
+	public void DoTimeOfDay(double delta)
+	{
+		if (delta != -1)
+		{
+			float diff = Mathf.Abs(TargetTimeOfDay - timeofday);
+			float factor = Mathf.Clamp(diff / 12, 0f, 1);
+			float easedSpeed = SkyEasing * EaseOutCubic(factor);
+
+			timeofday = Mathf.MoveToward(
+				timeofday,
+				TargetTimeOfDay,
+				easedSpeed * (float)delta
+			);
+		}
+
 		if (World is null)
 			EnsureWorld();
 		if (Lights is null)
@@ -69,8 +109,11 @@ public partial class LightingSystem : Singleton3D<LightingSystem>
 		float d = Mathf.Abs(TimeOfDay);
 		d = Mathf.Min(d, 24 - d);
 
+		// cumulus cloud fading
+		// (cumulus is the big clouds)
+
 		// thje threshold where it starts fading
-		const float cumulusThreshold = 17;
+		const float cumulusThreshold = 16;
 
 		float maxDistance = Mathf.Min(
 			Mathf.Abs(cumulusThreshold),
@@ -83,8 +126,11 @@ public partial class LightingSystem : Singleton3D<LightingSystem>
 
 		float cumulus = Mathf.Lerp(0.7f, 10, baseValue);
 
-		const float cirrusFadeStart = 17;
-		const float cirrusFadeEnd = 10;
+		// cirrus cloud fading
+		// (cirrus is the thing it looks kinda cook but weird)
+
+		const float cirrusFadeStart = 13;
+		const float cirrusFadeEnd = 11;
 
 		float cirrusBase = (TimeOfDay >= cirrusFadeStart)
 			? Mathf.InverseLerp(cirrusFadeStart, 20, TimeOfDay)
@@ -101,10 +147,17 @@ public partial class LightingSystem : Singleton3D<LightingSystem>
 		SkyMaterial.SetShaderParameter("clouds_alpha_upper_bound", cumulus);
 		SkyMaterial.SetShaderParameter("cirrus_opacity", cirrus);
 
-		var sgugh = Lights.GetNode("sunlight");
+		var sgugh = Lights.GetNode("./sunlight");
 
 		if (sgugh is Sunlight sunlight)
 		{
+			float factor = DaylightFactor();
+			sunlight.LightEnergy = sunlight.BaseEnergy * factor;
+
+			float warmth = 1 - factor;
+
+			// Lerp from normal sun color to sunset color
+			sunlight.LightColor = sunlight.BaseColor.Lerp(Colors.OrangeRed, warmth);
 		}
 
 		Rotation = new Vector3(Rotation.X, Rotation.Y, angle);
@@ -115,7 +168,7 @@ public partial class LightingSystem : Singleton3D<LightingSystem>
 	{
 		base._Process(delta);
 
-		DoTimeOfDay();
+		DoTimeOfDay(delta);
 	}
 
 
@@ -181,6 +234,12 @@ public partial class LightingSystem : Singleton3D<LightingSystem>
 	[ExportToolButton("Reset / Apply")] 
 	private Callable ResetCall => Callable.From(_resetCall);
 	private void _resetCall() => ResetApply();
+
+	private Callable DayCall => Callable.From(_dayCall);
+	private void _dayCall()
+	{
+		
+	}
 
 	public bool LightingIs(string name) => Lighting is PackedScene light && light.ResourcePath.Contains(name);
 	public bool TempLightingIs(string name) => TempLighting is PackedScene temp && temp.ResourcePath.Contains(name);
@@ -378,7 +437,7 @@ public partial class LightingSystem : Singleton3D<LightingSystem>
 			}
 
 			if (World is not null)
-				DoTimeOfDay();
+				DoTimeOfDay(-1);
 		}
 	}
 

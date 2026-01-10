@@ -19,6 +19,11 @@ public partial class Replicator : Singleton<Replicator>
 
 		server = await Server.Instance();
 		client = await Client.Instance();
+
+		NewConnection += id =>
+		{
+			GD.Print($"received new player joining {id}");	
+		};
 	}
 
 

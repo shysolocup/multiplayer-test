@@ -1,11 +1,29 @@
-[gd_scene load_steps=5 format=3 uid="uid://bpw5knwg1eohj"]
+[gd_scene load_steps=10 format=3 uid="uid://bpw5knwg1eohj"]
 
 [ext_resource type="Script" uid="uid://da68dgxcsirv3" path="res://src/core/Mouse.cs" id="1_bvsnt"]
+[ext_resource type="PackedScene" uid="uid://5tihhnhgdwvp" path="res://src/core/scenes/core_scripts.tscn" id="1_esq2d"]
 [ext_resource type="Script" uid="uid://dhuxka35qobys" path="res://src/core/libs/TaskLib.cs" id="2_5hfk5"]
 [ext_resource type="Script" uid="uid://cg8gr2yk5xjyi" path="res://src/core/libs/JsonLib.cs" id="3_h743u"]
 [ext_resource type="Script" uid="uid://ws1xb0ii3wd5" path="res://src/core/libs/FileLib.cs" id="4_f784k"]
+[ext_resource type="Script" uid="uid://ty7o1cv1dcvo" path="res://src/core/Screen.cs" id="5_tuapi"]
+[ext_resource type="Texture2D" uid="uid://mojdceb4jaa1" path="res://src/core/assets/bear5.png" id="6_eilea"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tuapi"]
+transparency = 1
+shading_mode = 0
+albedo_texture = ExtResource("6_eilea")
+billboard_mode = 3
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_eilea"]
+material = SubResource("StandardMaterial3D_tuapi")
+orientation = 2
 
 [node name="hidden" type="Node"]
+
+[node name="coreScripts" parent="." instance=ExtResource("1_esq2d")]
 
 [node name="mouse" type="Node" parent="."]
 script = ExtResource("1_bvsnt")
@@ -21,3 +39,11 @@ metadata/_custom_type_script = "uid://cg8gr2yk5xjyi"
 [node name="files" type="Node" parent="."]
 script = ExtResource("4_f784k")
 metadata/_custom_type_script = "uid://ws1xb0ii3wd5"
+
+[node name="screen" type="Node" parent="."]
+script = ExtResource("5_tuapi")
+metadata/_custom_type_script = "uid://ty7o1cv1dcvo"
+
+[node name="bear5" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 187.48846, 2.4899325, 0)
+mesh = SubResource("PlaneMesh_eilea")

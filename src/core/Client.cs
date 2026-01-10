@@ -56,9 +56,11 @@ public partial class Client : Singleton<Client>
 			CallLocal = true
 		)
 	]
-	private void _setLocalPlayer(Player player)
+	private void _setLocalPlayer(ulong id)
 	{
-		if (Multiplayer.GetUniqueId() == Multiplayer.GetRemoteSenderId())
+		var instance = InstanceFromId(id);
+
+		if (instance is Player player && Multiplayer.GetUniqueId() == Multiplayer.GetRemoteSenderId())
 		{
 			GD.Print("set local player");
 			LocalPlayer = player;	
@@ -80,26 +82,7 @@ public partial class Client : Singleton<Client>
 	public static async Task<Error> SetLocalPlayer(Player player)
 	{
 		var client = await Instance();
-		GD.Print(player.GetPeerId());
-		return client.RpcId(player.GetPeerId(), MethodName._setLocalPlayer, player);
-	}
-
-
-	/// <summary>
-	/// Sets the local player of the client using a given id
-	/// <para/>@server
-	/// </summary>
-	[
-		Rpc(
-			MultiplayerApi.RpcMode.Authority, 
-			TransferMode = MultiplayerPeer.TransferModeEnum.Reliable
-		)
-	]
-
-	public static async Task<Error> SetLocalPlayer(string id, Player player)
-	{
-		var client = await Instance();
-		return client.RpcId(long.Parse(id), MethodName._setLocalPlayer, player);
+		return client.RpcId(player.GetPeerId(), MethodName._setLocalPlayer, player.GetInstanceId());
 	}
 
 
@@ -155,7 +138,9 @@ public partial class Client : Singleton<Client>
 	public static async Task<Error> Run(string id, StringName method, params Variant[] args)
 	{
 		var client = await Instance();
-		return client.RpcId(long.Parse(id), method, args);
+		var player = await Players.GetPlayerById(id);
+
+		return client.RpcId(player.GetPeerId(), method, args);
 	}
 
 
@@ -173,6 +158,6 @@ public partial class Client : Singleton<Client>
 	
 	public static async Task<Error> Run(Player player, StringName method, params Variant[] args)
 	{
-		return await Run(player.GetId(), method, args);
+		return await Run(player.GetPeerId(), method, args);
 	}
 }

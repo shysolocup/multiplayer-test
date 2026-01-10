@@ -18,10 +18,13 @@ public partial class BehaviorFolder : Node
     public Array<Behavior> GetBehaviors()
     {
 		var result = new Array<Behavior>();
-		foreach (var script in GetChildren().Where(n => n is Behavior).Cast<Behavior>())
+
+		foreach (var node in GetChildren())
 		{
-			result.Add(script);
+            if (node is Behavior script)
+			    result.Add(script);
 		}
+        
 		return result;
     }
 

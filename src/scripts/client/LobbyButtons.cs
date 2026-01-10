@@ -3,17 +3,6 @@ using Godot;
 
 public partial class LobbyButtons : Behavior
 {
-	private void goaway()
-	{
-		foreach (var node in GetTree().GetNodesInGroup("lobbyui"))
-		{
-			if (node is Control control)
-			{
-				control.Visible = false;
-			}
-		}
-	}
-
 	// Called when the script node and its dependencies are ready.
 	public override void OnReady()
 	{
@@ -46,5 +35,16 @@ public partial class LobbyButtons : Behavior
 			print(id);
 			goaway();
 		};
+	}
+
+	private void goaway()
+	{
+		foreach (var node in GetTree().GetNodesInGroup("lobbyui"))
+		{
+			if (node is Control control)
+			{
+				control.Visible = false;
+			}
+		}
 	}
 }

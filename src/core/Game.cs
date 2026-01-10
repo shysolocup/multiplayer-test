@@ -22,6 +22,13 @@ public partial class Game : Singleton<Game>
 		return game.GetNode<T>(nodePath);
 	}
 
+	public static async Task Loaded() {
+        while (!IsLoaded)
+        {
+            await Task.Delay(10);
+        }
+    }
+
 	public static bool IsLoaded = false;
 
 	/// <summary>
@@ -81,6 +88,8 @@ public partial class Game : Singleton<Game>
 		GD.Print("loaded mouse");
 
 		GD.Print("game loaded");
+
+		IsLoaded = true;
 	}
 
 	public override async void _Ready()
