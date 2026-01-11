@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Core;
 using Godot;
 
 /// <summary>
@@ -10,11 +11,10 @@ using Godot;
 public partial class CameraSystem : Singleton3D<CameraSystem>
 {
 
-	#region vars
-
 	[Signal] public delegate void CameraTypeChangedEventHandler(CameraTypeEnum cameraType);
 	[Signal] public delegate void SubjectChangedEventHandler(Character subject);
 	[Signal] public delegate void CurrentCameraChangedEventHandler(Camera3D camera);
+
 	[Signal] public delegate void FreecamEnabledEventHandler();
 	[Signal] public delegate void FreecamDisabledEventHandler();
 	[Signal] public delegate void ShiftLockEnabledEventHandler();
@@ -36,15 +36,15 @@ public partial class CameraSystem : Singleton3D<CameraSystem>
 			{
 				ThirdPersonCamera ??= GetNode<Camera3D>("./thirdPerson");
 				FreecamCamera ??= GetNode<Camera3D>("./freecam");
-				FirstPersonCamera ??= GetNode<Camera3D>("./firstPerson");	
+				FirstPersonCamera ??= GetNode<Camera3D>("./firstPerson");
 			}
 
 			var value = 
-				(FreecamCamera is not null && FreecamCamera.Current) || FreecamActive
+				FreecamCamera.Current || FreecamActive || GotoCameraType == CameraTypeEnum.Custom
 					? GotoCameraType
-				: ThirdPersonCamera is not null && ThirdPersonCamera.Current 
+				: ThirdPersonCamera.Current 
 					? CameraTypeEnum.ThirdPerson
-				: FirstPersonCamera is not null && FirstPersonCamera.Current
+				: FirstPersonCamera.Current
 					? CameraTypeEnum.FirstPerson
 				: CameraTypeEnum.Custom;
 
@@ -64,12 +64,10 @@ public partial class CameraSystem : Singleton3D<CameraSystem>
 
 			GotoCameraType = value;
 
-			CurrentCamera = 
-				value == CameraTypeEnum.ThirdPerson && ThirdPersonCamera is not null
-					? ThirdPersonCamera
-				: value == CameraTypeEnum.FirstPerson && FirstPersonCamera is not null
-					? FirstPersonCamera
-				: CurrentCamera;
+			if (value == CameraTypeEnum.FirstPerson)
+				CurrentCamera = FirstPersonCamera;
+			else if (value ==  CameraTypeEnum.ThirdPerson)
+				CurrentCamera = ThirdPersonCamera;
 
 			EmitSignalCameraTypeChanged(value);
 		}
@@ -102,10 +100,18 @@ public partial class CameraSystem : Singleton3D<CameraSystem>
 				FirstPersonCamera ??= GetNode<Camera3D>("./firstPerson");	
 			}
 
-			return 
-				FreecamActive || FreecamCamera is not null && FreecamCamera.Current && GotoCamera is not null
-				? GotoCamera
-				: GetViewport().GetCamera3D(); 
+			// the editor sucks at loading this so I have to catch it or else it spams a big error
+			try 
+			{
+				return 
+					FreecamActive || FreecamCamera is not null && FreecamCamera.Current && GotoCamera is not null
+						? GotoCamera
+						: GetViewport().GetCamera3D(); 
+			}
+			catch
+			{
+				return null;
+			}
 		}
 		
 		set {
@@ -116,25 +122,31 @@ public partial class CameraSystem : Singleton3D<CameraSystem>
 				FirstPersonCamera ??= GetNode<Camera3D>("./firstPerson");	
 			}
 
-			value ??= CameraType == CameraTypeEnum.ThirdPerson 
-					? ThirdPersonCamera
-				: CameraType == CameraTypeEnum.FirstPerson
-					? FirstPersonCamera
-				: FreecamActive && FreecamCamera is not null
-					? FreecamCamera	
-				: null;
 
-			if (value != FreecamCamera)
+			if (value != ThirdPersonCamera && value != FirstPersonCamera && (CameraType == CameraTypeEnum.ThirdPerson || CameraType == CameraTypeEnum.FirstPerson))
+				CameraType = CameraTypeEnum.Custom;
+
+
+			if (value != FreecamCamera && FreecamActive)
 			{
 				GotoCamera = value;	
 
 				EmitSignalCurrentCameraChanged(value);
 			}
 
-			else if (!FreecamActive)
+			else if (FreecamCamera is not null && value == FreecamCamera && FreecamActive)
+			{
+				if (!Engine.IsEditorHint())
+
+					GetViewport().GetCamera3D().Current = false;
+					value.Current = true;
+			}
+
+			else
 			{
 				GD.Print($"set camera to {value?.Name}");
 
+				GetViewport().GetCamera3D().Current = false;
 				value.Current = true;
 
 				EmitSignalCurrentCameraChanged(value);
@@ -142,6 +154,8 @@ public partial class CameraSystem : Singleton3D<CameraSystem>
 		}
 	}
 	#endregion
+
+	#region vars
 
 	[Export] public Vector3 CameraOffset = Vector3.Zero;
 	[Export] public float Sensitivity = 0.003f;
@@ -151,17 +165,19 @@ public partial class CameraSystem : Singleton3D<CameraSystem>
 	[Export] public float ZoomStep = 1;
 	[Export] public float ShiftLockOffset = 0.5f;
 	[Export] public bool ShiftLocked = false;
+	[Export] public bool CanMoveCamera = true;
 
 	public Camera3D ThirdPersonCamera { get; set; }
 	public Camera3D FirstPersonCamera { get; set; }
 	public Camera3D FreecamCamera { get; set; }
 	public SpringArm3D ThirdPersonSpring { get; set; }
+	public Node3D FirstPersonRoot { get; set; }
 
 
 	#endregion
 
 
-	#region target
+	#region subject
 	private static Character _subject { get; set; }
 
 	[Export] public Character Subject { 
@@ -198,6 +214,7 @@ public partial class CameraSystem : Singleton3D<CameraSystem>
 	[
 		Rpc(
 			MultiplayerApi.RpcMode.Authority, 
+			CallLocal = true,
 			TransferMode = MultiplayerPeer.TransferModeEnum.Reliable
 		)
 	]
@@ -209,9 +226,11 @@ public partial class CameraSystem : Singleton3D<CameraSystem>
 
 	#endregion
 
+	private Mouse mouse;
+
 	#region ready
 	
-	public override void _Ready()
+	public async override void _Ready()
 	{
 		base._Ready();
 
@@ -221,20 +240,47 @@ public partial class CameraSystem : Singleton3D<CameraSystem>
 
 		if (Engine.IsEditorHint()) return;
 
-		ThirdPersonCamera.Position = Vector3.Zero;
-		ThirdPersonCamera.Rotation = Vector3.Zero;
+		if (ThirdPersonCamera is not null)
+		{
+			ThirdPersonCamera.Position = Vector3.Zero;
+			ThirdPersonCamera.Rotation = Vector3.Zero;
 
-		var spring = new SpringArm3D();
-		spring.Name = "thirdPersonSpring";
-		AddChild(spring);
+			var spring = new SpringArm3D
+			{
+				Name = "thirdPersonSpring"
+			};
 
-		ThirdPersonCamera.Reparent(spring);
-		ThirdPersonCamera.Position = new Vector3(0, 0, 5);
-		ThirdPersonSpring = spring;
+			AddChild(spring);
 
-		CallDeferred(MethodName.SetupFreecamNodes);
+			ThirdPersonCamera.Reparent(spring);
+			ThirdPersonCamera.Position = new Vector3(0, 0, 5);
+			ThirdPersonSpring = spring;	
+		}
+
+		if (FirstPersonCamera is not null)
+		{
+			var root = new Node3D
+			{
+				Name = "firstPersonRoot"
+			};
+
+			AddChild(root);
+
+			FirstPersonCamera.Reparent(root);
+			FirstPersonRoot = root;
+		}
 		
-		CameraType = GotoCameraType;
+		if (FreecamCamera is not null)
+		{
+			CallDeferred(MethodName.SetupFreecamNodes);	
+		}
+
+		GotoCamera = CurrentCamera;
+		GotoCameraType = CameraType;
+
+		mouse = await Mouse.Instance();
+
+		mouse.BindActor(this, Mouse.PriorityChannel.Camera);
 	}
 
 
@@ -258,7 +304,7 @@ public partial class CameraSystem : Singleton3D<CameraSystem>
 	public VBoxContainer EventLog;
 
 	public int FreecamMaxSpeed = 4;
-	public float FreecamMinSpeed = 0.1f;
+	public float FreecamMinSpeed = 0.01f;
 	public float FreecamAcceleration = 0.1f;
 
 	[Export]
@@ -284,7 +330,7 @@ public partial class CameraSystem : Singleton3D<CameraSystem>
 		{
 			Position = Position,
 			Rotation = Rotation,
-			Name = "FreecamPivot"
+			Name = "freecamPivot"
 		};
 
 		FreecamCamera.AddSibling(FreecamPivot);
@@ -295,9 +341,6 @@ public partial class CameraSystem : Singleton3D<CameraSystem>
 		ScreenOverlay = new();
 		ScreenOverlay.AddThemeConstantOverride("Separation", 8);
 		FreecamCamera.AddChild(ScreenOverlay);
-		
-		ScreenOverlay.AddChild(MakeLabel("Debug Camera"));
-		ScreenOverlay.AddSpacer(false);
 
 		ScreenOverlay.AddChild(EventLog);
 		ScreenOverlay.Visible = OverlayText;
@@ -306,19 +349,22 @@ public partial class CameraSystem : Singleton3D<CameraSystem>
 	private void FreecamProcess(double delta)
 	{
 		if (FreecamActive && FreecamCamera is not null && !Engine.IsEditorHint()) {
-			Vector2 inputDir = Input.GetVector("ui_left", "ui_right", "ui_up", "ui_down");
+			mouse.SetBindingMode(Mouse.PriorityChannel.Camera, 
+				Input.IsActionPressed("camera_move")
+					? Input.MouseModeEnum.Captured 
+					: Input.MouseModeEnum.Visible
+			);
 
-			if (Input.IsActionPressed("ui_accept") || Input.IsKeyPressed(Key.E))
-			{
-			}
+			var upDir = Input.GetAxis("fly_up", "fly_down");
+			var inputDir = GetInputDirection(delta);
 
-			if (inputDir != Vector2.Zero)
+			if (inputDir != Vector2.Zero || upDir != 0)
 			{
-				Vector3 forward = -GlobalTransform.Basis.Z;
+				Vector3 forward = -FreecamCamera.GlobalBasis.Z;
 				forward.Y = 0;
 				forward = forward.Normalized();
 
-				Vector3 right = GlobalTransform.Basis.X;
+				Vector3 right = FreecamCamera.GlobalBasis.X;
 				right.Y = 0;
 				right = right.Normalized();
 
@@ -326,28 +372,35 @@ public partial class CameraSystem : Singleton3D<CameraSystem>
 					right * inputDir.X 
 					+ 
 					forward * -inputDir.Y
+					+
+					new Vector3(0, -upDir, 0)
 				)
 				.Normalized();
 
-				FreecamVelocity = FreecamVelocity.Lerp(moveDir * FreecamTargetSpeed, FreecamAcceleration);
+				FreecamVelocity = FreecamVelocity.Lerp(
+					moveDir * FreecamTargetSpeed, 
+					FreecamAcceleration
+				);
 			}
 			else
 			{
-				FreecamVelocity = FreecamVelocity.Lerp(Vector3.Zero * FreecamTargetSpeed, FreecamAcceleration);
+				FreecamVelocity = FreecamVelocity.Lerp(Vector3.Zero, FreecamAcceleration);
 			}
+
+			FreecamPivot.Position += FreecamVelocity;
 		}
 	}
 
 	private void FreecamSpeedUp()
 	{
-		FreecamTargetSpeed = Mathf.Clamp(FreecamTargetSpeed + 0.15f, FreecamMinSpeed, FreecamMaxSpeed);
+		FreecamTargetSpeed = Mathf.Clamp(FreecamTargetSpeed + 0.05f, FreecamMinSpeed, FreecamMaxSpeed);
 		DisplayMessage($"[Speed up] {FreecamTargetSpeed}");
 	}
 
 	private void FreecamSlowDown()
 	{
-		FreecamTargetSpeed = Mathf.Clamp(FreecamTargetSpeed - 0.15f, FreecamMinSpeed, FreecamMaxSpeed);
-		DisplayMessage($"[Slow up] {FreecamTargetSpeed}");
+		FreecamTargetSpeed = Mathf.Clamp(FreecamTargetSpeed - 0.05f, FreecamMinSpeed, FreecamMaxSpeed);
+		DisplayMessage($"[Slow down] {FreecamTargetSpeed}");
 	}
 
 	private void FreecamInput(InputEvent @event)
@@ -355,25 +408,36 @@ public partial class CameraSystem : Singleton3D<CameraSystem>
 		if (Input.IsActionJustPressed("freecam") && FreecamCamera is not null)
 		{
 			FreecamActive ^= true;
-			CurrentCamera = FreecamActive ? FreecamCamera : GotoCamera;
-			Input.SetMouseMode( FreecamActive ? Input.MouseModeEnum.Captured : Input.MouseModeEnum.Visible);
 
-			if (FreecamActive)
+			CurrentCamera = FreecamActive ? FreecamCamera : GotoCamera;
+
+			if (FreecamActive) {
+				GD.Print("freecam enabled");
+				FreecamCamera.GlobalTransform = CurrentCamera.GlobalTransform;
+				DisplayMessage("Freecan Enabled - Alt P");
 				EmitSignalFreecamEnabled();
-			else
+			}
+			else {
+				GD.Print($"freecam disabled, going to {GotoCamera.Name}");
+				CurrentCamera = GotoCamera;
+				DisplayMessage("Freecan Disabled - Alt P");
 				EmitSignalFreecamDisabled();
+			}
 		}
 
 		if (FreecamActive && FreecamCamera is not null && !Engine.IsEditorHint())
 		{
 			// Turn around
-			if (@event is InputEventMouseMotion motion)
+			if (@event is InputEventMouseMotion motion && Input.IsActionPressed("camera_move"))
 			{
-				FreecamPivot.RotateY( - motion.Relative.X * Sensitivity);
-				FreecamCamera.RotateX( - motion.Relative.Y * Sensitivity);
-
+				var realSens = Sensitivity;
 				var rot = FreecamCamera.Rotation;
-				rot.X = Mathf.Clamp(Rotation.X,  - Mathf.Pi / 2, Mathf.Pi / 2);
+
+				rot.Y -= motion.Relative.X * realSens;
+				rot.Y = Mathf.Wrap(rot.Y, 0, float.Tau);
+
+				rot.X -= motion.Relative.Y * realSens;
+				rot.X = Mathf.Clamp(rot.X, -float.Pi/2, float.Pi/4);
 				
 				FreecamCamera.Rotation = rot;
 			}
@@ -409,11 +473,15 @@ public partial class CameraSystem : Singleton3D<CameraSystem>
 	}
 
 
-	private static Label MakeLabel(string text)
-		=> new Label
-			{
-				Text = text
-			};
+	private static Label MakeLabel(string text) {
+		var label = new Label {
+			Text = text
+		};
+
+		Chore.Debris(label, 4);
+
+		return label;
+	}
 
 	#endregion
 
@@ -423,9 +491,11 @@ public partial class CameraSystem : Singleton3D<CameraSystem>
 	{
 		if (CameraType == CameraTypeEnum.ThirdPerson && !Engine.IsEditorHint())
 		{
-			Input.MouseMode = (Input.IsActionPressed("camera_move") || ShiftLocked) 
-			? Input.MouseModeEnum.Captured 
-			: Input.MouseModeEnum.Visible;
+			mouse.SetBindingMode(Mouse.PriorityChannel.Camera, 
+				Input.IsActionPressed("camera_move")
+					? Input.MouseModeEnum.Captured 
+					: Input.MouseModeEnum.Visible
+			);
 
 
 			if (Subject is not null && Subject.Head is not null)
@@ -459,7 +529,7 @@ public partial class CameraSystem : Singleton3D<CameraSystem>
 	{
 		if (CameraType == CameraTypeEnum.ThirdPerson && !Engine.IsEditorHint())
 		{
-			if (Input.IsActionJustPressed("shift_lock"))
+			if (Input.IsActionJustPressed("shift_lock") && !FreecamActive)
 			{
 				ShiftLocked ^= true;
 
@@ -487,11 +557,12 @@ public partial class CameraSystem : Singleton3D<CameraSystem>
 	private void ThirdPersonInput(InputEvent @event)
 	{
 		if (
-			@event is InputEventMouseMotion mouse && 
-				(Input.IsActionPressed("camera_move") || ShiftLocked) // if shiftlocked or holding rmb move camera to mouse relative
+			@event is InputEventMouseMotion mouse 
+				&& (Input.IsActionPressed("camera_move") || ShiftLocked) // if shiftlocked or holding rmb move camera to mouse relative
 				&& Subject is not null 
 				&& CameraType == CameraTypeEnum.ThirdPerson 
 				&& !Engine.IsEditorHint()
+				&& CanMoveCamera
 		)
 		{
 			var rot = ThirdPersonSpring.Rotation;
@@ -509,7 +580,70 @@ public partial class CameraSystem : Singleton3D<CameraSystem>
 	}
 
 	#endregion
-	#region events
+
+	#region first person cam
+
+	private void FirstPersonProcess(double delta)
+	{
+		if (CameraType == CameraTypeEnum.FirstPerson && !Engine.IsEditorHint())
+		{
+			mouse.SetBindingMode(Mouse.PriorityChannel.Camera, Input.MouseModeEnum.Captured);
+
+			if (Subject is not null && Subject.Head is not null)
+			{
+				var head = Subject.Head;
+
+				var rootPos = head.GlobalPosition;
+				var basis = FirstPersonRoot.GlobalBasis;
+
+				rootPos -= basis.Z * CameraOffset.Z;
+				rootPos += basis.X * CameraOffset.X;
+				rootPos += basis.Y * CameraOffset.Y;
+
+				FirstPersonRoot.GlobalPosition = rootPos;
+			}
+		}
+	}
+
+	private void FirstPersonInput(InputEvent @event)
+	{
+		if (
+			@event is InputEventMouseMotion mouse
+				&& Subject is not null 
+				&& CameraType == CameraTypeEnum.FirstPerson 
+				&& !Engine.IsEditorHint()
+				&& CanMoveCamera
+		)
+		{
+			var rot = FirstPersonCamera.Rotation;
+
+			var realSens = Sensitivity;
+
+			rot.Y -= mouse.Relative.X * realSens;
+			rot.Y = Mathf.Wrap(rot.Y, 0, float.Tau);
+
+			rot.X -= mouse.Relative.Y * realSens;
+			rot.X = Mathf.Clamp(rot.X, -float.Pi/2, float.Pi/4);
+
+			FirstPersonCamera.Rotation = rot;
+		}
+	}
+
+	#endregion
+
+	#region misc & events
+
+	private Vector2 GetInputDirection(double delta)
+	{
+		Vector2 direction = Input.GetVector("ui_left", "ui_right", "ui_up", "ui_down");
+
+		if (direction.Length() > 0)
+		{
+			direction += direction * (float)delta;
+		}
+
+		return direction;
+	}
 
 	public override void _PhysicsProcess(double delta)
 	{
@@ -518,6 +652,7 @@ public partial class CameraSystem : Singleton3D<CameraSystem>
 		if (Engine.IsEditorHint()) return;
 
 		ThirdPersonProcess(delta);
+		FirstPersonProcess(delta);
 		FreecamProcess(delta);
 	}
 
@@ -538,6 +673,7 @@ public partial class CameraSystem : Singleton3D<CameraSystem>
 		if (Engine.IsEditorHint()) return;
 
 		ThirdPersonInput(@event);
+		FirstPersonInput(@event);
 		FreecamInput(@event);
 	}
 

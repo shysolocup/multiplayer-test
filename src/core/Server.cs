@@ -16,8 +16,8 @@ public partial class Server : Singleton<Server>
 
 	public static string GetId() => NodeTunnelBridge.GetOnlineId(Peer);
 
-	[Export] private int Port = 9998;
-	[Export] private string DefaultServerAddress = "relay.nodetunnel.io"; 
+	private const int Port = 9998;
+	private const string DefaultServerAddress = "relay.nodetunnel.io"; 
 	[Export] private int MaxPlayers = 20;
 
 
@@ -27,20 +27,12 @@ public partial class Server : Singleton<Server>
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer)]
 	private async Task Init()
 	{
-		if (Peer is not null) throw new System.Exception(@"
-		don;t make another fucking peer you peice of shit I knwo you I 
-		know where you live I know that shitty 
-		fuckin wendys you go to every saturday and sunday you fat fucking chud
-		why do you eat at the same restaurant 2 days in a row every week are you trying to be the manager pleaseget 
-		a job fattie
-		"
-		
-		);
+		if (Peer is not null) throw new System.Exception("can't make another peer");
 		
 		Peer = NodeTunnelBridge.NewPeer();
 		Multiplayer.MultiplayerPeer = Peer;
 
-		NodeTunnelBridge.ConnectToRelay(Peer, DefaultServerAddress, Port);
+		NodeTunnelBridge.ConnectToRelay(DefaultServerAddress, Port);
 
 		// await to be connected
 		await NodeTunnelBridge.RelayConnected(Peer);

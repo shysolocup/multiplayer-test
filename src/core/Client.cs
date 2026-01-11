@@ -75,6 +75,7 @@ public partial class Client : Singleton<Client>
 	[
 		Rpc(
 			MultiplayerApi.RpcMode.Authority, 
+			CallLocal = true,
 			TransferMode = MultiplayerPeer.TransferModeEnum.Reliable
 		)
 	]
@@ -93,6 +94,7 @@ public partial class Client : Singleton<Client>
 	[
 		Rpc(
 			MultiplayerApi.RpcMode.Authority, 
+			CallLocal = true,
 			TransferMode = MultiplayerPeer.TransferModeEnum.Reliable
 		)
 	]
@@ -105,18 +107,18 @@ public partial class Client : Singleton<Client>
 
 
 	/// <summary>
-	/// More easily run a function directly to the client
+	/// More easily run a function directly to a client
 	/// <para/>@server
 	/// </summary>
 	[
 		Rpc(
 			MultiplayerApi.RpcMode.Authority, 
-			CallLocal = false,
+			CallLocal = true,
 			TransferMode = MultiplayerPeer.TransferModeEnum.Reliable
 		)
 	]
 
-	public static async Task<Error> Run(long id, StringName method, params Variant[] args)
+	public static async Task<Error> Invoke(long id, StringName method, params Variant[] args)
 	{
 		var client = await Instance();
 		return client.RpcId(id, method, args);
@@ -124,18 +126,18 @@ public partial class Client : Singleton<Client>
 
 
 	/// <summary>
-	/// More easily run a function directly to the client
+	/// More easily run a function directly to a client
 	/// <para/>@server
 	/// </summary>
 	[
 		Rpc(
 			MultiplayerApi.RpcMode.Authority, 
-			CallLocal = false,
+			CallLocal = true,
 			TransferMode = MultiplayerPeer.TransferModeEnum.Reliable
 		)
 	]
 
-	public static async Task<Error> Run(string id, StringName method, params Variant[] args)
+	public static async Task<Error> Invoke(string id, StringName method, params Variant[] args)
 	{
 		var client = await Instance();
 		var player = await Players.GetPlayerById(id);
@@ -145,19 +147,96 @@ public partial class Client : Singleton<Client>
 
 
 	/// <summary>
-	/// More easily run a function directly to the server
+	/// More easily run a function directly to a client
 	/// <para/>@server
 	/// </summary>
 	[
 		Rpc(
 			MultiplayerApi.RpcMode.Authority, 
-			CallLocal = false,
+			CallLocal = true,
 			TransferMode = MultiplayerPeer.TransferModeEnum.Reliable
 		)
 	]
 	
-	public static async Task<Error> Run(Player player, StringName method, params Variant[] args)
+	public static async Task<Error> Invoke(Player player, StringName method, params Variant[] args)
 	{
-		return await Run(player.GetPeerId(), method, args);
+		return await Invoke(player.GetPeerId(), method, args);
 	}
-}
+
+
+	/// <summary>
+	/// More easily run a function directly to a client
+	/// <para/>@server
+	/// </summary>
+	[
+		Rpc(
+			MultiplayerApi.RpcMode.Authority, 
+			CallLocal = true,
+			TransferMode = MultiplayerPeer.TransferModeEnum.Reliable
+		)
+	]
+
+	public static async Task<Error> Invoke<T>(long id, T obj, StringName method, params Variant[] args) where T : Node
+	{
+		return obj.RpcId(id, method, args);
+	}
+
+
+	/// <summary>
+	/// More easily run a function directly to a client
+	/// <para/>@server
+	/// </summary>
+	[
+		Rpc(
+			MultiplayerApi.RpcMode.Authority, 
+			CallLocal = true,
+			TransferMode = MultiplayerPeer.TransferModeEnum.Reliable
+		)
+	]
+
+	public static async Task<Error> Invoke<T>(string id, T obj, StringName method, params Variant[] args)
+	{
+		var client = await Instance();
+		var player = await Players.GetPlayerById(id);
+
+		return client.RpcId(player.GetPeerId(), method, args);
+	}
+
+	/// <summary>
+	/// More easily run a function directly to a client
+	/// <para/>@server
+	/// </summary>
+	[
+		Rpc(
+			MultiplayerApi.RpcMode.Authority, 
+			CallLocal = true,
+			TransferMode = MultiplayerPeer.TransferModeEnum.Reliable
+		)
+	]
+	
+	public static async Task<Error> Invoke(Player player, GodotObject obj, StringName method, params Variant[] args)
+	{
+		return await Invoke(player.GetPeerId(), method, args);
+	}
+
+	/// <summary>
+	/// More easily run a function directly to ALL players
+	/// <para/>@server
+	/// </summary>
+	[
+		Rpc(
+			MultiplayerApi.RpcMode.Authority, 
+			CallLocal = true,
+			TransferMode = MultiplayerPeer.TransferModeEnum.Reliable
+		)
+	]
+
+	public static async Task InvokeAll(StringName method, params Variant[] args)
+	{
+		var client = await Instance();
+		foreach (var id in client.Multiplayer.GetPeers())
+		{
+			client.RpcId(id, method, args);
+		}
+	}
+} 

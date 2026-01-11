@@ -8,6 +8,7 @@ public partial class Replicator : Singleton<Replicator>
 
 	[Signal] public delegate void StartedHostingEventHandler(string id);
 	[Signal] public delegate void NewConnectionEventHandler(string id);
+	[Signal] public delegate void JoiningEventHandler(string id);
 	[Signal] public delegate void LeftConnectionEventHandler(string id);
 
 	private Server server { get; set; }
@@ -28,14 +29,16 @@ public partial class Replicator : Singleton<Replicator>
 
 
 	[
-		Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)
+		Rpc(
+			MultiplayerApi.RpcMode.AnyPeer,
+			CallLocal = true
+		)
 	]
 	private async void _join(string id, string hostId)
 	{
 		var remote = Multiplayer.GetRemoteSenderId();
-		EmitSignalNewConnection(id);
 
-		GD.Print("emitted signal");
+		EmitSignalNewConnection(id);
 
 		if (Multiplayer.IsServer())
 		{
@@ -45,7 +48,10 @@ public partial class Replicator : Singleton<Replicator>
 	}
 
 	[
-		Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)
+		Rpc(
+			MultiplayerApi.RpcMode.AnyPeer, 
+			CallLocal = true
+		)
 	]
 	private void _leave(string id)
 	{
@@ -77,7 +83,10 @@ public partial class Replicator : Singleton<Replicator>
 
 
 	[
-		Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)
+		Rpc(
+			MultiplayerApi.RpcMode.AnyPeer, 
+			CallLocal = true
+		)
 	]
 	public async Task Join(string hostId)
 	{
@@ -89,6 +98,8 @@ public partial class Replicator : Singleton<Replicator>
 		await NodeTunnelBridge.Joined(peer);
 
 		var id = Server.GetId();
+
+		EmitSignalJoining(id);
 
 		RpcId(1, MethodName._join, id, hostId);
 

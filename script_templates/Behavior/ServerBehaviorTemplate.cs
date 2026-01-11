@@ -1,5 +1,5 @@
-// meta-name: Behavior Template
-// meta-description: A simple base global behavior/script template
+// meta-name: Server Behavior Template
+// meta-description: A simple base server behavior/script template
 // meta-default: true
 
 using _BINDINGS_NAMESPACE_;
@@ -7,6 +7,7 @@ using System;
 
 
 // check the hover text for the base Behavior class for method names
+[OnServer]
 public partial class _CLASS_ : _BASE_
 {
     // Called when the script node and its dependencies are ready.

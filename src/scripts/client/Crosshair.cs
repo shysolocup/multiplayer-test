@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-// check the hover text for the base Behavior class for method names
+
 public partial class Crosshair : Behavior
 {
 	// Called when the script node and its dependencies are ready.

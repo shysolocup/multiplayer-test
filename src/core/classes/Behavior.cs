@@ -397,6 +397,13 @@ public partial class Behavior : Node
 	/// </summary>
 	public static FileLib files;
 
+	public ContextEnum GetContext() => Attribute.IsDefined(GetType(), typeof(OnServerAttribute)) ? ContextEnum.Server : ContextEnum.Client;
+
+	private bool CanRunOnContext()
+	{
+		var context = GetContext();
+		return context == ContextEnum.Server && Multiplayer.IsServer() || context == ContextEnum.Client;
+	}
 
 	public override async void _Ready()
 	{
@@ -431,9 +438,8 @@ public partial class Behavior : Node
 		json ??= await JsonLib.Instance();
 		files ??= await FileLib.Instance();
 
-		// it's specifically just in this order so ready fires before processes
-		// this might lead to issues but we ball
-		OnReady();
+		if (CanRunOnContext()) 
+			OnReady();
 		
 		ScriptReady = true;
 	}
@@ -448,11 +454,13 @@ public partial class Behavior : Node
 
 		if (what == NotificationApplicationFocusIn)
 		{
-			OnTabbedIn();
+			if (CanRunOnContext())
+				OnTabbedIn();
 		}
 		else if (what == NotificationApplicationFocusOut)
 		{
-			OnTabbedOut();
+			if (CanRunOnContext())
+				OnTabbedOut();
 		}
 	}
 
@@ -460,12 +468,15 @@ public partial class Behavior : Node
 	{
 		base._UnhandledInput(@event);
 
-		OnInput(@event);
+		var canRun = CanRunOnContext();
+
+		if (canRun)
+			OnInput(@event);
 
 		if (@event is InputEventKey key)
 		{
-			if (key.Pressed) OnKeyPressed(key);    
-			else OnKeyReleased(key);
+			if (key.Pressed && canRun) OnKeyPressed(key);    
+			else if (canRun) OnKeyReleased(key);
 		}
 	}
 
@@ -473,7 +484,7 @@ public partial class Behavior : Node
 	{
 		base._Process(delta);
 
-		if (ScriptReady) {
+		if (ScriptReady && CanRunOnContext()) {
 			OnProcess(delta);
 		}
 	}
@@ -482,7 +493,7 @@ public partial class Behavior : Node
 	{
 		base._PhysicsProcess(delta);
 
-		if (ScriptReady) {
+		if (ScriptReady && CanRunOnContext()) {
 			OnPhysics(delta);
 		}
 	}
@@ -490,16 +501,32 @@ public partial class Behavior : Node
 	public override void _EnterTree()
 	{
 		base._EnterTree();
-		OnCreation();
+
+		if (CanRunOnContext())
+		{
+			OnCreation();	
+		}
 	}
 
 	public override void _ExitTree()
 	{
 		base._ExitTree();
-		OnDeletion();
+
+		if (CanRunOnContext())
+		{
+			OnDeletion();	
+		}
 	}
 
 	#endregion
+
+	#region exports
+
+	public enum ContextEnum
+	{	
+		Client = 0,
+		Server = 1
+	}
 
 	[Export]
     public bool Enabled
@@ -507,6 +534,8 @@ public partial class Behavior : Node
         get => ProcessMode != ProcessModeEnum.Disabled;
         set => ProcessMode = value ? ProcessModeEnum.Inherit : ProcessModeEnum.Disabled;
     }
+
+	#endregion
 
 	#region methods
 

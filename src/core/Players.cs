@@ -75,7 +75,7 @@ public partial class Players : Singleton<Players>
 	[
 		Rpc(
 			MultiplayerApi.RpcMode.Authority, 
-			CallLocal = false, 
+			CallLocal = true, 
 			TransferMode = MultiplayerPeer.TransferModeEnum.Reliable
 		)
 	]
@@ -126,7 +126,7 @@ public partial class Players : Singleton<Players>
 	[
 		Rpc(
 			MultiplayerApi.RpcMode.Authority, 
-			CallLocal = false
+			CallLocal = true
 		)
 	]
 

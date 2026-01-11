@@ -42,36 +42,38 @@ public partial class Characters : Singleton3D<Characters>
 				velocity += chara.GetGravity() * (float)delta;
 			}
 
-			if (Input.IsActionPressed("ui_accept") && chara.IsOnFloor())
+			if (Input.IsActionPressed("jump") && chara.IsOnFloor())
 			{
 				velocity.Y = chara.JumpVelocity;
 			}
 
 			Vector2 inputDir = Input.GetVector("ui_left", "ui_right", "ui_up", "ui_down");
 
-			if (cameras.ShiftLocked)
+			if (cameras.ShiftLocked || cameras.CameraType == CameraSystem.CameraTypeEnum.FirstPerson)
 			{
-				Vector3 forward = cam.GlobalTransform.Basis.Z;
-
-				float yaw = Mathf.Atan2(-forward.X, -forward.Z);
+				var rot = chara.GlobalRotation;
 				
-				chara.Rotation = new Vector3(chara.Rotation.X, yaw, chara.Rotation.Z);
+				chara.GlobalRotation = new Vector3(
+					rot.X, 
+					cam.GlobalRotation.Y + Mathf.Pi, 
+					rot.Z
+				);
 
 			}
 
 			if (inputDir != Vector2.Zero)
 			{
-				Vector3 forward = -cam.GlobalTransform.Basis.Z;
+				Vector3 forward = -cam.GlobalBasis.Z;
 				forward.Y = 0;
 				forward = forward.Normalized();
 
-				Vector3 right = cam.GlobalTransform.Basis.X;
+				Vector3 right = cam.GlobalBasis.X;
 				right.Y = 0;
 				right = right.Normalized();
 
 				Vector3 moveDir = (right * inputDir.X + forward * -inputDir.Y).Normalized();
 
-				if (!cameras.ShiftLocked)
+				if (!cameras.ShiftLocked && cameras.CameraType != CameraSystem.CameraTypeEnum.FirstPerson)
 				{
 					float yaw = Mathf.Atan2(moveDir.X, moveDir.Z);
 					yaw = Mathf.LerpAngle(chara.Rotation.Y, yaw, (float)delta * 10f);
@@ -90,7 +92,7 @@ public partial class Characters : Singleton3D<Characters>
 			}
 
 			chara.Velocity = velocity;
-			chara.MoveAndSlide();		
+			chara.MoveAndSlide();
 		}	
 	}
 	#endregion
@@ -146,6 +148,7 @@ public partial class Characters : Singleton3D<Characters>
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	/// Non-Replicated Utility Methods ///
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
 	private static async Task<Character> SpawnDummy(Player player)
 	{
 
@@ -168,7 +171,13 @@ public partial class Characters : Singleton3D<Characters>
 	/// Spawns a character for the given player.
 	/// <para/>@server
 	/// </summary>
-	[Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = false, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+	[
+		Rpc(
+			MultiplayerApi.RpcMode.Authority, 
+			CallLocal = true, 
+			TransferMode = MultiplayerPeer.TransferModeEnum.Reliable
+		)
+	]
 	public async static Task<Character> Spawn(Player player)
 	{
 		player.GetCharacter()?.QueueFree();
