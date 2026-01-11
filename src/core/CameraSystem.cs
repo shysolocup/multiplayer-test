@@ -39,14 +39,23 @@ public partial class CameraSystem : Singleton3D<CameraSystem>
 				FirstPersonCamera ??= GetNode<Camera3D>("./firstPerson");
 			}
 
-			var value = 
-				FreecamCamera.Current || FreecamActive || GotoCameraType == CameraTypeEnum.Custom
-					? GotoCameraType
-				: ThirdPersonCamera.Current 
-					? CameraTypeEnum.ThirdPerson
-				: FirstPersonCamera.Current
-					? CameraTypeEnum.FirstPerson
-				: CameraTypeEnum.Custom;
+			CameraTypeEnum value;
+
+			try
+			{
+				value = 
+					FreecamCamera.Current || FreecamActive || GotoCameraType == CameraTypeEnum.Custom
+						? GotoCameraType
+					: ThirdPersonCamera.Current 
+						? CameraTypeEnum.ThirdPerson
+					: FirstPersonCamera.Current
+						? CameraTypeEnum.FirstPerson
+					: CameraTypeEnum.Custom;
+			}
+			catch
+			{
+				return CameraTypeEnum.Custom;
+			}
 
 			GotoCameraType = value;
 
@@ -76,11 +85,30 @@ public partial class CameraSystem : Singleton3D<CameraSystem>
 	public enum CameraTypeEnum
 	{
 		ThirdPerson = 0,
-		FirstPerson = 1,
-		Custom = 2
+		FirstPerson = 2,
+		Custom = 3
 	}
 
 	#endregion
+
+	private void _changeActive(Camera3D newCamera)
+	{
+		if (newCamera is not null) {
+			// godot really hates getting the camera for some reason
+			try
+			{
+				if (GetViewport().GetCamera3D() is Camera3D current)
+					current.Current = false;	
+			}
+			catch {}
+			
+			newCamera.Current = true;
+			EmitSignalCurrentCameraChanged(newCamera);
+
+			
+			GD.Print($"set camera to {newCamera?.Name}"); 
+		}
+	}
 
 
 	#region CurrentCamera
@@ -123,7 +151,12 @@ public partial class CameraSystem : Singleton3D<CameraSystem>
 			}
 
 
-			if (value != ThirdPersonCamera && value != FirstPersonCamera && (CameraType == CameraTypeEnum.ThirdPerson || CameraType == CameraTypeEnum.FirstPerson))
+			if (
+				value != FreecamCamera 
+				&& value != ThirdPersonCamera 
+				&& value != FirstPersonCamera 
+				&& (CameraType == CameraTypeEnum.ThirdPerson || CameraType == CameraTypeEnum.FirstPerson)
+			)
 				CameraType = CameraTypeEnum.Custom;
 
 
@@ -137,19 +170,12 @@ public partial class CameraSystem : Singleton3D<CameraSystem>
 			else if (FreecamCamera is not null && value == FreecamCamera && FreecamActive)
 			{
 				if (!Engine.IsEditorHint())
-
-					GetViewport().GetCamera3D().Current = false;
-					value.Current = true;
+					_changeActive(value);
 			}
 
 			else
 			{
-				GD.Print($"set camera to {value?.Name}");
-
-				GetViewport().GetCamera3D().Current = false;
-				value.Current = true;
-
-				EmitSignalCurrentCameraChanged(value);
+				_changeActive(value);
 			}
 		}
 	}
@@ -219,10 +245,9 @@ public partial class CameraSystem : Singleton3D<CameraSystem>
 		)
 	]
 	
-	public Error SetSubject(Player player)
-	{
-		return RpcId(player.GetPeerId(), MethodName._setSubject, player.GetInstanceId());
-	}
+	public Error SetSubject(Player player) 
+		=> RpcId(player.GetPeerId(), MethodName._setSubject, player.GetInstanceId());
+
 
 	#endregion
 

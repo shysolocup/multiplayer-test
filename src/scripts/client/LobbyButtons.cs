@@ -1,4 +1,3 @@
-using System.Linq;
 using Godot;
 
 
@@ -49,13 +48,23 @@ public partial class LobbyButtons : Behavior
 
 	private async void join()
 	{
+		if (string.IsNullOrEmpty(lobby.Text)) return;
+
 		print("got it boss, joining!!");
+
+		joinButton.Disabled = true;
+		hostButton.Disabled = true;
+
 		await rep.Join(lobby.Text);
 	}
 
 	private async void host()
 	{
 		print("got it boss, hosting!!");
+
+		joinButton.Disabled = true;
+		hostButton.Disabled = true;
+
 		await rep.Host();
 	}
 

@@ -52,10 +52,10 @@ Map = NodePath("default")
 metadata/_custom_type_script = "uid://c3yamjsvvi4eo"
 
 [node name="lighting" type="Node3D" parent="workspace" node_paths=PackedStringArray("World", "Lights")]
-transform = Transform3D(0.88107264, -0.47298035, 0, 0.47298032, 0.88107264, 0, 0, 0, 1, 0, 0, 0)
+transform = Transform3D(0.7335932, -0.67958844, 0, 0.67958844, 0.7335933, 0, 0, 0, 1, 0, 0, 0)
 script = ExtResource("4_44dqv")
-TargetTimeOfDay = 13.881863
-TimeOfDay = 13.881863
+TargetTimeOfDay = 14.8541
+TimeOfDay = 14.8541
 SkyMaterial = ExtResource("6_44dqv")
 World = NodePath("world")
 Lights = NodePath("lights")
@@ -74,7 +74,7 @@ script = ExtResource("6_gh3at")
 [node name="cameras" type="Node3D" parent="client" node_paths=PackedStringArray("CurrentCamera")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.430248, 1.2825328, 0)
 script = ExtResource("6_pm1mm")
-CameraType = 1
+CameraType = 2
 CurrentCamera = NodePath("firstPerson")
 metadata/_custom_type_script = "uid://iqerivcko5tq"
 

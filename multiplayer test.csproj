@@ -8,4 +8,6 @@
   <ItemGroup>
     <Compile Remove="script_templates/**/*.cs" /> <!-- All .cs files in a directory subtree -->
   </ItemGroup>
+
+  <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 </Project>

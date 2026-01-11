@@ -24,6 +24,7 @@ config/icon="res://icon.svg"
 DiscordRPCLoader="*res://addons/discord-rpc-gd/nodes/discord_autoload.gd"
 Ext="*res://src/core/libs/Ext.cs"
 HiddenSingletons="*res://src/core/scenes/hidden_singletons.tscn"
+ImGuiRoot="*res://addons/imgui-godot/data/ImGuiRoot.tscn"
 
 [display]
 
@@ -36,7 +37,7 @@ project/assembly_name="multiplayer test"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/csg_converter/plugin.cfg", "res://addons/csg_terrain/plugin.cfg", "res://addons/csgtomesh/plugin.cfg", "res://addons/discord-rpc-gd/plugin.cfg", "res://addons/fancy_folder_colors/plugin.cfg", "res://addons/freecam_3D/plugin.cfg", "res://addons/gdscript2all/plugin.cfg", "res://addons/nodetunnel/plugin.cfg", "res://addons/script-ide/plugin.cfg", "res://addons/terrain_3d/plugin.cfg")
+enabled=PackedStringArray("res://addons/csg_converter/plugin.cfg", "res://addons/csg_terrain/plugin.cfg", "res://addons/csgtomesh/plugin.cfg", "res://addons/discord-rpc-gd/plugin.cfg", "res://addons/fancy_folder_colors/plugin.cfg", "res://addons/freecam_3D/plugin.cfg", "res://addons/gdscript2all/plugin.cfg", "res://addons/imgui-godot/plugin.cfg", "res://addons/nodetunnel/plugin.cfg", "res://addons/script-ide/plugin.cfg", "res://addons/terrain_3d/plugin.cfg")
 
 [global_group]
 
