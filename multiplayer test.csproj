@@ -3,11 +3,14 @@
     <TargetFramework>net8.0</TargetFramework>
     <EnableDynamicLoading>true</EnableDynamicLoading>
     <RootNamespace>multiplayertest</RootNamespace>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Remove="script_templates/**/*.cs" /> <!-- All .cs files in a directory subtree -->
   </ItemGroup>
 
-  <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  <ItemGroup>
+    <PackageReference Include="ImGui.NET" Version="1.91.6.1" />
+  </ItemGroup>
 </Project>

@@ -1,23 +1,16 @@
-[gd_scene format=3 uid="uid://ds6x2baksbent"]
+[gd_scene load_steps=5 format=3 uid="uid://ds6x2baksbent"]
 
 [ext_resource type="Script" uid="uid://css84aji0fro1" path="res://src/core/ShaderSystem.cs" id="1_r63nx"]
 [ext_resource type="Shader" uid="uid://dvoxvdndgot3u" path="res://src/assets/shaders/canvas.test.gdshader" id="2_qwnq1"]
+[ext_resource type="Material" uid="uid://bblh7gef8l4y6" path="res://src/assets/shaders/canvas.kuwahara.tres" id="2_wp0mi"]
 [ext_resource type="Script" uid="uid://c6ojy70kwl7os" path="res://src/core/classes/ShaderRect.cs" id="3_qwnq1"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_wp0mi"]
-shader = ExtResource("2_qwnq1")
-shader_parameter/colorA = Color(0.2, 0, 0.1, 1)
-shader_parameter/colorB = Color(0.7, 0.3, 0.4, 1)
-shader_parameter/colorC = Color(1, 0.2, 0.4, 1)
-shader_parameter/discomode = false
-shader_parameter/speed = 1.0
-
-[node name="shaders" type="CanvasLayer" unique_id=1790867041]
+[node name="shaders" type="CanvasLayer"]
 script = ExtResource("1_r63nx")
 metadata/_custom_type_script = "uid://css84aji0fro1"
 
-[node name="lobbyBackground" type="ColorRect" parent="." unique_id=575543256 groups=["lobbyui"]]
-material = SubResource("ShaderMaterial_wp0mi")
+[node name="lobbyBackground" type="ColorRect" parent="." groups=["lobbyui"]]
+material = ExtResource("2_wp0mi")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -26,5 +19,5 @@ grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("3_qwnq1")
 Shader = ExtResource("2_qwnq1")
-ShaderMaterial = SubResource("ShaderMaterial_wp0mi")
+ShaderMaterial = ExtResource("2_wp0mi")
 metadata/_custom_type_script = "uid://c6ojy70kwl7os"

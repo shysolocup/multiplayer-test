@@ -292,7 +292,6 @@ internal sealed partial class Viewports
             var window = (GodotImGuiWindow)GCHandle.FromIntPtr(vp.PlatformUserData).Target!;
             window.Dispose();
             vp.PlatformUserData = IntPtr.Zero;
-            vp.RendererUserData = IntPtr.Zero;
         }
     }
 

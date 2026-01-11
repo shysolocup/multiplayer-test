@@ -79,12 +79,10 @@ internal sealed class State : IDisposable
         {
             io.NativePtr->BackendPlatformName = (byte*)_backendName;
             io.NativePtr->BackendRendererName = (byte*)_rendererName;
-
-            var pio = ImGui.GetPlatformIO().NativePtr;
-            pio->Platform_SetImeDataFn = Marshal.GetFunctionPointerForDelegate(_setImeData);
-            pio->Platform_SetClipboardTextFn = Marshal.GetFunctionPointerForDelegate(
+            io.NativePtr->PlatformSetImeDataFn = Marshal.GetFunctionPointerForDelegate(_setImeData);
+            io.NativePtr->SetClipboardTextFn = Marshal.GetFunctionPointerForDelegate(
                 _setClipboardText);
-            pio->Platform_GetClipboardTextFn = Marshal.GetFunctionPointerForDelegate(
+            io.NativePtr->GetClipboardTextFn = Marshal.GetFunctionPointerForDelegate(
                 _getClipboardText);
         }
 

@@ -1,0 +1,11 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://bblh7gef8l4y6"]
+
+[ext_resource type="Shader" uid="uid://dvoxvdndgot3u" path="res://src/assets/shaders/canvas.test.gdshader" id="1_bvafu"]
+
+[resource]
+shader = ExtResource("1_bvafu")
+shader_parameter/colorA = Color(0.2, 0, 0.1, 1)
+shader_parameter/colorB = Color(0.7, 0.3, 0.4, 1)
+shader_parameter/colorC = Color(1, 0.2, 0.4, 1)
+shader_parameter/discomode = false
+shader_parameter/speed = 1.0
