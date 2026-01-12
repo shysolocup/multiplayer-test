@@ -136,9 +136,7 @@ public partial class Mouse : Singleton<Mouse>
 		MasterHigh,
 		MasterMedium,
 		MasterLow,
-
 		Ui,
-		
 		Camera
 	}
 

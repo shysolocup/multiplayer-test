@@ -520,7 +520,7 @@ public partial class CameraSystem : Singleton3D<CameraSystem>
 				Input.IsActionPressed("camera_move")
 					? Input.MouseModeEnum.Captured 
 					: Input.MouseModeEnum.Visible
-			);
+				);
 
 
 			if (Subject is not null && Subject.Head is not null)

@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://c8cx4xjwluvxw"
-path="res://.godot/imported/RockC.glb-5881ee1ff2072066a3de122ce4239bee.scn"
+path="res://.godot/imported/RockC.glb-b09ec70837604ea2ef80fda7ace4dfce.scn"
 
 [deps]
 
-source_file="res://demo/assets/models/RockC.glb"
-dest_files=["res://.godot/imported/RockC.glb-5881ee1ff2072066a3de122ce4239bee.scn"]
+source_file="res://terraindemo/assets/models/RockC.glb"
+dest_files=["res://.godot/imported/RockC.glb-b09ec70837604ea2ef80fda7ace4dfce.scn"]
 
 [params]
 

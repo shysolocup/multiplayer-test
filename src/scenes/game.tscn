@@ -52,10 +52,10 @@ Map = NodePath("default")
 metadata/_custom_type_script = "uid://c3yamjsvvi4eo"
 
 [node name="lighting" type="Node3D" parent="workspace" node_paths=PackedStringArray("World", "Lights")]
-transform = Transform3D(0.7335932, -0.67958844, 0, 0.67958844, 0.7335933, 0, 0, 0, 1, 0, 0, 0)
+transform = Transform3D(0.65605223, 0.75471514, 0, -0.7547151, 0.65605223, 0, 0, 0, 1, 0, 0, 0)
 script = ExtResource("4_44dqv")
-TargetTimeOfDay = 14.8541
-TimeOfDay = 14.8541
+TargetTimeOfDay = 8.7333
+TimeOfDay = 8.7333
 SkyMaterial = ExtResource("6_44dqv")
 World = NodePath("world")
 Lights = NodePath("lights")
@@ -74,18 +74,17 @@ script = ExtResource("6_gh3at")
 [node name="cameras" type="Node3D" parent="client" node_paths=PackedStringArray("CurrentCamera")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.430248, 1.2825328, 0)
 script = ExtResource("6_pm1mm")
-CameraType = 2
-CurrentCamera = NodePath("firstPerson")
+CurrentCamera = NodePath("thirdPerson")
 metadata/_custom_type_script = "uid://iqerivcko5tq"
 
 [node name="freecam" type="Camera3D" parent="client/cameras"]
 
 [node name="firstPerson" type="Camera3D" parent="client/cameras"]
 transform = Transform3D(-0.22981189, 0, -0.9732351, 0, 1, 0, 0.9732351, 0, -0.22981189, 0, 0, 0)
-current = true
 
 [node name="thirdPerson" type="Camera3D" parent="client/cameras"]
 physics_interpolation_mode = 1
+current = true
 
 [node name="gui" type="Control" parent="client"]
 layout_mode = 3

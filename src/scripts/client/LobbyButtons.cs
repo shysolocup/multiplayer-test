@@ -13,13 +13,6 @@ public partial class LobbyButtons : Behavior
 	{
 		var container = gui.GetNode("./lobby/container");
 
-		mouse.BindActor(
-			actor: this, 
-			priority: Mouse.PriorityChannel.Ui, 
-			mode: Input.MouseModeEnum.Visible,
-			persist: true
-		);
-
 		joinButton = container.GetNode<Button>("joinButton");
 		hostButton = container.GetNode<Button>("hostButton");
 		lobby = container.GetNode<LineEdit>("lobbyId");
@@ -28,6 +21,13 @@ public partial class LobbyButtons : Behavior
 		hostButton.Pressed += host;
 		rep.StartedHosting += hosting;
 		rep.Joining += joining;
+
+		mouse.BindActor(
+			actor: this, 
+			priority: Mouse.PriorityChannel.Ui, 
+			mode: Input.MouseModeEnum.Visible,
+			persist: true
+		);
 	}
 
 
