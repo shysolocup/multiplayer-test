@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Core;
@@ -397,13 +398,47 @@ public partial class Behavior : Node
 	/// </summary>
 	public static FileLib files;
 
-	public ContextEnum GetContext() => Attribute.IsDefined(GetType(), typeof(OnServerAttribute)) ? ContextEnum.Server : ContextEnum.Client;
+	/// <summary>
+	/// the current run context of the script, optional type argument for functions to check what context a specific method is in
+	/// </summary>
+	/// <param name="methodName">optional method to check the context of</param>
+	/// <returns></returns>
+	#nullable enable
+	public ContextEnum GetContext(string? methodName = null) {
+		var t = GetType();
+		var onServer = typeof(OnServerAttribute);
+		var onClient = typeof(OnClientAttribute);
 
-	private bool CanRunOnContext()
+		// scripst by default run on the client unless told otherwise
+		// if the script is told to run on the server it should default the method to the server unless told otherwise
+		bool scriptIsServer = Attribute.IsDefined(t, onServer);
+
+		MethodInfo? method = methodName is not null ? t.GetMethod(methodName) : null;
+
+		// if the method is told to run on the server it'll override the client
+		bool methodIsServer = method is not null && Attribute.IsDefined(method, onServer);
+
+		// if the method is explicitly told to run on the client then it'll ovrderride the overrdieedfjkld
+		bool methodIsClient = method is not null && Attribute.IsDefined(method, onClient);
+
+		return (scriptIsServer || methodIsServer) && !methodIsClient
+			? ContextEnum.Server 
+			: ContextEnum.Client;
+	}
+
+
+	/// <summary>
+	/// boolean check if the following code should be able to run in the current context
+	/// </summary>
+	/// <param name="methodName">optional method to check the context of</param>
+	/// <returns></returns>
+	public bool CanRunOnContext(string? methodName = null)
 	{
-		var context = GetContext();
+		var context = GetContext(methodName);
 		return context == ContextEnum.Server && Multiplayer.IsServer() || context == ContextEnum.Client;
 	}
+
+	#nullable disable
 
 	public override async void _Ready()
 	{
@@ -438,7 +473,7 @@ public partial class Behavior : Node
 		json ??= await JsonLib.Instance();
 		files ??= await FileLib.Instance();
 
-		if (CanRunOnContext()) 
+		if (CanRunOnContext("OnReady")) 
 			OnReady();
 		
 		ScriptReady = true;
@@ -454,12 +489,12 @@ public partial class Behavior : Node
 
 		if (what == NotificationApplicationFocusIn)
 		{
-			if (CanRunOnContext())
+			if (CanRunOnContext("OnTabbedIn"))
 				OnTabbedIn();
 		}
 		else if (what == NotificationApplicationFocusOut)
 		{
-			if (CanRunOnContext())
+			if (CanRunOnContext("OnTabbedOut"))
 				OnTabbedOut();
 		}
 	}
@@ -468,15 +503,13 @@ public partial class Behavior : Node
 	{
 		base._UnhandledInput(@event);
 
-		var canRun = CanRunOnContext();
-
-		if (canRun)
+		if (CanRunOnContext("OnInput"))
 			OnInput(@event);
 
 		if (@event is InputEventKey key)
 		{
-			if (key.Pressed && canRun) OnKeyPressed(key);    
-			else if (canRun) OnKeyReleased(key);
+			if (key.Pressed && CanRunOnContext("OnKeyPressed")) OnKeyPressed(key);    
+			else if (CanRunOnContext("OnKeyReleased")) OnKeyReleased(key);
 		}
 	}
 
@@ -484,7 +517,7 @@ public partial class Behavior : Node
 	{
 		base._Process(delta);
 
-		if (ScriptReady && CanRunOnContext()) {
+		if (ScriptReady && CanRunOnContext("OnProcess")) {
 			OnProcess(delta);
 		}
 	}
@@ -493,7 +526,7 @@ public partial class Behavior : Node
 	{
 		base._PhysicsProcess(delta);
 
-		if (ScriptReady && CanRunOnContext()) {
+		if (ScriptReady && CanRunOnContext("OnPhysics")) {
 			OnPhysics(delta);
 		}
 	}
@@ -502,7 +535,7 @@ public partial class Behavior : Node
 	{
 		base._EnterTree();
 
-		if (CanRunOnContext())
+		if (CanRunOnContext("OnCreation"))
 		{
 			OnCreation();	
 		}
@@ -512,7 +545,7 @@ public partial class Behavior : Node
 	{
 		base._ExitTree();
 
-		if (CanRunOnContext())
+		if (CanRunOnContext("OnDeletion"))
 		{
 			OnDeletion();	
 		}
