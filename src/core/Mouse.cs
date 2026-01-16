@@ -25,8 +25,8 @@ public partial class Mouse : Singleton<Mouse>
 	/// <summary>
 	/// binds a <see cref="MouseModeBinding"/> which controls what should get priority over the mouse's mode
 	/// </summary>
-	public MouseModeBinding BindActor(Node actor, PriorityChannel priority, bool persist = false, Input.MouseModeEnum? mode = null)
-		=> BindActor(actor, (int)priority, persist, mode);
+	public MouseModeBinding BindActor(Node actor, PriorityChannel channel, bool persist = false, Input.MouseModeEnum? mode = null)
+		=> BindActor(actor, (int)channel, persist, mode);
 
 
 	/// <summary>
@@ -37,9 +37,9 @@ public partial class Mouse : Singleton<Mouse>
 	/// <param name="priority">priority level, optionally an int</param>
 	/// <param name="persist">if the mode should persist after all actors are unbound, default false meaning once all the actors disconnect it'll set the mode to null</param>
 	/// <returns></returns>
-	public MouseModeBinding BindActor(Node actor, int priority, bool persist = false, Input.MouseModeEnum? mode = null)
+	public MouseModeBinding BindActor(Node actor, int channel, bool persist = false, Input.MouseModeEnum? mode = null)
 	{
-		if (PriorityList.GetValueOrDefault(priority) is MouseModeBinding value)
+		if (PriorityList.GetValueOrDefault(channel) is MouseModeBinding value)
 		{
 			if (!value.Actors.Contains(actor))
 				value.Actors.Add(actor);
@@ -60,40 +60,40 @@ public partial class Mouse : Singleton<Mouse>
 			if (mode is not null)
 				binding.Mode = mode;
 
-			PriorityList[priority] = binding;
+			PriorityList[channel] = binding;
 				
 		}
 
-		return PriorityList.GetValueOrDefault(priority);
+		return PriorityList.GetValueOrDefault(channel);
 	}
 
 
-	public MouseModeBinding GetBindng(PriorityChannel priority)
-		=> PriorityList.GetValueOrDefault((int)priority);
+	public MouseModeBinding GetBindng(PriorityChannel channel)
+		=> PriorityList.GetValueOrDefault((int)channel);
 
-	public MouseModeBinding GetBindng(int priority)
-		=> PriorityList.GetValueOrDefault(priority);
+	public MouseModeBinding GetBindng(int channel)
+		=> PriorityList.GetValueOrDefault(channel);
 
-	public Array<Node> GetActors(PriorityChannel priority)
-		=> GetBindng(priority).Actors;
+	public Array<Node> GetActors(PriorityChannel channel)
+		=> GetBindng(channel).Actors;
 
-	public Array<Node> GetActors(int priority)
-		=> GetBindng(priority).Actors;
-
-
-	/// <summary>
-	/// sets the mode of the <see cref="MouseModeBinding"/>
-	/// </summary>
-	public Mouse SetBindingMode(PriorityChannel priority, Input.MouseModeEnum mode)
-		=> SetBindingMode((int)priority, mode);
+	public Array<Node> GetActors(int channel)
+		=> GetBindng(channel).Actors;
 
 
 	/// <summary>
 	/// sets the mode of the <see cref="MouseModeBinding"/>
 	/// </summary>
-	public Mouse SetBindingMode(int priority, Input.MouseModeEnum mode)
+	public Mouse SetBindingMode(PriorityChannel channel, Input.MouseModeEnum mode)
+		=> SetBindingMode((int)channel, mode);
+
+
+	/// <summary>
+	/// sets the mode of the <see cref="MouseModeBinding"/>
+	/// </summary>
+	public Mouse SetBindingMode(int channel, Input.MouseModeEnum mode)
 	{
-		if (PriorityList.GetValueOrDefault(priority) is MouseModeBinding value)
+		if (PriorityList.GetValueOrDefault(channel) is MouseModeBinding value)
 		{
 			value.Mode = mode;
 		}
@@ -103,9 +103,9 @@ public partial class Mouse : Singleton<Mouse>
 	/// <summary>
 	/// sets the mode of the <see cref="MouseModeBinding"/>
 	/// </summary>
-	public Mouse SetBindingPersist(int priority, bool persist)
+	public Mouse SetBindingPersist(int channel, bool persist)
 	{
-		if (PriorityList.GetValueOrDefault(priority) is MouseModeBinding value)
+		if (PriorityList.GetValueOrDefault(channel) is MouseModeBinding value)
 		{
 			value.Persist = persist;
 		}
@@ -115,15 +115,15 @@ public partial class Mouse : Singleton<Mouse>
 	/// <summary>
 	/// unbinds a <see cref="MouseModeBinding"/>
 	/// </summary>
-	public bool UnbindActor(Node actor, PriorityChannel priority)
-		=> UnbindActor(actor, (int)priority);
+	public bool UnbindActor(Node actor, PriorityChannel channel)
+		=> UnbindActor(actor, (int)channel);
 
 	/// <summary>
 	/// unbinds a <see cref="MouseModeBinding"/>
 	/// </summary>
-	public bool UnbindActor(Node actor, int priority)
+	public bool UnbindActor(Node actor, int channel)
 	{
-		if (PriorityList.GetValueOrDefault(priority) is MouseModeBinding value)
+		if (PriorityList.GetValueOrDefault(channel) is MouseModeBinding value)
 		{
 			return value.Actors.Remove(actor);
 		}

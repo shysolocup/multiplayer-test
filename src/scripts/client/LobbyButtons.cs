@@ -1,6 +1,8 @@
 using Godot;
 
 
+
+[Prerunner]
 public partial class LobbyButtons : Behavior
 {
 	private LineEdit lobby;
@@ -11,6 +13,8 @@ public partial class LobbyButtons : Behavior
 	// Called when the script node and its dependencies are ready.
 	public override void OnReady()
 	{
+		GD.Print("guh lobby buttons script is running");
+
 		var container = gui.GetNode("./lobby/container");
 
 		joinButton = container.GetNode<Button>("joinButton");
@@ -19,12 +23,13 @@ public partial class LobbyButtons : Behavior
 
 		joinButton.Pressed += join;
 		hostButton.Pressed += host;
-		rep.StartedHosting += hosting;
-		rep.Joining += joining;
+
+		game.StartedHosting += hosting;
+		game.Joining += joining;
 
 		mouse.BindActor(
 			actor: this, 
-			priority: Mouse.PriorityChannel.Ui, 
+			channel: Mouse.PriorityChannel.Ui, 
 			mode: Input.MouseModeEnum.Visible,
 			persist: true
 		);
@@ -55,7 +60,7 @@ public partial class LobbyButtons : Behavior
 		joinButton.Disabled = true;
 		hostButton.Disabled = true;
 
-		await rep.Join(lobby.Text);
+		await game.Join(lobby.Text);
 	}
 
 	private async void host()
@@ -65,7 +70,7 @@ public partial class LobbyButtons : Behavior
 		joinButton.Disabled = true;
 		hostButton.Disabled = true;
 
-		await rep.Host();
+		await game.Host();
 	}
 
 	private void goaway()

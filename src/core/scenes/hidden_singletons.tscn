@@ -23,6 +23,9 @@ orientation = 2
 
 [node name="hidden" type="Node"]
 
+[node name="coreSpawner" type="MultiplayerSpawner" parent="."]
+spawn_path = NodePath("..")
+
 [node name="coreScripts" parent="." instance=ExtResource("1_esq2d")]
 
 [node name="mouse" type="Node" parent="."]

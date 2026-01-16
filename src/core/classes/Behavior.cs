@@ -398,12 +398,23 @@ public partial class Behavior : Node
 	/// </summary>
 	public static FileLib files;
 
+	#endregion
+
+	#region networking methods
+
+	/// <summary>
+	/// if the behavior is a networker meaning it doesn't wait for the game to be truly ready
+	/// </summary>
+	public bool IsPrerunner()
+		=> Attribute.IsDefined(GetType(), typeof(PrerunnerAttribute));
+
 	/// <summary>
 	/// the current run context of the script, optional type argument for functions to check what context a specific method is in
 	/// </summary>
 	/// <param name="methodName">optional method to check the context of</param>
 	/// <returns></returns>
 	#nullable enable
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
 	public ContextEnum GetContext(string? methodName = null) {
 		var t = GetType();
 		
@@ -433,26 +444,27 @@ public partial class Behavior : Node
 	/// </summary>
 	/// <param name="methodName">optional method to check the context of</param>
 	/// <returns></returns>
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
 	public bool CanRunOnContext(string? methodName = null)
 	{
-		if (!Replicator.IsConnected()) return false;
+		if (!Game.IsConnected()) return false;
 
 		var context = GetContext(methodName);
-		return context == ContextEnum.Server && isServer() || context == ContextEnum.Client;
+
+		return (context == ContextEnum.Server && isServer()) || context == ContextEnum.Client;
 	}
 
 	#nullable disable
+	#endregion
+
+	#region ready
 
 	public override async void _Ready()
 	{
 		if (Enabled)
-		{
 			ProcessMode = ProcessModeEnum.Inherit;   
-		}
 		else
-		{
 			ProcessMode = ProcessModeEnum.Disabled;
-		}
 
 		if (isEditor()) return;
 
@@ -476,9 +488,10 @@ public partial class Behavior : Node
 		json ??= await JsonLib.Instance();
 		files ??= await FileLib.Instance();
 
-		await Replicator.WaitUntilConnected();
+		if (!IsPrerunner())
+			await Game.WaitUntilConnected();
 
-		if (CanRunOnContext("OnReady")) 
+		if (IsPrerunner() || CanRunOnContext("OnReady")) 
 			OnReady();
 		
 		ScriptReady = true;
@@ -492,7 +505,7 @@ public partial class Behavior : Node
 	{
 		base._Notification(what);
 
-		if (!Replicator.IsConnected()) return;
+		if (!Game.IsConnected()) return;
 
 		if (what == NotificationApplicationFocusIn)
 		{
@@ -510,7 +523,7 @@ public partial class Behavior : Node
 	{
 		base._UnhandledInput(@event);
 
-		if (!Replicator.IsConnected()) return;
+		if (!Game.IsConnected()) return;
 
 		if (CanRunOnContext("OnInput"))
 			OnInput(@event);
@@ -526,7 +539,7 @@ public partial class Behavior : Node
 	{
 		base._Process(delta);
 
-		if (!Replicator.IsConnected()) return;
+		if (!Game.IsConnected()) return;
 
 		if (ScriptReady && CanRunOnContext("OnProcess")) {
 			OnProcess(delta);
@@ -537,7 +550,7 @@ public partial class Behavior : Node
 	{
 		base._PhysicsProcess(delta);
 
-		if (!Replicator.IsConnected()) return;
+		if (!Game.IsConnected()) return;
 
 		if (ScriptReady && CanRunOnContext("OnPhysics")) {
 			OnPhysics(delta);
@@ -548,7 +561,7 @@ public partial class Behavior : Node
 	{
 		base._EnterTree();
 
-		if (!Replicator.IsConnected()) return;
+		if (!Game.IsConnected()) return;
 
 		if (CanRunOnContext("OnCreation"))
 		{
@@ -560,7 +573,7 @@ public partial class Behavior : Node
 	{
 		base._ExitTree();
 
-		if (!Replicator.IsConnected()) return;
+		if (!Game.IsConnected()) return;
 
 		if (CanRunOnContext("OnDeletion"))
 		{
@@ -593,26 +606,30 @@ public partial class Behavior : Node
 	/// <summary>
 	/// Checks if the script is running on the server (STATIC)
 	/// </summary>
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
 	public static bool isServer(object _ = null)
-		=> Replicator.IsServer();
+		=> Game.IsServer();
 
 
 	/// <summary>
 	/// Checks if the script is running on the server
 	/// </summary>
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
 	public bool isServer() 
-		=> Replicator.IsServer();
+		=> Game.IsServer();
 
 
 	/// <summary>
 	/// Checks if the script is running on the client (STATIC)
 	/// </summary>
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
 	public static bool isClient(object _ = null)
 		=> !isServer();
 
 	/// <summary>
 	/// Checks if the script is running on the client
 	/// </summary>
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
 	public bool isClient() 
 		=> !isServer();
 
@@ -621,7 +638,9 @@ public partial class Behavior : Node
 	/// </summary>
 	/// <returns></returns>
 	public static bool isEditor() 
-		=> Engine.IsEditorHint();
+		=> Game.IsEditor();
+
+	
 
 	/// <summary>
 	/// Prints whatever's input

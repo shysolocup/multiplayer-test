@@ -7,7 +7,7 @@ public partial class Client : Singleton<Client>
 {
 	private static Player _localPlayer { get; set; }
 
-	public string GetId() => NodeTunnelBridge.GetOnlineId();
+	public async Task<string> GetId() => (await Server.WaitUntilPeer()).OnlineId;
 
 	public static GuiSystem Gui { get; set; }
 	public static CameraSystem Cameras { get; set; }

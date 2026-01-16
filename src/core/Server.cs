@@ -1,5 +1,6 @@
 using Core;
 using Godot;
+using NodeTunnel;
 using System.Threading.Tasks;
 
 [GlobalClass, Icon("uid://cx7nfcxc0as46")]
@@ -11,30 +12,39 @@ public partial class Server : Singleton<Server>
 	
 	[Signal] public delegate void PlayerConnectedEventHandler(string hostId);
 
-	private static MultiplayerPeer Peer { get; set; }
-	public static MultiplayerPeer GetPeer() => Peer;
+	private static NodeTunnelPeer Peer { get; set; }
+	public static NodeTunnelPeer GetPeer() => Peer;
 
-	public static string GetId() => NodeTunnelBridge.GetOnlineId(Peer);
+	public static string GetId() => Peer.OnlineId;
 
 	private const int Port = 9998;
 	private const string DefaultServerAddress = "relay.nodetunnel.io"; 
 	[Export] private int MaxPlayers = 20;
 
 
+	public static async Task<NodeTunnelPeer> WaitUntilPeer() {
+		while (Peer is null || !IsInstanceValid(Peer.Peer))
+		{
+			await Task.Delay(10);
+		}
+
+		return Peer;
+	}
+
+
 	public static string HostId { get; set; }
 
 
-	public async Task<MultiplayerPeer> ConnectToServer()
+	public async Task<NodeTunnelPeer> ConnectToServer()
 	{
 		if (Peer is not null) throw new System.Exception("can't make another peer");
 		
-		Peer = NodeTunnelBridge.NewPeer();
-		Multiplayer.MultiplayerPeer = Peer;
+		Peer = new NodeTunnelPeer();
+		Multiplayer.MultiplayerPeer = Peer.Peer;
 
-		NodeTunnelBridge.ConnectToRelay(DefaultServerAddress, Port);
+		Peer.ConnectToRelay(DefaultServerAddress, Port);
 
-		// await to be connected
-		await NodeTunnelBridge.RelayConnected(Peer);
+		await Peer.WaitUntilRelayConnected();
 
 		var id = GetId();
 

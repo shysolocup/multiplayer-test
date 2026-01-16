@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=4 uid="uid://dtwjgai1ljwtw"]
+[gd_scene load_steps=23 format=4 uid="uid://dtwjgai1ljwtw"]
 
 [ext_resource type="Script" uid="uid://bvp7c0e42bdmd" path="res://src/core/classes/Character.cs" id="1_bbyxb"]
 
@@ -283,9 +283,9 @@ properties/1/replication_mode = 1
 properties/2/path = NodePath(".:scale")
 properties/2/spawn = true
 properties/2/replication_mode = 1
-properties/3/path = NodePath(".:visible")
-properties/3/spawn = true
-properties/3/replication_mode = 1
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_bbyxb"]
+viewport_path = NodePath("billboard/container/viewport")
 
 [node name="starterCharacter" type="CharacterBody3D"]
 script = ExtResource("1_bbyxb")
@@ -1321,3 +1321,30 @@ shape = SubResource("CapsuleShape3D_3xf06")
 
 [node name="sync" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_bbyxb")
+
+[node name="billboard" type="Sprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.9495842, 0)
+billboard = 1
+texture = SubResource("ViewportTexture_bbyxb")
+
+[node name="container" type="SubViewportContainer" parent="billboard"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="viewport" type="SubViewport" parent="billboard/container"]
+transparent_bg = true
+size = Vector2i(422, 48)
+
+[node name="username" type="Label" parent="billboard/container/viewport"]
+unique_name_in_owner = true
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "PLAYER USERNANME ME EHERE YES"
+horizontal_alignment = 1
+vertical_alignment = 1

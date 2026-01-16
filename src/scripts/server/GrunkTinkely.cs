@@ -5,14 +5,10 @@ public partial class GrunkTinkely : Behavior
 {
 	public override async void OnReady()
 	{
-		print(Replicator.IsConnected());
-		warn("AAAAAAAAAAAAAAAAAAAAAAA");
-	}
+		print(game.IsConnected());
+		print(isServer());
 
-	[OnClient]
-	public override void OnProcess(double delta)
-	{
-		base.OnProcess(delta);
+		warn("AAAAAAAAAAAAAAAAAAAAAAA");
 	}
 
 }

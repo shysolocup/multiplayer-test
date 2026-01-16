@@ -24,7 +24,7 @@ public static class NodeE
 	/// <summary>
 	/// Creates a new thread and deletes the given node after a given time.
 	/// </summary>
-	public static CancellationTokenSource Debris(Node node, float time)
+	public static CancellationTokenSource Debris(this Node node, float time)
 	{
 		return Chore.Delay(time, async token =>
 		{

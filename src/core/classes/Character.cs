@@ -15,6 +15,7 @@ public partial class Character : CharacterBody3D
 	public MeshInstance3D RightLeg { get; set; }
 	public MeshInstance3D Torso { get; set; }
 	public AnimationPlayer Animator { get; set; }
+	public MeshInstance3D Username { get; set; }
 
 	public CollisionShape3D Collision { get; set; }
 

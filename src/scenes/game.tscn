@@ -48,13 +48,14 @@ metadata/_custom_type_script = "uid://hilik46ime86"
 [node name="map" type="Node3D" parent="workspace" node_paths=PackedStringArray("Map")]
 transform = Transform3D(-0.99987966, 0, -0.015515357, 0, 1, 0, 0.015515357, 0, -0.99987966, 0, 0, 0)
 script = ExtResource("3_44dqv")
-Map = NodePath("default")
+Map = NodePath("@Node3D@72092")
 metadata/_custom_type_script = "uid://c3yamjsvvi4eo"
 
 [node name="lighting" type="Node3D" parent="workspace" node_paths=PackedStringArray("World", "Lights")]
-transform = Transform3D(0.9999997, 0, 0, 0, 0.99999976, 0, 0, 0, 1, 0, 0, 0)
+transform = Transform3D(0.9528615, 0.30340433, 0, -0.3034043, 0.95286155, 0, 0, 0, 1, 0, 0, 0)
 script = ExtResource("4_44dqv")
-TargetTimeOfDay = 8.7333
+TargetTimeOfDay = 10.82252
+TimeOfDay = 10.82252
 SkyMaterial = ExtResource("6_44dqv")
 World = NodePath("world")
 Lights = NodePath("lights")
@@ -187,7 +188,11 @@ script = ExtResource("22_p02ep")
 spawn_path = NodePath("../../workspace")
 
 [node name="playerSpawner" type="MultiplayerSpawner" parent="replicator"]
+_spawnable_scenes = PackedStringArray("uid://cx461ggiitbpu")
 spawn_path = NodePath("../../players")
 
 [node name="globalSpawner" type="MultiplayerSpawner" parent="replicator"]
 spawn_path = NodePath("../../global")
+
+[node name="repSpawner" type="MultiplayerSpawner" parent="replicator"]
+spawn_path = NodePath("..")

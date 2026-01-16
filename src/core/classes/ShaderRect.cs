@@ -2,7 +2,7 @@ using Godot;
 using System.Text;
 
 [Tool]
-[GlobalClass, Icon("")]
+[GlobalClass, Icon("uid://b4uq75vbsu0jg")]
 public partial class ShaderRect : ColorRect
 {
     #nullable enable
