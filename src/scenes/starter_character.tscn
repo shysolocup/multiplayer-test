@@ -1336,7 +1336,9 @@ grow_vertical = 2
 
 [node name="viewport" type="SubViewport" parent="billboard/container"]
 transparent_bg = true
+handle_input_locally = false
 size = Vector2i(422, 48)
+render_target_update_mode = 4
 
 [node name="username" type="Label" parent="billboard/container/viewport"]
 unique_name_in_owner = true

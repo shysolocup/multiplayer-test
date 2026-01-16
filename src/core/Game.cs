@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using Godot;
 using NodeTunnel;
 
+[Tool]
 [GlobalClass, Icon("uid://boo8iw5pvoaa8")]
 public partial class Game : Singleton<Game>
 {
@@ -234,15 +235,15 @@ public partial class Game : Singleton<Game>
 	}
 
 	public static async Task<Node> GetGameNode(NodePath nodePath)
-	{
-		return await GetGameNode<Node>(nodePath);
-	}
+		=> await GetGameNode<Node>(nodePath);
 
 	public static async Task<T> GetGameNode<T>(NodePath nodePath) where T : Node
 	{
 		var game = await Instance();
 		return game.GetNode<T>(nodePath);
 	}
+
+	public void Quit() => GetTree().Quit();
 
 	public static async Task Loaded() {
 		while (!IsLoaded)
@@ -328,6 +329,8 @@ public partial class Game : Singleton<Game>
 	public override async void _Ready()
 	{
 		base._Ready();
+
+		if (Engine.IsEditorHint()) return;
 
 		GD.Print("guh");
 
