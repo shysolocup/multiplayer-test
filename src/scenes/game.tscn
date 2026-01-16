@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://cg6684xj7fjx"]
+[gd_scene load_steps=21 format=3 uid="uid://cg6684xj7fjx"]
 
 [ext_resource type="Script" uid="uid://dj3d8j4qfl1st" path="res://src/core/Game.cs" id="1_covw0"]
 [ext_resource type="Script" uid="uid://c5frf4qgle4bf" path="res://src/core/GuiSystem.cs" id="2_276xm"]
@@ -6,7 +6,6 @@
 [ext_resource type="Script" uid="uid://c3yamjsvvi4eo" path="res://src/core/MapSystem.cs" id="3_44dqv"]
 [ext_resource type="Script" uid="uid://hilik46ime86" path="res://src/core/Characters.cs" id="3_kcfyl"]
 [ext_resource type="Script" uid="uid://cv04eaa2q8bhx" path="res://src/core/LightingSystem.cs" id="4_44dqv"]
-[ext_resource type="PackedScene" uid="uid://dtwjgai1ljwtw" path="res://src/scenes/starter_character.tscn" id="4_lkrtx"]
 [ext_resource type="Script" uid="uid://d1k532y44p2cq" path="res://src/core/Server.cs" id="5_lcg6w"]
 [ext_resource type="Material" uid="uid://7wuop4abysij" path="res://src/assets/resources/skies/res_sky_realistic.tres" id="6_44dqv"]
 [ext_resource type="Script" uid="uid://dcblggjtpvjin" path="res://src/core/Client.cs" id="6_gh3at"]
@@ -19,7 +18,6 @@
 [ext_resource type="PackedScene" uid="uid://ds6x2baksbent" path="res://src/scenes/shaders.tscn" id="18_44dqv"]
 [ext_resource type="PackedScene" uid="uid://by5f8a6nan5nk" path="res://src/scenes/client_scripts.tscn" id="19_3xp0n"]
 [ext_resource type="Script" uid="uid://3u0cd6x7v7xf" path="res://src/core/GlobalStorage.cs" id="19_lkrtx"]
-[ext_resource type="PackedScene" uid="uid://cx461ggiitbpu" path="res://src/scenes/starter_player.tscn" id="20_44dqv"]
 [ext_resource type="Script" uid="uid://bxtd783k615yg" path="res://src/core/Replicator.cs" id="22_p02ep"]
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_kcfyl"]
@@ -42,20 +40,20 @@ size = Vector3(1.12, 0.28, 0.56)
 
 [node name="characters" type="Node3D" parent="workspace" node_paths=PackedStringArray("StarterCharacter")]
 script = ExtResource("3_kcfyl")
-StarterCharacter = NodePath("../../global/starterCharacter")
+StarterCharacter = NodePath("")
 metadata/_custom_type_script = "uid://hilik46ime86"
 
 [node name="map" type="Node3D" parent="workspace" node_paths=PackedStringArray("Map")]
 transform = Transform3D(-0.99987966, 0, -0.015515357, 0, 1, 0, 0.015515357, 0, -0.99987966, 0, 0, 0)
 script = ExtResource("3_44dqv")
-Map = NodePath("@Node3D@72092")
+Map = NodePath("@Node3D@32012")
 metadata/_custom_type_script = "uid://c3yamjsvvi4eo"
 
 [node name="lighting" type="Node3D" parent="workspace" node_paths=PackedStringArray("World", "Lights")]
-transform = Transform3D(0.9528615, 0.30340433, 0, -0.3034043, 0.95286155, 0, 0, 0, 1, 0, 0, 0)
+transform = Transform3D(0.9918993, 0.12702346, 0, -0.12702344, 0.9918994, 0, 0, 0, 1, 0, 0, 0)
 script = ExtResource("4_44dqv")
-TargetTimeOfDay = 10.82252
-TimeOfDay = 10.82252
+TargetTimeOfDay = 11.513492
+TimeOfDay = 11.513492
 SkyMaterial = ExtResource("6_44dqv")
 World = NodePath("world")
 Lights = NodePath("lights")
@@ -168,17 +166,10 @@ unique_name_in_owner = true
 script = ExtResource("19_lkrtx")
 metadata/_custom_type_script = "uid://3u0cd6x7v7xf"
 
-[node name="starterPlayer" parent="global" instance=ExtResource("20_44dqv")]
-PlayerName = "Player"
-Id = ""
-
-[node name="starterCharacter" parent="global" instance=ExtResource("4_lkrtx")]
-transform = Transform3D(-0.6024838, 0, -0.7981311, 0, 1, 0, 0.7981311, 0, -0.6024838, 2.6189446, 0.01726067, 2.8367674)
-
 [node name="players" type="Node" parent="." node_paths=PackedStringArray("StarterPlayer")]
 unique_name_in_owner = true
 script = ExtResource("9_bd8mh")
-StarterPlayer = NodePath("../global/starterPlayer")
+StarterPlayer = NodePath("")
 
 [node name="replicator" type="Node" parent="."]
 unique_name_in_owner = true
@@ -188,7 +179,6 @@ script = ExtResource("22_p02ep")
 spawn_path = NodePath("../../workspace")
 
 [node name="playerSpawner" type="MultiplayerSpawner" parent="replicator"]
-_spawnable_scenes = PackedStringArray("uid://cx461ggiitbpu")
 spawn_path = NodePath("../../players")
 
 [node name="globalSpawner" type="MultiplayerSpawner" parent="replicator"]

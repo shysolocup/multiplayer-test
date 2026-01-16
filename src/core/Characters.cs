@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 public partial class Characters : Singleton3D<Characters>
 {	
 	[Export]
-	public Character StarterCharacter;
+	public PackedScene StarterCharacter = ResourceLoader.Load<PackedScene>($"res://src/scenes/starter_character.tscn", "", ResourceLoader.CacheMode.Replace);
 
 	[Signal]
 	public delegate void CharacterSpawnedEventHandler(Character character);
@@ -123,11 +123,10 @@ public partial class Characters : Singleton3D<Characters>
 	{
 		base._Ready();
 		
-		var storage = await GlobalStorage.Instance();
 		cameras = await CameraSystem.Instance();
 		cam = cameras.CurrentCamera;
 		
-		StarterCharacter ??= storage.GetNode<Character>("./starterCharacter");
+		StarterCharacter ??= ResourceLoader.Load<PackedScene>($"res://src/scenes/starter_character.tscn", "", ResourceLoader.CacheMode.Replace);
 
 		Connect(Node.SignalName.ChildEnteredTree, _spawnCall);
 		Connect(Node.SignalName.ChildExitingTree, _remCall);
@@ -155,7 +154,7 @@ public partial class Characters : Singleton3D<Characters>
 		var inst = await Instance();
 		var workspace = await Workspace.Instance();
 
-		Character character = inst.StarterCharacter.Duplicate() as Character;
+		Character character = inst.StarterCharacter.Instantiate() as Character;
 		character.GlobalTransform = workspace.Spawn.GlobalTransform;
 		character.Name = player.GetPlayerName();
 

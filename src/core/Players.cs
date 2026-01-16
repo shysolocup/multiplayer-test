@@ -11,7 +11,7 @@ using Godot.Collections;
 public partial class Players : Singleton<Players>
 {
 	[Export]
-	public Player StarterPlayer;
+	public PackedScene StarterPlayer = ResourceLoader.Load<PackedScene>($"res://src/scenes/starter_player.tscn", "", ResourceLoader.CacheMode.Replace);
 
 	public Player LocalPlayer
 	{
@@ -51,10 +51,8 @@ public partial class Players : Singleton<Players>
 	public override async void _Ready()
 	{
 		base._Ready();
-
-		var storage = await GlobalStorage.Instance();
 		
-		StarterPlayer ??= storage.GetNode<Player>("./starterPlayer");
+		StarterPlayer ??= ResourceLoader.Load<PackedScene>($"res://src/scenes/starter_player.tscn", "", ResourceLoader.CacheMode.Replace);
 
 		Connect(Node.SignalName.ChildEnteredTree, _joinedCall);
 		Connect(Node.SignalName.ChildExitingTree, _leftCall);
@@ -102,7 +100,7 @@ public partial class Players : Singleton<Players>
 		}
 
 
-		var player = (Player)inst.StarterPlayer.Duplicate();
+		var player = (Player)inst.StarterPlayer.Instantiate();
 			player.ProcessMode = ProcessModeEnum.Inherit;
 			player.SetPeerId(peerId);
 			player.SetPlayerId(id);
