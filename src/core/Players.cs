@@ -13,9 +13,13 @@ public partial class Players : Singleton<Players>
 	[Export]
 	public PackedScene StarterPlayer = ResourceLoader.Load<PackedScene>($"res://src/scenes/starter_player.tscn", "", ResourceLoader.CacheMode.Replace);
 
+
+
+	[Export]
 	public Player LocalPlayer
 	{
 		get => Client.LocalPlayer;
+		set {}
 	}
 
 

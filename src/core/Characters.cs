@@ -155,8 +155,8 @@ public partial class Characters : Singleton3D<Characters>
 		var workspace = await Workspace.Instance();
 
 		Character character = inst.StarterCharacter.Instantiate() as Character;
-		character.GlobalTransform = workspace.Spawn.GlobalTransform;
-		character.Name = player.GetPlayerName();
+			character.GlobalTransform = workspace.Spawn.GlobalTransform;
+			character.Name = player.GetPlayerName();
 
 		GD.PushWarning("spawned dummy");
 
@@ -184,7 +184,6 @@ public partial class Characters : Singleton3D<Characters>
 		var character = await SpawnDummy(player);
 
 		player.SetCharacter(character);
-
 		player.EmitSignal(Player.SignalName.Spawned, character);
 
 		GD.PushWarning($"spawned {player.GetPlayerName()}'s character");

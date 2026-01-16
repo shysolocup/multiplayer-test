@@ -279,6 +279,8 @@ viewport_path = NodePath("billboard/container/viewport")
 [node name="starterCharacter" type="CharacterBody3D"]
 script = ExtResource("1_bbyxb")
 
+[node name="spawner" type="MultiplayerSpawner" parent="."]
+
 [node name="mesh" type="Node3D" parent="."]
 transform = Transform3D(-0.315, 0, -2.7538174e-08, 0, 0.315, 0, 2.7538174e-08, 0, -0.315, 0, 0, 0)
 
@@ -1314,6 +1316,7 @@ billboard = 1
 texture = SubResource("ViewportTexture_bbyxb")
 
 [node name="container" type="SubViewportContainer" parent="billboard"]
+visible = false
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -1325,7 +1328,7 @@ mouse_filter = 2
 transparent_bg = true
 handle_input_locally = false
 size = Vector2i(422, 48)
-render_target_update_mode = 4
+render_target_update_mode = 0
 
 [node name="username" type="Label" parent="billboard/container/viewport"]
 unique_name_in_owner = true

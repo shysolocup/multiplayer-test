@@ -483,7 +483,6 @@ public partial class Behavior : Node
 		gui ??= await GuiSystem.Instance();
 		shaders ??= await ShaderSystem.Instance();
 		mouse ??= await Mouse.Instance();
-
 		task ??= await TaskLib.Instance();
 		json ??= await JsonLib.Instance();
 		files ??= await FileLib.Instance();

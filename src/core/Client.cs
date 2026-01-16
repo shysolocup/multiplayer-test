@@ -2,12 +2,20 @@ using Core;
 using Godot;
 using System.Threading.Tasks;
 
+
 [GlobalClass, Icon("uid://rqxgol7tuknt")]
 public partial class Client : Singleton<Client>
 {
 	private static Player _localPlayer { get; set; }
 
 	public async Task<string> GetId() => (await Server.WaitUntilPeer()).OnlineId;
+
+	[Export]
+	private int PeerId
+	{
+		get => Server.GetPeer().UniqueId;
+		set {}
+	}
 
 	public static GuiSystem Gui { get; set; }
 	public static CameraSystem Cameras { get; set; }
@@ -41,6 +49,8 @@ public partial class Client : Singleton<Client>
 	{
 		base._Ready();
 
+		if (Engine.IsEditorHint()) return;
+
 		Gui ??= await GuiSystem.Instance();
 		Cameras ??= GetNode<CameraSystem>("./cameras");
 		Scripts ??= await ClientScriptSystem.Instance();
@@ -58,9 +68,7 @@ public partial class Client : Singleton<Client>
 	]
 	private void _setLocalPlayer(ulong id)
 	{
-		var instance = InstanceFromId(id);
-
-		if (instance is Player player && Multiplayer.GetUniqueId() == Multiplayer.GetRemoteSenderId())
+		if (IsInstanceIdValid(id) && InstanceFromId(id) is Player player && Multiplayer.GetUniqueId() == Multiplayer.GetRemoteSenderId())
 		{
 			GD.Print("set local player");
 			LocalPlayer = player;	

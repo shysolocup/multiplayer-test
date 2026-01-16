@@ -38,15 +38,14 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.35986328, 0)
 use_collision = true
 size = Vector3(1.12, 0.28, 0.56)
 
-[node name="characters" type="Node3D" parent="workspace" node_paths=PackedStringArray("StarterCharacter")]
+[node name="characters" type="Node3D" parent="workspace"]
 script = ExtResource("3_kcfyl")
-StarterCharacter = NodePath("")
 metadata/_custom_type_script = "uid://hilik46ime86"
 
 [node name="map" type="Node3D" parent="workspace" node_paths=PackedStringArray("Map")]
 transform = Transform3D(-0.99987966, 0, -0.015515357, 0, 1, 0, 0.015515357, 0, -0.99987966, 0, 0, 0)
 script = ExtResource("3_44dqv")
-Map = NodePath("@Node3D@32012")
+Map = NodePath("default")
 metadata/_custom_type_script = "uid://c3yamjsvvi4eo"
 
 [node name="lighting" type="Node3D" parent="workspace" node_paths=PackedStringArray("World", "Lights")]
@@ -166,23 +165,16 @@ unique_name_in_owner = true
 script = ExtResource("19_lkrtx")
 metadata/_custom_type_script = "uid://3u0cd6x7v7xf"
 
-[node name="players" type="Node" parent="." node_paths=PackedStringArray("StarterPlayer")]
+[node name="players" type="Node" parent="."]
 unique_name_in_owner = true
 script = ExtResource("9_bd8mh")
-StarterPlayer = NodePath("")
 
 [node name="replicator" type="Node" parent="."]
 unique_name_in_owner = true
 script = ExtResource("22_p02ep")
 
-[node name="worldSpawner" type="MultiplayerSpawner" parent="replicator"]
-spawn_path = NodePath("../../workspace")
-
 [node name="playerSpawner" type="MultiplayerSpawner" parent="replicator"]
 spawn_path = NodePath("../../players")
 
-[node name="globalSpawner" type="MultiplayerSpawner" parent="replicator"]
-spawn_path = NodePath("../../global")
-
-[node name="repSpawner" type="MultiplayerSpawner" parent="replicator"]
-spawn_path = NodePath("..")
+[node name="characterSpawner" type="MultiplayerSpawner" parent="replicator"]
+spawn_path = NodePath("../../workspace/characters")

@@ -225,9 +225,7 @@ public partial class CameraSystem : Singleton3D<CameraSystem>
 	]
 	private void _setSubject(ulong id)
 	{
-		var node = InstanceFromId(id);
-
-		if ( node is Player player && Multiplayer.GetUniqueId() == Multiplayer.GetRemoteSenderId())
+		if (IsInstanceIdValid(id) && InstanceFromId(id) is Player player && Multiplayer.GetUniqueId() == Multiplayer.GetRemoteSenderId())
 		{
 			Subject = player.GetCharacter();	
 		}
