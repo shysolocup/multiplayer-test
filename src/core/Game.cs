@@ -1,48 +1,75 @@
 using System.Threading.Tasks;
 using Godot;
+using NodeTunnel;
 
 [GlobalClass, Icon("uid://boo8iw5pvoaa8")]
 public partial class Game : Singleton<Game>
 {
-	public static Workspace Workspace { get; set; }
-	public static Players Players { get; set; }
-	public static Server Server { get; set; }
-	public static Client Client { get; set; }
-	public static GlobalStorage GlobalStorage { get; set; }
-	
+	public static class Systems
+	{
+		public static Workspace Workspace { get; set; }
+		public static Players Players { get; set; }
+		public static GlobalStorage GlobalStorage { get; set; }
+		public static Server Server { get; set; }
+		public static Client Client { get; set; }
+		public static Replicator Replicator { get; set; }
+		public static AudioSystem AudioSystem { get; set; }
+		public static MapSystem MapSystem { get; set; }
+		public static CameraSystem CameraSystem { get; set; }
+		public static Characters Characters { get; set; }
+		public static ClientScriptSystem ClientScriptSystem { get; set; }
+		public static ServerScriptSystem ServerScriptSystem { get; set; }
+		public static GuiSystem GuiSystem { get; set; }
+		public static LightingSystem LightingSystem { get; set; }
+		public static Mouse Mouse { get; set; }
+		public static Screen Screen { get; set; }
+		public static ShaderSystem ShaderSystem { get; set; }
+		public static FileLib FileLib { get; set; }
+		public static JsonLib JsonLib { get; set; }
+		public static TaskLib TaskLib { get; set; }
+	}
+
 	[Signal] public delegate void StartedHostingEventHandler(string id);
 	[Signal] public delegate void NewConnectionEventHandler(string id);
 	[Signal] public delegate void JoiningEventHandler(string id);
-	[Signal] public delegate void LeftConnectionEventHandler(string id);
-
-	private static Server server { get; set; }
-	private static Client client { get; set; }
-
-	public override async void _Ready()
-	{
-		base._Ready();
-
-		if (Engine.IsEditorHint()) return;
-
-		server = await Server.Instance();
-		client = await Client.Instance();
-
-		NewConnection += id =>
-		{
-			GD.Print($"received new player joining {id}");	
-		};
-	}
+	[Signal] public delegate void LeftConnectionEventHandler();
 
 
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
 	public static bool IsConnected()
-		=> server is not null && server.Multiplayer.MultiplayerPeer.GetConnectionStatus() == MultiplayerPeer.ConnectionStatus.Connected;
+		=> Systems.Server is not null 
+			&& Server.GetPeer() is NodeTunnelPeer peer
+			&& (
+				peer.ConnectionState == ConnectionState.Hosting || 
+				peer.ConnectionState == ConnectionState.Joined
+			);
+
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
+	public bool IsConnected(object _ = null)
+		=> Game.IsConnected();
 
 
 	/// <summary>
 	/// waits until the player is connected
 	/// </summary>
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
 	public static async Task WaitUntilConnected() {
-		await NodeTunnelBridge.RelayConnected();
+		while (!IsConnected())
+		{
+			await Task.Delay(10);
+		}
+	}
+
+
+	/// <summary>
+	/// waits until the player is connected
+	/// </summary>
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
+	public async Task WaitUntilConnected(object _ = null) {
+		while (!IsConnected())
+		{
+			await Task.Delay(10);
+		}
 	}
 
 
@@ -71,31 +98,28 @@ public partial class Game : Singleton<Game>
 			CallLocal = true
 		)
 	]
-	private void _leave(string id)
+	private void _leave()
 	{
 		var remote = Multiplayer.GetRemoteSenderId();
-		EmitSignalLeftConnection(id);
+		EmitSignalLeftConnection();
 	}
 
 
 	public async Task Host()
 	{
-		var peer = await server.ConnectToServer();
+		var peer = await Systems.Server.ConnectToServer();
 
-		NodeTunnelBridge.Host(peer);
+		peer.Host();
 
 		// await to be connected
-		await NodeTunnelBridge.Hosting(peer);
+		await peer.WaitUntilHosting();
 
-		var id = NodeTunnelBridge.GetOnlineId(peer);
+		var id = peer.OnlineId;
 
 		Server.HostId = id;
-		// DisplayServer.ClipboardSet(HostId.ToString());
 
 		EmitSignalStartedHosting(id);
-		
-		RpcId(1, MethodName._join, id, id);
-
+		_join(id, id);
 		GD.PushWarning($"started hosting at id {id}");	
 	}
 
@@ -108,19 +132,18 @@ public partial class Game : Singleton<Game>
 	]
 	public async Task Join(string hostId)
 	{
-		var peer = await server.ConnectToServer();
+		var peer = await Systems.Server.ConnectToServer();
 
 		GD.PushWarning($"trying to join {hostId}");	
-		NodeTunnelBridge.Join(peer, hostId);
+		
+		peer.Join(hostId);
 
-		await NodeTunnelBridge.Joined(peer);
+		await peer.WaitUntilJoined();
 
-		var id = Server.GetId();
+		var id = peer.OnlineId;
 
 		EmitSignalJoining(id);
-
 		RpcId(1, MethodName._join, id, hostId);
-
 		GD.PushWarning($"peer {id} has joined with the function");	
 	}
 
@@ -131,29 +154,34 @@ public partial class Game : Singleton<Game>
 	public async Task Leave()
 	{
 		var peer = Server.GetPeer();
-		var id = Server.GetId();
 
-		NodeTunnelBridge.Leave(peer);
+		if (peer is not null)
+		{
+			peer.LeaveRoom();
 
-		RpcId(1, MethodName._leave, id);
+			RpcId(1, MethodName._leave);
 
-		GD.PushWarning($"leaving game");	
+			GD.PushWarning($"leaving game");		
+		}
 	}
 
 	/// <summary>
 	/// Checks if the script is running on the server (STATIC)
 	/// </summary>
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
-	public static bool IsServer(object _ = null)
-		=> server is not null && server.Multiplayer.IsServer();
+	public static bool IsServer()
+		=> 
+			Systems.Server is not null &&
+			Server.GetPeer() is NodeTunnelPeer peer &&
+			peer.ConnectionState == ConnectionState.Hosting;
 
 
 	/// <summary>
 	/// Checks if the script is running on the server
 	/// </summary>
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
-	public bool IsServer() 
-		=> server is not null && server.Multiplayer.IsServer();
+	public bool IsServer(object _ = null) 
+		=> Game.IsServer();
 
 
 	/// <summary>
@@ -230,58 +258,69 @@ public partial class Game : Singleton<Game>
 	/// </summary>
 	public async Task Load()
 	{
-		GD.Print("started loading");
+		var loadString = "started loading,";
 
 		// children
-		Workspace = await Workspace.Instance();
-		GD.Print("loaded workspace");
+		Systems.Workspace = await Workspace.Instance();
+		loadString += "loaded workspace,";
 
-		Server = await Server.Instance();
-		GD.Print("loaded server");
+		Systems.Server = await Server.Instance();
+		loadString += "loaded server,";
 
-		Client = await Client.Instance();
-		GD.Print("loaded client");
+		Systems.Client = await Client.Instance();
+		loadString += "loaded client,";
 
-		Players = await Players.Instance();
-		GD.Print("loaded players");
+		Systems.Players = await Players.Instance();
+		loadString += "loaded players,";
 
-		GlobalStorage = await GlobalStorage.Instance();
-		GD.Print("loaded global storage");
+		Systems.GlobalStorage = await GlobalStorage.Instance();
+		loadString += "loaded global storage,";
 
-		Replicator = await Replicator.Instance();
-		GD.Print("loaded replicator");
+		Systems.Replicator = await Replicator.Instance();
+		loadString += "loaded replicator,";
 		
-		await ServerScriptSystem.Instance();
-		GD.Print("loaded server scripts");
+		Systems.ServerScriptSystem = await ServerScriptSystem.Instance();
+		loadString += "loaded server scripts,";
 
-		await ClientScriptSystem.Instance();
-		GD.Print("loaded client scripts");
+		Systems.ClientScriptSystem = await ClientScriptSystem.Instance();
+		loadString += "loaded client scripts,";
 
-		await GuiSystem.Instance();
-		GD.Print("loaded guis");
+		Systems.GuiSystem = await GuiSystem.Instance();
+		loadString += "loaded guis,";
 
-		await ShaderSystem.Instance();
-		GD.Print("loaded shaders");
+		Systems.ShaderSystem = await ShaderSystem.Instance();
+		loadString += "loaded shaders,";
 
-		await Characters.Instance();
-		GD.Print("loaded characters");
+		Systems.Characters = await Characters.Instance();
+		loadString += "loaded characters,";
 		
-		await CameraSystem.Instance();
-		GD.Print("loaded cameras");
+		Systems.CameraSystem = await CameraSystem.Instance();
+		loadString += "loaded cameras,";
 
-		await MapSystem.Instance();
-		GD.Print("loaded maps");
+		Systems.MapSystem = await MapSystem.Instance();
+		loadString += "loaded maps,";
 
-		await LightingSystem.Instance();
-		GD.Print("loaded lightings");
+		Systems.LightingSystem = await LightingSystem.Instance();
+		loadString += "loaded lightings,";
 
-		await AudioSystem.Instance();
-		GD.Print("loaded audios");
+		Systems.AudioSystem = await AudioSystem.Instance();
+		loadString += "loaded audios,";
 
-		await Mouse.Instance();
-		GD.Print("loaded mouse");
+		Systems.Mouse = await Mouse.Instance();
+		loadString += "loaded mouse,";
 
-		GD.Print("game loaded");
+		Systems.FileLib = await FileLib.Instance();
+		loadString += "loaded file lib,";
+		
+		Systems.TaskLib = await TaskLib.Instance();
+		loadString += "loaded task lib,";
+
+		Systems.Screen = await Screen.Instance();
+		loadString += "loaded screen,";
+
+		loadString += "game loaded";
+
+		GD.Print(loadString);
 
 		IsLoaded = true;
 	}
@@ -291,6 +330,11 @@ public partial class Game : Singleton<Game>
 		base._Ready();
 
 		GD.Print("guh");
+
+		NewConnection += id =>
+		{
+			GD.Print($"received new player joining {id}");	
+		};
 
 		// load singleton systems
 		await Load();
