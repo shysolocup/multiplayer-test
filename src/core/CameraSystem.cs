@@ -517,7 +517,7 @@ public partial class CameraSystem : Singleton3D<CameraSystem>
 		if (CameraType == CameraTypeEnum.ThirdPerson && !Engine.IsEditorHint())
 		{
 			mouse.SetBindingMode(Mouse.PriorityChannel.Camera, 
-				Input.IsActionPressed("camera_move")
+				Input.IsActionPressed("camera_move") || ShiftLocked
 					? Input.MouseModeEnum.Captured 
 					: Input.MouseModeEnum.Visible
 				);

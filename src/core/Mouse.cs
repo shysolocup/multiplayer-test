@@ -133,9 +133,7 @@ public partial class Mouse : Singleton<Mouse>
 
 	public enum PriorityChannel
 	{
-		MasterHigh,
-		MasterMedium,
-		MasterLow,
+		Master,
 		Ui,
 		Camera
 	}
@@ -149,27 +147,26 @@ public partial class Mouse : Singleton<Mouse>
 
 		foreach ((var i, var binding) in PriorityList)
 		{
+			// if htehe actors are greater than 0 and it has the stuff and it works then it does
 			if (
 				binding.Actors.Count > 0 
 				&& (nullablePriority is null || i < nullablePriority) 
 				&& binding.Mode is Input.MouseModeEnum
-			) {
+			) 
 				nullablePriority = i;
-			}
+
+			// iff ffff all actors stop acting on the bind then reset its mode back to null
 			else if (binding.Actors.Count > 0 && !binding.Persist)
-			{
 				binding.Mode = null;
-			}
 		}
 
+		// oouegh if nullable priority exists thn get the prioirity and get the bind mode and apply it
 		if (
 			nullablePriority is int priority 
 			&& PriorityList.TryGetValue(priority, out var bind)
 			&& bind.Mode is Input.MouseModeEnum mode
 		)
-		{
 			Input.MouseMode = mode;
-		}
 	}
 
 	private RayCast3D Ray { get; set; }

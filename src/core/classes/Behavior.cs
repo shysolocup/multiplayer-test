@@ -406,6 +406,7 @@ public partial class Behavior : Node
 	#nullable enable
 	public ContextEnum GetContext(string? methodName = null) {
 		var t = GetType();
+		
 		var onServer = typeof(OnServerAttribute);
 		var onClient = typeof(OnClientAttribute);
 
@@ -434,8 +435,10 @@ public partial class Behavior : Node
 	/// <returns></returns>
 	public bool CanRunOnContext(string? methodName = null)
 	{
+		if (!Replicator.IsConnected()) return false;
+
 		var context = GetContext(methodName);
-		return context == ContextEnum.Server && Multiplayer.IsServer() || context == ContextEnum.Client;
+		return context == ContextEnum.Server && isServer() || context == ContextEnum.Client;
 	}
 
 	#nullable disable
@@ -473,6 +476,8 @@ public partial class Behavior : Node
 		json ??= await JsonLib.Instance();
 		files ??= await FileLib.Instance();
 
+		await Replicator.WaitUntilConnected();
+
 		if (CanRunOnContext("OnReady")) 
 			OnReady();
 		
@@ -483,9 +488,11 @@ public partial class Behavior : Node
 
 	#region event handlers
 
-	public override void _Notification(int what)
+	public override async void _Notification(int what)
 	{
 		base._Notification(what);
+
+		if (!Replicator.IsConnected()) return;
 
 		if (what == NotificationApplicationFocusIn)
 		{
@@ -499,9 +506,11 @@ public partial class Behavior : Node
 		}
 	}
 
-	public override void _UnhandledInput(InputEvent @event)
+	public override async void _UnhandledInput(InputEvent @event)
 	{
 		base._UnhandledInput(@event);
+
+		if (!Replicator.IsConnected()) return;
 
 		if (CanRunOnContext("OnInput"))
 			OnInput(@event);
@@ -517,6 +526,8 @@ public partial class Behavior : Node
 	{
 		base._Process(delta);
 
+		if (!Replicator.IsConnected()) return;
+
 		if (ScriptReady && CanRunOnContext("OnProcess")) {
 			OnProcess(delta);
 		}
@@ -525,6 +536,8 @@ public partial class Behavior : Node
 	public override void _PhysicsProcess(double delta)
 	{
 		base._PhysicsProcess(delta);
+
+		if (!Replicator.IsConnected()) return;
 
 		if (ScriptReady && CanRunOnContext("OnPhysics")) {
 			OnPhysics(delta);
@@ -535,6 +548,8 @@ public partial class Behavior : Node
 	{
 		base._EnterTree();
 
+		if (!Replicator.IsConnected()) return;
+
 		if (CanRunOnContext("OnCreation"))
 		{
 			OnCreation();	
@@ -544,6 +559,8 @@ public partial class Behavior : Node
 	public override void _ExitTree()
 	{
 		base._ExitTree();
+
+		if (!Replicator.IsConnected()) return;
 
 		if (CanRunOnContext("OnDeletion"))
 		{
@@ -562,11 +579,11 @@ public partial class Behavior : Node
 	}
 
 	[Export]
-    public bool Enabled
-    {
-        get => ProcessMode != ProcessModeEnum.Disabled;
-        set => ProcessMode = value ? ProcessModeEnum.Inherit : ProcessModeEnum.Disabled;
-    }
+	public bool Enabled
+	{
+		get => ProcessMode != ProcessModeEnum.Disabled;
+		set => ProcessMode = value ? ProcessModeEnum.Inherit : ProcessModeEnum.Disabled;
+	}
 
 	#endregion
 
@@ -576,59 +593,61 @@ public partial class Behavior : Node
 	/// <summary>
 	/// Checks if the script is running on the server (STATIC)
 	/// </summary>
-	public static async Task<bool> isServer(object _ = null)
-	{
-		var repl = await Game.Instance();
-		return repl.Multiplayer.IsServer();
-	}
+	public static bool isServer(object _ = null)
+		=> Replicator.IsServer();
 
 
 	/// <summary>
 	/// Checks if the script is running on the server
 	/// </summary>
-	public bool isServer() => Multiplayer.IsServer();
+	public bool isServer() 
+		=> Replicator.IsServer();
 
 
 	/// <summary>
 	/// Checks if the script is running on the client (STATIC)
 	/// </summary>
-	public static async Task<bool> isClient(object _ = null)
-	{
-		return !await isServer();
-	}
+	public static bool isClient(object _ = null)
+		=> !isServer();
 
 	/// <summary>
 	/// Checks if the script is running on the client
 	/// </summary>
-	public bool isClient() => !Multiplayer.IsServer();
+	public bool isClient() 
+		=> !isServer();
 
 	/// <summary>
 	/// 
 	/// </summary>
 	/// <returns></returns>
-	public static bool isEditor() => Engine.IsEditorHint();
+	public static bool isEditor() 
+		=> Engine.IsEditorHint();
 
 	/// <summary>
 	/// Prints whatever's input
 	/// </summary>
-	public static void print(params object[] what) => GD.Print(what);
+	public static void print(params object[] what) 
+	=> GD.Print(what);
 
 	/// <summary>
 	/// Throws an error completely stopping current execution
 	/// </summary>
-	public static void error(params object[] what) => throw new Exception(
-		string.Join(' ', [.. what.Select( a => a.ToString() )])
-	);
+	public static void error(params object[] what) 
+		=> throw new Exception(
+			string.Join(' ', [.. what.Select( a => a.ToString() )])
+		);
 
 	/// <summary>
 	/// Throws an error without completely stopping current execution
 	/// </summary>
-	public static void softError(params object[] what) => GD.PushError(what);
+	public static void softError(params object[] what) 
+		=> GD.PushError(what);
 
 	/// <summary>
 	/// Produces a warning in Godot's console
 	/// </summary>
-	public static void warn(params object[] what) => GD.PushWarning(what);
+	public static void warn(params object[] what) 
+		=> GD.PushWarning(what);
 
 	/// <summary>
 	/// If the given thing is null, false, or invalid produce an error
@@ -642,6 +661,20 @@ public partial class Behavior : Node
 			|| thing is bool b && b == false 
 			|| thing is Node n && !IsInstanceValid(n)    
 		) error(what);
+	}
+
+	/// <summary>
+	/// If the given thing is null, false, or invalid produce an error
+	/// <para/><c>
+	/// assert(node, "node isn't real");
+	/// </c>
+	/// </summary>
+	public static void softAssert(object thing, params object[] what) {
+		if (
+			thing is null 
+			|| thing is bool b && b == false 
+			|| thing is Node n && !IsInstanceValid(n)    
+		) softError(what);
 	}
 
 	#endregion

@@ -24,8 +24,7 @@ public partial class Server : Singleton<Server>
 	public static string HostId { get; set; }
 
 
-	[Rpc(MultiplayerApi.RpcMode.AnyPeer)]
-	private async Task Init()
+	public async Task<MultiplayerPeer> ConnectToServer()
 	{
 		if (Peer is not null) throw new System.Exception("can't make another peer");
 		
@@ -40,13 +39,13 @@ public partial class Server : Singleton<Server>
 		var id = GetId();
 
 		GD.PushWarning("initialized with peer id ", id);
+
+		return Peer;
 	}
 
 	public override async void _Ready()
 	{
 		base._Ready();
-
-		await Init();
 
 		Scripts = await ServerScriptSystem.Instance();
 		Replicator = await Replicator.Instance();

@@ -85,7 +85,7 @@ public partial class Players : Singleton<Players>
 		var inst = await Instance();
 
 		// incase they somehow get past the rpc restriction bc I lowk don't know how it works
-		if (!inst.Multiplayer.IsServer()) throw new Exception("can't make a player on the client");
+		if (!Replicator.IsServer()) throw new Exception("can't make a player on the client");
 		
 
 		/* 
@@ -110,7 +110,7 @@ public partial class Players : Singleton<Players>
 
 		inst.CallDeferred(Node.MethodName.AddChild, player);
 
-		GD.PushWarning("spawned player, is server?: ", inst.Multiplayer.IsServer());
+		GD.PushWarning("spawned player, is server?: ", !Replicator.IsServer());
 
 		await Client.SetLocalPlayer(player);
 		await Characters.Spawn(player);
@@ -135,7 +135,7 @@ public partial class Players : Singleton<Players>
 		var inst = await Instance();
 
 		// incase they somehow get past the rpc restriction bc I lowk don't know how it works
-		if (!inst.Multiplayer.IsServer()) throw new Exception("can't remove a player on the client");
+		if (!Replicator.IsServer()) throw new Exception("can't remove a player on the client");
 		
 		inst.CallDeferred(Node.MethodName.RemoveChild, player);
 	}
@@ -157,7 +157,7 @@ public partial class Players : Singleton<Players>
 		var inst = await Instance();
 
 		// incase they somehow get past the rpc restriction bc I lowk don't know how it works
-		if (!inst.Multiplayer.IsServer()) throw new Exception("can't remove a player on the client");
+		if (!Replicator.IsServer()) throw new Exception("can't remove a player on the client");
 		
 		var player = await GetPlayerById(id);
 		inst.CallDeferred(Node.MethodName.RemoveChild, player);

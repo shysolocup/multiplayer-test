@@ -52,10 +52,9 @@ Map = NodePath("default")
 metadata/_custom_type_script = "uid://c3yamjsvvi4eo"
 
 [node name="lighting" type="Node3D" parent="workspace" node_paths=PackedStringArray("World", "Lights")]
-transform = Transform3D(0.65605223, 0.75471514, 0, -0.7547151, 0.65605223, 0, 0, 0, 1, 0, 0, 0)
+transform = Transform3D(0.9999997, 0, 0, 0, 0.99999976, 0, 0, 0, 1, 0, 0, 0)
 script = ExtResource("4_44dqv")
 TargetTimeOfDay = 8.7333
-TimeOfDay = 8.7333
 SkyMaterial = ExtResource("6_44dqv")
 World = NodePath("world")
 Lights = NodePath("lights")

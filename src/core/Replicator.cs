@@ -11,8 +11,8 @@ public partial class Replicator : Singleton<Replicator>
 	[Signal] public delegate void JoiningEventHandler(string id);
 	[Signal] public delegate void LeftConnectionEventHandler(string id);
 
-	private Server server { get; set; }
-	private Client client { get; set; }
+	private static Server server { get; set; }
+	private static Client client { get; set; }
 
 	public override async void _Ready()
 	{
@@ -28,6 +28,18 @@ public partial class Replicator : Singleton<Replicator>
 	}
 
 
+	public static bool IsConnected()
+		=> server is not null && server.Multiplayer.MultiplayerPeer.GetConnectionStatus() == MultiplayerPeer.ConnectionStatus.Connected;
+
+
+	/// <summary>
+    /// waits until the player is connected
+    /// </summary>
+    public static async Task WaitUntilConnected() {
+        await NodeTunnelBridge.RelayConnected();
+    }
+
+
 	[
 		Rpc(
 			MultiplayerApi.RpcMode.AnyPeer,
@@ -40,7 +52,7 @@ public partial class Replicator : Singleton<Replicator>
 
 		EmitSignalNewConnection(id);
 
-		if (Multiplayer.IsServer())
+		if (IsServer())
 		{
 			GD.Print("trying to make the player");
 			var player = await Players.MakePlayer(remote, id);
@@ -62,7 +74,7 @@ public partial class Replicator : Singleton<Replicator>
 
 	public async Task Host()
 	{
-		var peer = Server.GetPeer();
+		var peer = await server.ConnectToServer();
 
 		NodeTunnelBridge.Host(peer);
 
@@ -90,7 +102,7 @@ public partial class Replicator : Singleton<Replicator>
 	]
 	public async Task Join(string hostId)
 	{
-		var peer = Server.GetPeer();
+		var peer = await server.ConnectToServer();
 
 		GD.PushWarning($"trying to join {hostId}");	
 		NodeTunnelBridge.Join(peer, hostId);
@@ -120,5 +132,57 @@ public partial class Replicator : Singleton<Replicator>
 		RpcId(1, MethodName._leave, id);
 
 		GD.PushWarning($"leaving game");	
+	}
+
+	/// <summary>
+	/// Checks if the script is running on the server (STATIC)
+	/// </summary>
+	public static bool IsServer(object _ = null)
+		=> server is not null && server.Multiplayer.IsServer();
+
+
+	/// <summary>
+	/// Checks if the script is running on the server
+	/// </summary>
+	public bool IsServer() 
+		=> server is not null && server.Multiplayer.IsServer();
+
+
+	/// <summary>
+	/// Checks if the script is running on the client (STATIC)
+	/// </summary>
+	public static bool IsClient(object _ = null)
+		=> !IsServer();
+
+	/// <summary>
+	/// Checks if the script is running on the client
+	/// </summary>
+	public bool IsClient() 
+		=> !IsServer();
+
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <returns></returns>
+	public static bool isEditor() 
+		=> Engine.IsEditorHint();
+
+
+	public static bool isTool()
+	{
+		#if TOOLS
+			return true;
+		#else
+			return false;
+		#endif
+	}
+
+	public static bool isDebug()
+	{
+		#if DEBUG
+			return true;
+		#else
+			return false;
+		#endif
 	}
 }
