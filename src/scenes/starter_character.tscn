@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=4 uid="uid://dtwjgai1ljwtw"]
+[gd_scene load_steps=23 format=4 uid="uid://dtwjgai1ljwtw"]
 
 [ext_resource type="Script" uid="uid://bvp7c0e42bdmd" path="res://src/core/classes/Character.cs" id="1_bbyxb"]
 
@@ -276,10 +276,19 @@ height = 1.6552734
 [sub_resource type="ViewportTexture" id="ViewportTexture_bbyxb"]
 viewport_path = NodePath("billboard/container/viewport")
 
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_bbyxb"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath(".:scale")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+
 [node name="starterCharacter" type="CharacterBody3D"]
 script = ExtResource("1_bbyxb")
-
-[node name="spawner" type="MultiplayerSpawner" parent="."]
 
 [node name="mesh" type="Node3D" parent="."]
 transform = Transform3D(-0.315, 0, -2.7538174e-08, 0, 0.315, 0, 2.7538174e-08, 0, -0.315, 0, 0, 0)
@@ -1311,12 +1320,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8032261, 0)
 shape = SubResource("CapsuleShape3D_3xf06")
 
 [node name="billboard" type="Sprite3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.9495842, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.004736662, 1.9495842, -0.0010519028)
 billboard = 1
 texture = SubResource("ViewportTexture_bbyxb")
 
 [node name="container" type="SubViewportContainer" parent="billboard"]
-visible = false
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -1328,7 +1336,7 @@ mouse_filter = 2
 transparent_bg = true
 handle_input_locally = false
 size = Vector2i(422, 48)
-render_target_update_mode = 0
+render_target_update_mode = 4
 
 [node name="username" type="Label" parent="billboard/container/viewport"]
 unique_name_in_owner = true
@@ -1340,3 +1348,6 @@ grow_vertical = 2
 text = "PLAYER USERNANME ME EHERE YES"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="sync" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_bbyxb")

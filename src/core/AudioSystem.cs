@@ -11,9 +11,9 @@ public partial class AudioSystem : Singleton3D<AudioSystem>
 	/// <param name="directory"></param>
 	/// <returns></returns>
 	[Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-	public static async Task<AudioStreamPlayer3D> Play(string directory)
+	public AudioStreamPlayer3D Play(string directory)
 	{
-		var audio = await Get($"./{directory}");
+		var audio = Get($"./{directory}");
 		audio.Play();
 		return audio;
 	}
@@ -23,10 +23,9 @@ public partial class AudioSystem : Singleton3D<AudioSystem>
 	/// </summary>
 	/// <param name="directory"></param>
 	/// <returns></returns>
-	public static async Task<AudioStreamPlayer3D> Get(string directory)
+	public AudioStreamPlayer3D Get(string directory)
 	{
-		var audios = await Instance();
-		var audio = audios.GetNode<AudioStreamPlayer3D>(directory);
+		var audio = GetNode<AudioStreamPlayer3D>(directory);
 		return audio;
 	}
 }

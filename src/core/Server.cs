@@ -37,7 +37,7 @@ public partial class Server : Singleton<Server>
 
 	public async Task<NodeTunnelPeer> ConnectToServer()
 	{
-		if (Peer is not null) throw new System.Exception("can't make another peer");
+		/// if (Peer is not null) throw new System.Exception("can't make another peer");
 		
 		Peer = new NodeTunnelPeer();
 		Multiplayer.MultiplayerPeer = Peer.Peer;
@@ -74,9 +74,8 @@ public partial class Server : Singleton<Server>
 		)
 	]
 
-	public static async Task<Error> Run(StringName method, params Variant[] args)
+	public Error Invoke(StringName method, params Variant[] args)
 	{
-		var server = await Instance();
-		return server.RpcId(1, method, args);
+		return RpcId(1, method, args);
 	}
 }

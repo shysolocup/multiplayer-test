@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Core;
 using Godot;
 
+
 /// <summary>
 /// controls cameras
 /// </summary>
@@ -12,7 +13,7 @@ public partial class CameraSystem : Singleton3D<CameraSystem>
 {
 
 	[Signal] public delegate void CameraTypeChangedEventHandler(CameraTypeEnum cameraType);
-	[Signal] public delegate void SubjectChangedEventHandler(Character subject);
+	[Signal] public delegate void SubjectChangedEventHandler(Node3D subject);
 	[Signal] public delegate void CurrentCameraChangedEventHandler(Camera3D camera);
 
 	[Signal] public delegate void FreecamEnabledEventHandler();
@@ -204,9 +205,9 @@ public partial class CameraSystem : Singleton3D<CameraSystem>
 
 
 	#region subject
-	private static Character _subject { get; set; }
+	private static Node3D _subject { get; set; }
 
-	[Export] public Character Subject { 
+	[Export] public Node3D Subject { 
 		get => _subject; 
 		set
 		{
@@ -242,7 +243,6 @@ public partial class CameraSystem : Singleton3D<CameraSystem>
 			TransferMode = MultiplayerPeer.TransferModeEnum.Reliable
 		)
 	]
-	
 	public Error SetSubject(Player player) 
 		=> RpcId(player.GetPeerId(), MethodName._setSubject, player.GetInstanceId());
 
@@ -406,9 +406,7 @@ public partial class CameraSystem : Singleton3D<CameraSystem>
 				);
 			}
 			else
-			{
 				FreecamVelocity = FreecamVelocity.Lerp(Vector3.Zero, FreecamAcceleration);
-			}
 
 			FreecamPivot.Position += FreecamVelocity;
 		}
@@ -521,10 +519,11 @@ public partial class CameraSystem : Singleton3D<CameraSystem>
 				);
 
 
-			if (Subject is not null && Subject.Head is not null)
+			if (Subject is not null || (Subject is Character character && character.Head is not null))
 			{
+				var head = Subject is Character c ? c.Head : Subject;
 				var pos = ThirdPersonSpring.GlobalPosition;
-				var newPos = Subject.Head.GlobalPosition;
+				var newPos = head.GlobalPosition;
 
 				var basis = ThirdPersonSpring.GlobalBasis;
 
@@ -612,9 +611,11 @@ public partial class CameraSystem : Singleton3D<CameraSystem>
 		{
 			mouse.SetBindingMode(Mouse.PriorityChannel.Camera, Input.MouseModeEnum.Captured);
 
-			if (Subject is not null && Subject.Head is not null)
+	
+
+			if (Subject is not null || (Subject is Character character && character.Head is not null))
 			{
-				var head = Subject.Head;
+				var head = Subject is Character c ? c.Head : Subject;
 
 				var rootPos = head.GlobalPosition;
 				var basis = FirstPersonRoot.GlobalBasis;

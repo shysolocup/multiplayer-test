@@ -1,5 +1,4 @@
 using Godot;
-using System.Threading.Tasks;
 
 
 [GlobalClass, Icon("uid://fmiylsiygwmg")]
@@ -14,7 +13,8 @@ public partial class Characters : Singleton3D<Characters>
 	[Signal]
 	public delegate void CharacterRemovedEventHandler(Character character);
 
-	static private CameraSystem cameras { get; set; }
+	private CameraSystem cameras { get; set; }
+	private Workspace workspace { get; set; }
 	private Camera3D cam { get; set; }
 
 
@@ -124,6 +124,7 @@ public partial class Characters : Singleton3D<Characters>
 		base._Ready();
 		
 		cameras = await CameraSystem.Instance();
+		workspace = await Workspace.Instance();
 		cam = cameras.CurrentCamera;
 		
 		StarterCharacter ??= ResourceLoader.Load<PackedScene>($"res://src/scenes/starter_character.tscn", "", ResourceLoader.CacheMode.Replace);
@@ -148,19 +149,15 @@ public partial class Characters : Singleton3D<Characters>
 	/// Non-Replicated Utility Methods ///
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private static async Task<Character> SpawnDummy(Player player)
+	public Character SpawnDummy(string name)
 	{
-
-		var inst = await Instance();
-		var workspace = await Workspace.Instance();
-
-		Character character = inst.StarterCharacter.Instantiate() as Character;
+		Character character = StarterCharacter.Instantiate() as Character;
 			character.GlobalTransform = workspace.Spawn.GlobalTransform;
-			character.Name = player.GetPlayerName();
+			character.Name = name;
 
 		GD.PushWarning("spawned dummy");
 
-		inst.CallDeferred(Node.MethodName.AddChild, character);
+		// inst.CallDeferred(Node.MethodName.AddChild, character);
 
 		return character;  
 	}
@@ -177,11 +174,11 @@ public partial class Characters : Singleton3D<Characters>
 			TransferMode = MultiplayerPeer.TransferModeEnum.Reliable
 		)
 	]
-	public async static Task<Character> Spawn(Player player)
+	public Character Spawn(Player player)
 	{
 		player.GetCharacter()?.QueueFree();
 
-		var character = await SpawnDummy(player);
+		var character = (Character)Replicator.CharacterSpawner.Spawn(player.GetPlayerName());
 
 		player.SetCharacter(character);
 		player.EmitSignal(Player.SignalName.Spawned, character);
@@ -193,11 +190,6 @@ public partial class Characters : Singleton3D<Characters>
 		return character;
 	}
 
-
-	public static async Task<Character> GetCharacterById(string id)
-	{
-		return (await Players.GetPlayerById(id))?.GetCharacter();
-	}
 	
 	#endregion
 }

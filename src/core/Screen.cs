@@ -11,11 +11,11 @@ public partial class Screen : Singleton<Screen>
     public static Vector2I ScreenSize => DisplayServer.ScreenGetSize();
     public static int CurrentScreen => DisplayServer.GetPrimaryScreen();
 
-    public static Error Popup(string title, string description, string[] buttons, Callable callback) => DisplayServer.DialogShow(title, description, buttons, callback); 
+    public Error Popup(string title, string description, string[] buttons, Callable callback) => DisplayServer.DialogShow(title, description, buttons, callback); 
 
-    private static bool fullscreen = false;
+    private bool fullscreen = false;
 
-    public static bool Fullscreen
+    public bool Fullscreen
     {
         get => fullscreen;
         set {

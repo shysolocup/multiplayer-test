@@ -13,7 +13,8 @@ public partial class Players : Singleton<Players>
 	[Export]
 	public PackedScene StarterPlayer = ResourceLoader.Load<PackedScene>($"res://src/scenes/starter_player.tscn", "", ResourceLoader.CacheMode.Replace);
 
-
+	private Characters characters { get; set; }
+	private Client client { get; set; }
 
 	[Export]
 	public Player LocalPlayer
@@ -55,6 +56,9 @@ public partial class Players : Singleton<Players>
 	public override async void _Ready()
 	{
 		base._Ready();
+
+		characters = await Characters.Instance();
+		client = await Client.Instance();
 		
 		StarterPlayer ??= ResourceLoader.Load<PackedScene>($"res://src/scenes/starter_player.tscn", "", ResourceLoader.CacheMode.Replace);
 
@@ -82,12 +86,10 @@ public partial class Players : Singleton<Players>
 		)
 	]
 
-	public static async Task<Player> MakePlayer(long peerId, string id)
+	public Player MakePlayer(long peerId, string id)
 	{
-		var inst = await Instance();
-
 		// incase they somehow get past the rpc restriction bc I lowk don't know how it works
-		if (!Game.IsServer()) throw new Exception("can't make a player on the client");
+		/// if (!Game.IsServer()) throw new Exception("can't make a player on the client");
 		
 
 		/* 
@@ -95,7 +97,7 @@ public partial class Players : Singleton<Players>
 			the mere CHANCE that a little RAT could send an event to join a second time and break the entire thing
 			FUCK YOUUUU
 		*/
-		var CHEATING_FUCKING_RAT = await GetPlayerById(id);
+		var CHEATING_FUCKING_RAT = GetPlayerById(id);
 		
 
 		if (CHEATING_FUCKING_RAT is not null)
@@ -103,19 +105,16 @@ public partial class Players : Singleton<Players>
 			throw new Exception("YOU LITTLE FUCKIN RAT STOP CHEATING TRYING TO MAKE A NEW PLAYER AND BREAK MY ENGINE YOU PIECE OF SHIT GET OUT OF MY WALLSSSSS");
 		}
 
-
-		var player = (Player)inst.StarterPlayer.Instantiate();
+		var player = (Player)StarterPlayer.Instantiate();
 			player.ProcessMode = ProcessModeEnum.Inherit;
 			player.SetPeerId(peerId);
 			player.SetPlayerId(id);
 			player.SetPlayerName($"player:${id}");
 
-		inst.CallDeferred(Node.MethodName.AddChild, player);
-
 		GD.PushWarning("spawned player, is server?: ", !Game.IsServer());
 
-		await Client.SetLocalPlayer(player);
-		await Characters.Spawn(player);
+		client.SetLocalPlayer(player);
+		characters.Spawn(player);
 		
 		return player;
 	}
@@ -132,14 +131,13 @@ public partial class Players : Singleton<Players>
 		)
 	]
 
-	public static async Task RemovePlayer(Player player)
+	public void RemovePlayer(Player player)
 	{
-		var inst = await Instance();
 
 		// incase they somehow get past the rpc restriction bc I lowk don't know how it works
 		if (!Game.IsServer()) throw new Exception("can't remove a player on the client");
 		
-		inst.CallDeferred(Node.MethodName.RemoveChild, player);
+		CallDeferred(Node.MethodName.RemoveChild, player);
 	}
 
 
@@ -154,15 +152,13 @@ public partial class Players : Singleton<Players>
 		)
 	]
 
-	public static async Task RemovePlayer(string id)
+	public void RemovePlayer(string id)
 	{
-		var inst = await Instance();
-
 		// incase they somehow get past the rpc restriction bc I lowk don't know how it works
 		if (!Game.IsServer()) throw new Exception("can't remove a player on the client");
 		
-		var player = await GetPlayerById(id);
-		inst.CallDeferred(Node.MethodName.RemoveChild, player);
+		var player = GetPlayerById(id);
+		CallDeferred(Node.MethodName.RemoveChild, player);
 	}
 
 
@@ -176,10 +172,9 @@ public partial class Players : Singleton<Players>
 	/// <summary>
 	/// Gets a player by their peer id
 	/// </summary>
-	public static async Task<Player> GetPlayerById(string id)
+	public Player GetPlayerById(string id)
 	{
-		var inst = await Instance();
-		var players = await GetPlayers();
+		var players = GetPlayers();
 
 		foreach (var player in players)
 		{
@@ -193,12 +188,11 @@ public partial class Players : Singleton<Players>
 	/// Returns an array of players in the game
 	/// <para/> Specifically it returns a <see cref="Array"/>
 	/// </summary>
-	public static async Task<Array<Player>> GetPlayers()
+	public Array<Player> GetPlayers()
 	{
-		var inst = await Instance();
 		var result = new Array<Player>();
 
-		foreach (var node in inst.GetChildren())
+		foreach (var node in GetChildren())
 		{
 			if (node is Player player) 
 				result.Add(player);
@@ -210,9 +204,9 @@ public partial class Players : Singleton<Players>
 	/// <summary>
 	/// Gets a player by their character model
 	/// </summary>
-	public static async Task<Player> GetPlayerByCharacter(Character character)
+	public Player GetPlayerByCharacter(Character character)
 	{
-		var players = await GetPlayers();
+		var players = GetPlayers();
 		foreach (var player in players)
 		{
 			if (player.GetCharacter() == character) return player;

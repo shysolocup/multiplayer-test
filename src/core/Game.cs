@@ -1,3 +1,5 @@
+using System;
+using Godot.Collections;
 using System.Threading.Tasks;
 using Godot;
 using NodeTunnel;
@@ -6,6 +8,22 @@ using NodeTunnel;
 [GlobalClass, Icon("uid://boo8iw5pvoaa8")]
 public partial class Game : Singleton<Game>
 {
+	public override async void _Ready()
+	{
+		base._Ready();
+
+		if (Engine.IsEditorHint()) return;
+
+		// load singleton systems
+		await Load();
+
+		Systems.Server.Multiplayer.PeerConnected += (long id) => {
+			GD.Print(id);
+		};
+
+		IsLoaded = true;	
+	}
+
 	public static class Systems
 	{
 		public static Workspace Workspace { get; set; }
@@ -28,10 +46,9 @@ public partial class Game : Singleton<Game>
 		public static FileLib FileLib { get; set; }
 		public static JsonLib JsonLib { get; set; }
 		public static TaskLib TaskLib { get; set; }
-	}
+    }
 
 	[Signal] public delegate void StartedHostingEventHandler(string id);
-	[Signal] public delegate void NewConnectionEventHandler(string id);
 	[Signal] public delegate void JoiningEventHandler(string id);
 	[Signal] public delegate void LeftConnectionEventHandler();
 
@@ -40,10 +57,12 @@ public partial class Game : Singleton<Game>
 	public static bool IsConnected()
 		=> Systems.Server is not null 
 			&& Server.GetPeer() is NodeTunnelPeer peer
+			&& Client.LocalPlayer is not null
 			&& (
 				peer.ConnectionState == ConnectionState.Hosting || 
 				peer.ConnectionState == ConnectionState.Joined
 			);
+
 
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
 	public bool IsConnected(object _ = null)
@@ -73,26 +92,6 @@ public partial class Game : Singleton<Game>
 		}
 	}
 
-
-	[
-		Rpc(
-			MultiplayerApi.RpcMode.AnyPeer,
-			CallLocal = true
-		)
-	]
-	private async void _join(string id, string hostId)
-	{
-		var remote = Multiplayer.GetRemoteSenderId();
-
-		EmitSignalNewConnection(id);
-
-		if (IsServer())
-		{
-			GD.Print("trying to make the player");
-			var player = await Players.MakePlayer(remote, id);
-		}
-	}
-
 	[
 		Rpc(
 			MultiplayerApi.RpcMode.AnyPeer, 
@@ -101,7 +100,6 @@ public partial class Game : Singleton<Game>
 	]
 	private void _leave()
 	{
-		var remote = Multiplayer.GetRemoteSenderId();
 		EmitSignalLeftConnection();
 	}
 
@@ -111,56 +109,49 @@ public partial class Game : Singleton<Game>
 		var peer = await Systems.Server.ConnectToServer();
 
 		peer.Host();
-
-		// await to be connected
 		await peer.WaitUntilHosting();
 
-		var id = peer.OnlineId;
+		var peerId = peer.UniqueId;
+		var stringId = peer.OnlineId;
 
-		Server.HostId = id;
+		Server.HostId = stringId;
 
-		EmitSignalStartedHosting(id);
-		_join(id, id);
-		GD.PushWarning($"started hosting at id {id}");	
+		Replicator.PlayerSpawner.Spawn(new Godot.Collections.Array { 
+			peerId, stringId 
+		});
+		
+		EmitSignalStartedHosting(stringId);
 	}
 
 
-	[
-		Rpc(
-			MultiplayerApi.RpcMode.AnyPeer, 
-			CallLocal = true
-		)
-	]
+	
 	public async Task Join(string hostId)
 	{
 		var peer = await Systems.Server.ConnectToServer();
-
-		GD.PushWarning($"trying to join {hostId}");	
 		
 		peer.Join(hostId);
-
 		await peer.WaitUntilJoined();
 
-		var id = peer.OnlineId;
+		var peerId = peer.UniqueId;
+		var stringId = peer.OnlineId;
 
-		EmitSignalJoining(id);
-		RpcId(1, MethodName._join, id, hostId);
-		GD.PushWarning($"peer {id} has joined with the function");	
+		Server.HostId = hostId;
+
+		Replicator.PlayerSpawner.Spawn(new Godot.Collections.Array { 
+			peerId, stringId 
+		});
+
+		EmitSignalJoining(stringId);
 	}
 
 
-	[
-		Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)
-	]
-	public async Task Leave()
+	public void Leave()
 	{
 		var peer = Server.GetPeer();
 
 		if (peer is not null)
 		{
 			peer.LeaveRoom();
-
-			RpcId(1, MethodName._leave);
 
 			GD.PushWarning($"leaving game");		
 		}
@@ -324,25 +315,6 @@ public partial class Game : Singleton<Game>
 		GD.Print(loadString);
 
 		IsLoaded = true;
-	}
-
-	public override async void _Ready()
-	{
-		base._Ready();
-
-		if (Engine.IsEditorHint()) return;
-
-		GD.Print("guh");
-
-		NewConnection += id =>
-		{
-			GD.Print($"received new player joining {id}");	
-		};
-
-		// load singleton systems
-		await Load();
-
-		IsLoaded = true;	
 	}
 
 	public override void _Notification(int what)

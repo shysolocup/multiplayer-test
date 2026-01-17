@@ -23,6 +23,8 @@ public partial class Client : Singleton<Client>
 	public static ClientScriptSystem Scripts { get; set; }
 	public static Replicator Replicator { get; set; }
 
+	private Players players { get; set; }
+
 	public static Player LocalPlayer
 	{
 		get => _localPlayer;
@@ -55,6 +57,9 @@ public partial class Client : Singleton<Client>
 		Cameras ??= GetNode<CameraSystem>("./cameras");
 		Scripts ??= await ClientScriptSystem.Instance();
 		Replicator ??= await Replicator.Instance();
+
+		players = await Players.Instance();
+		
 
 		GD.PushWarning("loaded client stuff");
 	}
@@ -94,6 +99,23 @@ public partial class Client : Singleton<Client>
 		return client.RpcId(player.GetPeerId(), MethodName._setLocalPlayer, player.GetInstanceId());
 	}
 
+	/// <summary>
+	/// Sets the local player of the client using the player's built in id
+	/// <para/>@server
+	/// </summary>
+	[
+		Rpc(
+			MultiplayerApi.RpcMode.Authority, 
+			CallLocal = true,
+			TransferMode = MultiplayerPeer.TransferModeEnum.Reliable
+		)
+	]
+	
+	public Error SetLocalPlayer(Player player, object _ = null)
+	{
+		return RpcId(player.GetPeerId(), MethodName._setLocalPlayer, player.GetInstanceId());
+	}
+
 
 	/// <summary>
 	/// Sets the local player of the client using a given id
@@ -126,10 +148,9 @@ public partial class Client : Singleton<Client>
 		)
 	]
 
-	public static async Task<Error> Invoke(long id, StringName method, params Variant[] args)
+	public Error Invoke(long id, StringName method, params Variant[] args)
 	{
-		var client = await Instance();
-		return client.RpcId(id, method, args);
+		return RpcId(id, method, args);
 	}
 
 
@@ -145,12 +166,11 @@ public partial class Client : Singleton<Client>
 		)
 	]
 
-	public static async Task<Error> Invoke(string id, StringName method, params Variant[] args)
+	public Error Invoke(string id, StringName method, params Variant[] args)
 	{
-		var client = await Instance();
-		var player = await Players.GetPlayerById(id);
+		var player = players.GetPlayerById(id);
 
-		return client.RpcId(player.GetPeerId(), method, args);
+		return RpcId(player.GetPeerId(), method, args);
 	}
 
 
@@ -166,9 +186,9 @@ public partial class Client : Singleton<Client>
 		)
 	]
 	
-	public static async Task<Error> Invoke(Player player, StringName method, params Variant[] args)
+	public Error Invoke(Player player, StringName method, params Variant[] args)
 	{
-		return await Invoke(player.GetPeerId(), method, args);
+		return Invoke(player.GetPeerId(), method, args);
 	}
 
 
@@ -184,7 +204,7 @@ public partial class Client : Singleton<Client>
 		)
 	]
 
-	public static async Task<Error> Invoke<T>(long id, T obj, StringName method, params Variant[] args) where T : Node
+	public Error Invoke<T>(long id, T obj, StringName method, params Variant[] args) where T : Node
 	{
 		return obj.RpcId(id, method, args);
 	}
@@ -202,12 +222,11 @@ public partial class Client : Singleton<Client>
 		)
 	]
 
-	public static async Task<Error> Invoke<T>(string id, T obj, StringName method, params Variant[] args)
+	public Error Invoke<T>(string id, T obj, StringName method, params Variant[] args)
 	{
-		var client = await Instance();
-		var player = await Players.GetPlayerById(id);
+		var player = players.GetPlayerById(id);
 
-		return client.RpcId(player.GetPeerId(), method, args);
+		return RpcId(player.GetPeerId(), method, args);
 	}
 
 	/// <summary>
@@ -222,9 +241,9 @@ public partial class Client : Singleton<Client>
 		)
 	]
 	
-	public static async Task<Error> Invoke(Player player, GodotObject obj, StringName method, params Variant[] args)
+	public Error Invoke(Player player, GodotObject obj, StringName method, params Variant[] args)
 	{
-		return await Invoke(player.GetPeerId(), method, args);
+		return Invoke(player.GetPeerId(), method, args);
 	}
 
 	/// <summary>
@@ -239,12 +258,8 @@ public partial class Client : Singleton<Client>
 		)
 	]
 
-	public static async Task InvokeAll(StringName method, params Variant[] args)
+	public void InvokeAll(StringName method, params Variant[] args)
 	{
-		var client = await Instance();
-		foreach (var id in client.Multiplayer.GetPeers())
-		{
-			client.RpcId(id, method, args);
-		}
+		Rpc(method, args);
 	}
 } 

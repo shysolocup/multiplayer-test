@@ -178,7 +178,7 @@ public partial class Mouse : Singleton<Mouse>
 
 	#nullable enable
 
-	public async Task<T?> GetTarget<T>(int range = 1000) where T : Node3D
+	public T? GetTarget<T>(int range = 1000) where T : Node3D
 	{
 		var camera = Client.CurrentCamera;
 		
