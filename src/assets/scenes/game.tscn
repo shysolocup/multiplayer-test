@@ -55,14 +55,14 @@ metadata/_custom_type_script = "uid://hilik46ime86"
 [node name="map" type="Node3D" parent="workspace" node_paths=PackedStringArray("Map")]
 transform = Transform3D(-0.99987966, 0, -0.015515357, 0, 1, 0, 0.015515357, 0, -0.99987966, 0, 0, 0)
 script = ExtResource("3_44dqv")
-Map = NodePath("@Node3D@30977")
+Map = NodePath("default")
 metadata/_custom_type_script = "uid://c3yamjsvvi4eo"
 
 [node name="lighting" type="Node3D" parent="workspace" node_paths=PackedStringArray("World", "Lights")]
-transform = Transform3D(0.13519675, 0.9908184, 0, -0.9908183, 0.13519676, 0, 0, 0, 1, 0, 0, 0)
+transform = Transform3D(0.5176914, 0.8555669, 0, -0.85556686, 0.5176914, 0, 0, 0, 1, 0, 0, 0)
 script = ExtResource("4_44dqv")
-TargetTimeOfDay = 6.518
-TimeOfDay = 6.518
+TargetTimeOfDay = 8.084
+TimeOfDay = 8.078503
 SkyMaterial = ExtResource("6_44dqv")
 World = NodePath("world")
 Lights = NodePath("lights")
@@ -73,6 +73,8 @@ script = ExtResource("7_pm1mm")
 metadata/_custom_type_script = "uid://dd1he2wiyd6x4"
 
 [node name="spawn" type="Marker3D" parent="workspace"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="workspace"]
 
 [node name="client" type="Node" parent="."]
 unique_name_in_owner = true
