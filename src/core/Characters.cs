@@ -1,4 +1,5 @@
 using Godot;
+using Godot.Collections;
 
 
 [GlobalClass, Icon("uid://fmiylsiygwmg")]
@@ -16,6 +17,7 @@ public partial class Characters : Singleton3D<Characters>
 	private CameraSystem cameras { get; set; }
 	private Workspace workspace { get; set; }
 	private Camera3D cam { get; set; }
+	private Players players { get; set; }
 
 
 	[
@@ -31,7 +33,7 @@ public partial class Characters : Singleton3D<Characters>
 		base._PhysicsProcess(delta);
 
 		var player = Client.LocalPlayer;
-		var chara = player?.GetCharacter();
+		var chara = player?.Character;
 
 		if (chara is not null && !cameras.FreecamActive)
 		{
@@ -125,6 +127,7 @@ public partial class Characters : Singleton3D<Characters>
 		
 		cameras = await CameraSystem.Instance();
 		workspace = await Workspace.Instance();
+		players = await Players.Instance();
 		cam = cameras.CurrentCamera;
 		
 		StarterCharacter ??= ResourceLoader.Load<PackedScene>($"res://src/scenes/starter_character.tscn", "", ResourceLoader.CacheMode.Replace);
@@ -143,24 +146,11 @@ public partial class Characters : Singleton3D<Characters>
 	}
 
 
-	#region utility
+	#region replicated
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	/// Non-Replicated Utility Methods ///
+	/// RPC Methods ///
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	public Character SpawnDummy(string name)
-	{
-		Character character = StarterCharacter.Instantiate() as Character;
-			character.GlobalTransform = workspace.Spawn.GlobalTransform;
-			character.Name = name;
-
-		GD.PushWarning("spawned dummy");
-
-		// inst.CallDeferred(Node.MethodName.AddChild, character);
-
-		return character;  
-	}
 
 
 	/// <summary>
@@ -176,18 +166,84 @@ public partial class Characters : Singleton3D<Characters>
 	]
 	public Character Spawn(Player player)
 	{
-		player.GetCharacter()?.QueueFree();
+		player.Character?.QueueFree();
 
-		var character = (Character)Replicator.CharacterSpawner.Spawn(player.GetPlayerName());
+		var peerId = player.GetPeerId();
+		var id = player.GetId();
+		var name = player.GetPlayerName();
 
-		player.SetCharacter(character);
-		player.EmitSignal(Player.SignalName.Spawned, character);
+		Character character = null;
+		var spawner = Replicator.CharacterSpawner;
 
-		GD.PushWarning($"spawned {player.GetPlayerName()}'s character");
+		if (Game.IsServer())
+		{
+			character = (Character)spawner.Spawn(new Array { 
+				peerId,
+				id, 
+				name 
+			});
 
-		cameras.SetSubject(player);
+			GD.PushWarning($"spawned {name}'s character");
+		}
+
+		GD.Print(id == Server.GetId());
 
 		return character;
+	}
+
+
+	#endregion
+	#region utility
+
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	/// Non-Replicated Utility Methods ///
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	public Character SpawnDummy(int peerId, string playerId, string playerName)
+	{
+		var chara = StarterCharacter.Instantiate() as Character;
+			chara.GlobalTransform = workspace.Spawn.GlobalTransform;
+			chara.Name = playerName;
+			chara.SetId(playerId);
+			chara.SetMultiplayerAuthority(peerId, true);
+
+		GD.PushWarning("spawned dummy");	
+
+		return chara;
+	}
+
+
+	/// <summary>
+	/// Gets a character by their peer id
+	/// </summary>
+	public Character GetCharacterById(string id)
+	{
+		var players = GetCharacters();
+
+		foreach (var chara in players)
+		{
+			if (chara.GetId() == id) return chara;
+		}
+
+		return null;
+	}
+
+
+	/// <summary>
+	/// Returns an array of characters in the game
+	/// <para/> Specifically it returns a <see cref="Array"/>
+	/// </summary>
+	public Array<Character> GetCharacters()
+	{
+		var result = new Array<Character>();
+
+		foreach (var node in GetChildren())
+		{
+			if (node is Character chara) 
+				result.Add(chara);
+		}
+
+		return result;
 	}
 
 	

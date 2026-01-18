@@ -14,19 +14,34 @@ public partial class Player : Node
 	[Export] private string PlayerName { get; set; } = "Player";
 	[Export] private string Id { get; set; }
 	[Export] private long PeerId { get; set; }
-	[Export] private Character Character;
+	[Export] public Character Character
+	{
+		get => characters is Characters c ? c.GetCharacterById(Id) : null;
+		set => throw new System.Exception("don't do that");
+	}
 
 	public string GetId() => Id;
 	public long GetPeerId() => PeerId;
 	public string GetPlayerName() => PlayerName;
-	public Character GetCharacter() => Character;
+
+
+	private Characters characters { get; set; }
+
+
+    public override async void _Ready()
+    {
+        base._Ready();
+
+		characters = await Characters.Instance();
+    }
+
 
 
 	/// <summary>
 	/// sets the player's peer id
 	/// <para/>@server
 	/// </summary>
-	[Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+	[Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true)]
 	public void SetPlayerName(string name)
 	{
 		PlayerName = name;
@@ -38,7 +53,7 @@ public partial class Player : Node
 	/// sets the player's peer id
 	/// <para/>@server
 	/// </summary>
-	[Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+	[Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true)]
 	public void SetPlayerId(string id)
 	{
 		Id = id;
@@ -49,19 +64,9 @@ public partial class Player : Node
 	/// sets the player's peer id
 	/// <para/>@server
 	/// </summary>
-	[Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+	[Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true)]
 	public void SetPeerId(long id)
 	{
 		PeerId = id;
-	}
-
-	/// <summary>
-	/// sets the player's character
-	/// <para/>@server
-	/// </summary>
-	[Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-	public void SetCharacter(Character character)
-	{
-		Character = character;	
 	}
 }

@@ -3,6 +3,13 @@ using Godot;
 [GlobalClass]
 public partial class Character : CharacterBody3D
 {
+
+	[Export] private string Id { get; set; }
+
+	public string GetId() => Id;
+
+	[Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true)]
+	public void SetId(string id) => Id = id;
 	
 	public Node3D Mesh { get; set; }
 	public Node3D Rig { get; set; }

@@ -88,30 +88,13 @@ public partial class Players : Singleton<Players>
 
 	public Player MakePlayer(long peerId, string id)
 	{
-		// incase they somehow get past the rpc restriction bc I lowk don't know how it works
-		/// if (!Game.IsServer()) throw new Exception("can't make a player on the client");
-		
-
-		/* 
-			INCASE THEY SOMEHOW GET PAST THE TWO OTHER RESTRICTIONS becuase I'm paranoid as SHIT
-			the mere CHANCE that a little RAT could send an event to join a second time and break the entire thing
-			FUCK YOUUUU
-		*/
-		var CHEATING_FUCKING_RAT = GetPlayerById(id);
-		
-
-		if (CHEATING_FUCKING_RAT is not null)
-		{
-			throw new Exception("YOU LITTLE FUCKIN RAT STOP CHEATING TRYING TO MAKE A NEW PLAYER AND BREAK MY ENGINE YOU PIECE OF SHIT GET OUT OF MY WALLSSSSS");
-		}
-
 		var player = (Player)StarterPlayer.Instantiate();
 			player.ProcessMode = ProcessModeEnum.Inherit;
 			player.SetPeerId(peerId);
 			player.SetPlayerId(id);
 			player.SetPlayerName($"player:${id}");
 
-		GD.PushWarning("spawned player, is server?: ", !Game.IsServer());
+		GD.PushWarning("spawned player, is server?: ", Game.IsServer());
 
 		client.SetLocalPlayer(player);
 		characters.Spawn(player);
@@ -209,7 +192,7 @@ public partial class Players : Singleton<Players>
 		var players = GetPlayers();
 		foreach (var player in players)
 		{
-			if (player.GetCharacter() == character) return player;
+			if (player.Character == character) return player;
 		}
 
 		return null;

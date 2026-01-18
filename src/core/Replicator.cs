@@ -13,6 +13,7 @@ public partial class Replicator : Singleton<Replicator>
     private Players players { get; set; }
     private GlobalStorage global { get; set; }
     private Characters characters { get; set; }
+    private CameraSystem cameras { get; set; }
 
 
     public override async void _Ready()
@@ -23,10 +24,11 @@ public partial class Replicator : Singleton<Replicator>
         CharacterSpawner = GetNode<MultiplayerSpawner>("./characterSpawner");
 
 
-        var workspace = await Workspace.Instance();
-        var players = await Players.Instance();
-        var global = await GlobalStorage.Instance();
-        var characters = await Characters.Instance();
+        workspace = await Workspace.Instance();
+        players = await Players.Instance();
+        global = await GlobalStorage.Instance();
+        cameras = await CameraSystem.Instance();
+        characters = await Characters.Instance();
 
 
         PlayerSpawner.SpawnFunction = Callable.From( (Godot.Collections.Array array) =>
@@ -38,9 +40,13 @@ public partial class Replicator : Singleton<Replicator>
             return players.MakePlayer(peerId, id);
         });
 
-        CharacterSpawner.SpawnFunction = Callable.From((string name) =>
+        CharacterSpawner.SpawnFunction = Callable.From((Godot.Collections.Array array) =>
         {
-            return characters.SpawnDummy(name);
+            var peerId = (int)array[0];
+            var playerId = (string)array[1];
+            var playerName = (string)array[2];
+
+            return characters.SpawnDummy(peerId, playerId, playerName);
         });
 
 
@@ -58,21 +64,39 @@ public partial class Replicator : Singleton<Replicator>
             GD.Print("set authority to server");
 
             players.PlayerJoined += OnJoin;
-            OnJoin(Client.LocalPlayer);
+
+            foreach (var player in players.GetPlayers())
+            {
+                OnJoin(player);
+            }
         }
     }
 
-    private static void OnJoin(Player player)
+    private void OnJoin(Player player)
     {
-        player.Spawned += character => {
+        player.Spawned += chara => {
             GD.Print("set character authority to client");
-            character.SetMultiplayerAuthority((int)player.GetPeerId(), recursive: true);
+            chara.SetMultiplayerAuthority((int)player.GetPeerId(), recursive: true);
+
+            GD.Print(player.GetId(), Server.GetId());
+
+            if (player.GetId() == Server.GetId())
+            {
+                cameras.SetSubject(player);
+            }
         };
 
-        if (player.GetCharacter() is Character chara)
+        if (player.Character is Character chara)
         {
             GD.Print("set character authority to client");
             chara.SetMultiplayerAuthority((int)player.GetPeerId(), recursive: true);
+
+            GD.Print(player.GetId(), Server.GetId());
+
+            if (player.GetId() == Server.GetId())
+            {
+                cameras.SetSubject(player);
+            }
         }
     }
 }

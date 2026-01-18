@@ -1,5 +1,6 @@
 using Core;
 using Godot;
+using NodeTunnel;
 using System.Threading.Tasks;
 
 
@@ -13,7 +14,7 @@ public partial class Client : Singleton<Client>
 	[Export]
 	private int PeerId
 	{
-		get => Server.GetPeer().UniqueId;
+		get => Server.GetPeer() is NodeTunnelPeer peer ? peer.UniqueId : -1;
 		set {}
 	}
 
@@ -73,14 +74,13 @@ public partial class Client : Singleton<Client>
 	]
 	private void _setLocalPlayer(ulong id)
 	{
-		if (IsInstanceIdValid(id) && InstanceFromId(id) is Player player && Multiplayer.GetUniqueId() == Multiplayer.GetRemoteSenderId())
+		if (IsInstanceIdValid(id) && InstanceFromId(id) is Player player && player.GetId() == Server.GetId())
 		{
 			GD.Print("set local player");
 			LocalPlayer = player;	
 		}
 	}
 
-
 	/// <summary>
 	/// Sets the local player of the client using the player's built in id
 	/// <para/>@server
@@ -88,25 +88,7 @@ public partial class Client : Singleton<Client>
 	[
 		Rpc(
 			MultiplayerApi.RpcMode.Authority, 
-			CallLocal = true,
-			TransferMode = MultiplayerPeer.TransferModeEnum.Reliable
-		)
-	]
-	
-	public static async Task<Error> SetLocalPlayer(Player player)
-	{
-		var client = await Instance();
-		return client.RpcId(player.GetPeerId(), MethodName._setLocalPlayer, player.GetInstanceId());
-	}
-
-	/// <summary>
-	/// Sets the local player of the client using the player's built in id
-	/// <para/>@server
-	/// </summary>
-	[
-		Rpc(
-			MultiplayerApi.RpcMode.Authority, 
-			CallLocal = true,
+			CallLocal = false,
 			TransferMode = MultiplayerPeer.TransferModeEnum.Reliable
 		)
 	]
@@ -114,25 +96,6 @@ public partial class Client : Singleton<Client>
 	public Error SetLocalPlayer(Player player, object _ = null)
 	{
 		return RpcId(player.GetPeerId(), MethodName._setLocalPlayer, player.GetInstanceId());
-	}
-
-
-	/// <summary>
-	/// Sets the local player of the client using a given id
-	/// <para/>@server
-	/// </summary>
-	[
-		Rpc(
-			MultiplayerApi.RpcMode.Authority, 
-			CallLocal = true,
-			TransferMode = MultiplayerPeer.TransferModeEnum.Reliable
-		)
-	]
-	
-	public static async Task<Error> SetLocalPlayer(long id, Player player)
-	{
-		var client = await Instance();
-		return client.RpcId(id, MethodName._setLocalPlayer, player);
 	}
 
 

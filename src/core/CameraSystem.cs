@@ -218,33 +218,19 @@ public partial class CameraSystem : Singleton3D<CameraSystem>
 		} 
 	}
 
-	[
-		Rpc(
-			MultiplayerApi.RpcMode.AnyPeer,
-			CallLocal = true
-		)
-	]
-	private void _setSubject(ulong id)
-	{
-		if (IsInstanceIdValid(id) && InstanceFromId(id) is Player player && Multiplayer.GetUniqueId() == Multiplayer.GetRemoteSenderId())
-		{
-			Subject = player.GetCharacter();	
-		}
-	}
+	/// <summary>
+	/// Sets the local player of the client using the player's built in id
+	/// <para/>@client
+	/// </summary>
+	public void SetSubject(Player player) 
+		=> Subject = player.Character;	
 
 	/// <summary>
 	/// Sets the local player of the client using the player's built in id
-	/// <para/>@server
+	/// <para/>@client
 	/// </summary>
-	[
-		Rpc(
-			MultiplayerApi.RpcMode.Authority, 
-			CallLocal = true,
-			TransferMode = MultiplayerPeer.TransferModeEnum.Reliable
-		)
-	]
-	public Error SetSubject(Player player) 
-		=> RpcId(player.GetPeerId(), MethodName._setSubject, player.GetInstanceId());
+	public void SetSubject(Node3D node)
+		=> Subject = node;
 
 
 	#endregion

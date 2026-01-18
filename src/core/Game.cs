@@ -116,13 +116,28 @@ public partial class Game : Singleton<Game>
 
 		Server.HostId = stringId;
 
-		Replicator.PlayerSpawner.Spawn(new Godot.Collections.Array { 
-			peerId, stringId 
-		});
+		guh(peerId, stringId);
 		
 		EmitSignalStartedHosting(stringId);
 	}
 
+	private void guh(long peerId, string stringId)
+	{
+		Player player = (Player)Replicator.PlayerSpawner.Spawn(new Godot.Collections.Array { 
+			peerId, stringId 
+		});
+	}
+
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
+	private void EmitJoin(long peerId, string stringId)
+	{
+		if (IsServer())
+		{
+			guh(peerId, stringId);
+		}
+
+		EmitSignalJoining(stringId);
+	}
 
 	
 	public async Task Join(string hostId)
@@ -137,11 +152,7 @@ public partial class Game : Singleton<Game>
 
 		Server.HostId = hostId;
 
-		Replicator.PlayerSpawner.Spawn(new Godot.Collections.Array { 
-			peerId, stringId 
-		});
-
-		EmitSignalJoining(stringId);
+		Rpc(MethodName.EmitJoin, peerId, stringId);
 	}
 
 
