@@ -1,6 +1,6 @@
 [gd_scene load_steps=23 format=4 uid="uid://dtwjgai1ljwtw"]
 
-[ext_resource type="Script" uid="uid://bvp7c0e42bdmd" path="res://src/core/classes/Character.cs" id="1_bbyxb"]
+[ext_resource type="Script" uid="uid://bvp7c0e42bdmd" path="res://addons/coreblocks/core/classes/Character.cs" id="1_bbyxb"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6tad7"]
 resource_name = "Face"

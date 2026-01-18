@@ -4,4 +4,3 @@
 addons/*
 !addons/.editorconfig
 .addons/
-.vs/

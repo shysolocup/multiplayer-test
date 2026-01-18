@@ -1,6 +1,6 @@
 [gd_scene load_steps=23 format=4 uid="uid://bo0rl4wd6webr"]
 
-[ext_resource type="Script" uid="uid://bxg7u861dnld" path="res://src/core/classes/Sunlight.cs" id="1_i2xtl"]
+[ext_resource type="Script" uid="uid://bxg7u861dnld" path="res://addons/coreblocks/core/classes/Sunlight.cs" id="1_i2xtl"]
 [ext_resource type="Material" uid="uid://7wuop4abysij" path="res://src/assets/resources/skies/res_sky_realistic.tres" id="1_kw2do"]
 
 [sub_resource type="Sky" id="Sky_kw2do"]

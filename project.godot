@@ -17,13 +17,13 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 config/name="multiplayer test"
 run/main_scene="uid://cg6684xj7fjx"
 config/features=PackedStringArray("4.5", "C#", "Forward Plus")
-config/icon="res://icon.svg"
+config/icon="res://src/assets/images/icon.svg"
 
 [autoload]
 
 DiscordRPCLoader="*res://addons/discord-rpc-gd/nodes/discord_autoload.gd"
-Ext="*res://src/core/libs/Ext.cs"
-HiddenSingletons="*res://src/core/scenes/hidden_singletons.tscn"
+Ext="*res://addons/coreblocks/core/libs/Ext.cs"
+HiddenSingletons="*res://addons/coreblocks/core/scenes/hidden_singletons.tscn"
 
 [display]
 
@@ -34,9 +34,13 @@ window/stretch/mode="canvas_items"
 
 project/assembly_name="multiplayer test"
 
+[editor]
+
+script/templates_search_path="res://addons/coreblocks/script_templates"
+
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/csg_converter/plugin.cfg", "res://addons/csgtomesh/plugin.cfg", "res://addons/discord-rpc-gd/plugin.cfg", "res://addons/fancy_folder_colors/plugin.cfg", "res://addons/gdscript2all/plugin.cfg", "res://addons/nodetunnel/plugin.cfg", "res://addons/script-ide/plugin.cfg", "res://addons/terrain_3d/plugin.cfg")
+enabled=PackedStringArray("res://addons/coreblocks/plugin.cfg", "res://addons/csg_converter/plugin.cfg", "res://addons/csgtomesh/plugin.cfg", "res://addons/discord-rpc-gd/plugin.cfg", "res://addons/fancy_folder_colors/plugin.cfg", "res://addons/gdscript2all/plugin.cfg", "res://addons/nodetunnel/plugin.cfg", "res://addons/script-ide/plugin.cfg", "res://addons/terrain_3d/plugin.cfg")
 
 [global_group]
 

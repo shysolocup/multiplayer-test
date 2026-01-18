@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="script_templates/**/*.cs" /> <!-- All .cs files in a directory subtree -->
+    <Compile Remove="addons/coreblocks/script_templates/**/*.cs" /> <!-- All .cs files in a directory subtree -->
   </ItemGroup>
 
   <ItemGroup>

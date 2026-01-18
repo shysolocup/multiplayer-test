@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://cx461ggiitbpu"]
 
-[ext_resource type="Script" uid="uid://frnpgkvyxvtv" path="res://src/core/classes/Player.cs" id="1_01g1l"]
+[ext_resource type="Script" uid="uid://frnpgkvyxvtv" path="res://addons/coreblocks/core/classes/Player.cs" id="1_01g1l"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_01g1l"]
 properties/0/path = NodePath(".:PlayerName")

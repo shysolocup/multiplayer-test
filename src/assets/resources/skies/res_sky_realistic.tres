@@ -1,8 +1,8 @@
 [gd_resource type="ShaderMaterial" load_steps=18 format=3 uid="uid://7wuop4abysij"]
 
-[ext_resource type="Shader" uid="uid://b1jfi8tqdl1n5" path="res://src/core/assets/sky/sky.default.gdshader" id="1_nbrkq"]
-[ext_resource type="Texture2D" uid="uid://bdvkmjuer3q65" path="res://src/core/assets/sky/moon.png" id="2_svkh5"]
-[ext_resource type="CompressedCubemap" uid="uid://bs78evs1saajk" path="res://src/core/assets/sky/stars.hdr" id="3_5g5tf"]
+[ext_resource type="Shader" uid="uid://b1jfi8tqdl1n5" path="res://addons/coreblocks/core/assets/sky/sky.default.gdshader" id="1_nbrkq"]
+[ext_resource type="Texture2D" uid="uid://bdvkmjuer3q65" path="res://addons/coreblocks/core/assets/sky/moon.png" id="2_svkh5"]
+[ext_resource type="CompressedCubemap" uid="uid://bs78evs1saajk" path="res://addons/coreblocks/core/assets/sky/stars.hdr" id="3_5g5tf"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_n8vuu"]
 seed = 2
