@@ -5,9 +5,12 @@ using Godot;
 /// <summary>
 /// Base class for singletons with a type argument that allows you to define its inheritance
 /// </summary>
-public abstract partial class Singleton<T> : Node
+public abstract partial class Singleton<T> : Node, IBaseSingleton<T>
     where T : Node
 {
+    /// <summary>
+    /// Instance of the singleton
+    /// </summary>
     public static T Me;
 
     /// <summary>
@@ -15,9 +18,7 @@ public abstract partial class Singleton<T> : Node
     /// </summary>
     public static async Task<T> Instance() {
         while (Me is null || !IsInstanceValid(Me))
-        {
             await Task.Delay(10);
-        }
 
         return Me;
     }
@@ -28,9 +29,7 @@ public abstract partial class Singleton<T> : Node
         base._Ready();
 
         if (Me != null && Me != this)
-        {
             return;
-        }
 
         Me = (T)(object)this;
     }

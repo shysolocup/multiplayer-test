@@ -23,7 +23,6 @@ public partial class Replicator : Singleton<Replicator>
         PlayerSpawner = GetNode<MultiplayerSpawner>("./playerSpawner");
         CharacterSpawner = GetNode<MultiplayerSpawner>("./characterSpawner");
 
-
         workspace = await Workspace.Instance();
         players = await Players.Instance();
         global = await GlobalStorage.Instance();

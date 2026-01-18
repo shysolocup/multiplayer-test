@@ -3,11 +3,13 @@ using Godot.Collections;
 using System.Threading.Tasks;
 using Godot;
 using NodeTunnel;
+using System.Reflection;
 
 [Tool]
 [GlobalClass, Icon("uid://boo8iw5pvoaa8")]
 public partial class Game : Singleton<Game>
 {
+
 	public override async void _Ready()
 	{
 		base._Ready();
@@ -24,6 +26,236 @@ public partial class Game : Singleton<Game>
 		IsLoaded = true;	
 	}
 
+
+	#region Systems
+	/// <summary>
+	/// Get a singleton system by generic type
+	/// <para/><code>
+	/// Game.GetSystem&lt;GuiSystem&gt;()
+	/// </code>
+	/// </summary>
+	public static async Task<T> GetSystem<T>() where T : class, IBaseSingleton<GodotObject>
+    {
+		var t = typeof(T);
+
+		var properties = typeof(Systems).GetProperties(
+			BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy
+		);
+
+		foreach (var prop in properties)
+		{
+			if (prop.PropertyType == t)
+			{
+				var obj = prop.GetValue(null);
+
+				if (obj is not null)
+					return (T)obj;
+
+				break;
+			}
+		}
+
+		// Try to find a public static method called "Instance"
+		// Include FlattenHierarchy so inherited statics are found
+		var method = t.GetMethod(
+			"Instance",
+			BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy
+		);
+
+		GD.Print("METHOD: ", method);
+
+		if (method is not null)
+		{
+			// Invoke returns object, cast to Task<T>
+			var task = method.Invoke(null, null);
+			var outed = await (Task<T>)task;
+			return outed;
+		}
+
+        throw new Exception($"no system with the name {t.Name} exists.\nif this is a mistake check Game.Systems and make an issue report pls");
+    }
+
+	
+	/// <summary>
+	/// Get up to 10 systems by generic types returning a tuple of each 
+	/// <para/><code>
+	/// var (guis, workspace, cameras) = Game.GetSystems&lt;GuiSystem, Workspace, CameraSystem&gt;()
+	/// </code>
+	/// </summary>
+	public static async Task<T1> GetSystems<T1>()
+		where T1 : class, IBaseSingleton<GodotObject>
+
+		=> await GetSystem<T1>();
+
+
+	/// <inheritdoc cref="GetSystems{T1}"/>
+	public static async Task<(T1, T2)> GetSystems<T1, T2>()
+		where T1 : class, IBaseSingleton<GodotObject>
+		where T2 : class, IBaseSingleton<GodotObject>
+
+		=> ( 
+			await GetSystem<T1>(), 
+			await GetSystem<T2>() 
+		);
+
+
+	/// <inheritdoc cref="GetSystems{T1}"/>
+	public static async Task<(T1, T2, T3)> GetSystems<T1, T2, T3>()
+		where T1 : class, IBaseSingleton<GodotObject>
+		where T2 : class, IBaseSingleton<GodotObject>
+		where T3 : class, IBaseSingleton<GodotObject>
+
+		=> ( 
+			await GetSystem<T1>(), 
+			await GetSystem<T2>(),
+			await GetSystem<T3>()
+		);
+
+
+	/// <inheritdoc cref="GetSystems{T1}"/>
+	public static async Task<(T1, T2, T3, T4)> GetSystems<T1, T2, T3, T4>()
+		where T1 : class, IBaseSingleton<GodotObject>
+		where T2 : class, IBaseSingleton<GodotObject>
+		where T3 : class, IBaseSingleton<GodotObject>
+		where T4 : class, IBaseSingleton<GodotObject>
+
+		=> ( 
+			await GetSystem<T1>(), 
+			await GetSystem<T2>(),
+			await GetSystem<T3>(),
+			await GetSystem<T4>()
+		);
+
+
+	/// <inheritdoc cref="GetSystems{T1}"/>
+	public static async Task<(T1, T2, T3, T4, T5)> GetSystems<T1, T2, T3, T4, T5>()
+		where T1 : class, IBaseSingleton<GodotObject>
+		where T2 : class, IBaseSingleton<GodotObject>
+		where T3 : class, IBaseSingleton<GodotObject>
+		where T4 : class, IBaseSingleton<GodotObject>
+		where T5 : class, IBaseSingleton<GodotObject>
+
+		=> ( 
+			await GetSystem<T1>(), 
+			await GetSystem<T2>(),
+			await GetSystem<T3>(),
+			await GetSystem<T4>(),
+			await GetSystem<T5>()
+		);
+
+
+	/// <inheritdoc cref="GetSystems{T1}"/>
+	public static async Task<(T1, T2, T3, T4, T5, T6)> GetSystems<T1, T2, T3, T4, T5, T6>()
+		where T1 : class, IBaseSingleton<GodotObject>
+		where T2 : class, IBaseSingleton<GodotObject>
+		where T3 : class, IBaseSingleton<GodotObject>
+		where T4 : class, IBaseSingleton<GodotObject>
+		where T5 : class, IBaseSingleton<GodotObject>
+		where T6 : class, IBaseSingleton<GodotObject>
+
+		=> ( 
+			await GetSystem<T1>(), 
+			await GetSystem<T2>(),
+			await GetSystem<T3>(),
+			await GetSystem<T4>(),
+			await GetSystem<T5>(),
+			await GetSystem<T6>()
+		);
+
+	/// <inheritdoc cref="GetSystems{T1}"/>
+	public static async Task<(T1, T2, T3, T4, T5, T6, T7)> GetSystems<T1, T2, T3, T4, T5, T6, T7>()
+		where T1 : class, IBaseSingleton<GodotObject>
+		where T2 : class, IBaseSingleton<GodotObject>
+		where T3 : class, IBaseSingleton<GodotObject>
+		where T4 : class, IBaseSingleton<GodotObject>
+		where T5 : class, IBaseSingleton<GodotObject>
+		where T6 : class, IBaseSingleton<GodotObject>
+		where T7 : class, IBaseSingleton<GodotObject>
+		=> (
+			await GetSystem<T1>(),
+			await GetSystem<T2>(),
+			await GetSystem<T3>(),
+			await GetSystem<T4>(),
+			await GetSystem<T5>(),
+			await GetSystem<T6>(),
+			await GetSystem<T7>()
+		);
+
+	/// <inheritdoc cref="GetSystems{T1}"/>
+	public static async Task<(T1, T2, T3, T4, T5, T6, T7, T8)> GetSystems<T1, T2, T3, T4, T5, T6, T7, T8>()
+		where T1 : class, IBaseSingleton<GodotObject>
+		where T2 : class, IBaseSingleton<GodotObject>
+		where T3 : class, IBaseSingleton<GodotObject>
+		where T4 : class, IBaseSingleton<GodotObject>
+		where T5 : class, IBaseSingleton<GodotObject>
+		where T6 : class, IBaseSingleton<GodotObject>
+		where T7 : class, IBaseSingleton<GodotObject>
+		where T8 : class, IBaseSingleton<GodotObject>
+		=> (
+			await GetSystem<T1>(),
+			await GetSystem<T2>(),
+			await GetSystem<T3>(),
+			await GetSystem<T4>(),
+			await GetSystem<T5>(),
+			await GetSystem<T6>(),
+			await GetSystem<T7>(),
+			await GetSystem<T8>()
+		);
+
+	/// <inheritdoc cref="GetSystems{T1}"/>
+	public static async Task<(T1, T2, T3, T4, T5, T6, T7, T8, T9)> GetSystems<T1, T2, T3, T4, T5, T6, T7, T8, T9>()
+		where T1 : class, IBaseSingleton<GodotObject>
+		where T2 : class, IBaseSingleton<GodotObject>
+		where T3 : class, IBaseSingleton<GodotObject>
+		where T4 : class, IBaseSingleton<GodotObject>
+		where T5 : class, IBaseSingleton<GodotObject>
+		where T6 : class, IBaseSingleton<GodotObject>
+		where T7 : class, IBaseSingleton<GodotObject>
+		where T8 : class, IBaseSingleton<GodotObject>
+		where T9 : class, IBaseSingleton<GodotObject>
+		=> (
+			await GetSystem<T1>(),
+			await GetSystem<T2>(),
+			await GetSystem<T3>(),
+			await GetSystem<T4>(),
+			await GetSystem<T5>(),
+			await GetSystem<T6>(),
+			await GetSystem<T7>(),
+			await GetSystem<T8>(),
+			await GetSystem<T9>()
+		);
+
+	/// <inheritdoc cref="GetSystems{T1}"/>
+	public static async Task<(T1, T2, T3, T4, T5, T6, T7, T8, T9, T10)> GetSystems<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>()
+		where T1 : class, IBaseSingleton<GodotObject>
+		where T2 : class, IBaseSingleton<GodotObject>
+		where T3 : class, IBaseSingleton<GodotObject>
+		where T4 : class, IBaseSingleton<GodotObject>
+		where T5 : class, IBaseSingleton<GodotObject>
+		where T6 : class, IBaseSingleton<GodotObject>
+		where T7 : class, IBaseSingleton<GodotObject>
+		where T8 : class, IBaseSingleton<GodotObject>
+		where T9 : class, IBaseSingleton<GodotObject>
+		where T10 : class, IBaseSingleton<GodotObject>
+		=> (
+			await GetSystem<T1>(),
+			await GetSystem<T2>(),
+			await GetSystem<T3>(),
+			await GetSystem<T4>(),
+			await GetSystem<T5>(),
+			await GetSystem<T6>(),
+			await GetSystem<T7>(),
+			await GetSystem<T8>(),
+			await GetSystem<T9>(),
+			await GetSystem<T10>()
+		);
+
+
+
+	/// <summary>
+	/// Static namespace of systems
+	/// <para/> This is where <see cref="GetSystem"/> and <see cref="GetSystems"/> calls from though GetSystem is awaited so I recommend using that instead of just pulling from here
+	/// </summary>
 	public static class Systems
 	{
 		public static Workspace Workspace { get; set; }
@@ -47,6 +279,10 @@ public partial class Game : Singleton<Game>
 		public static JsonLib JsonLib { get; set; }
 		public static TaskLib TaskLib { get; set; }
     }
+
+	#endregion
+
+	#region Multiplayer
 
 	[Signal] public delegate void StartedHostingEventHandler(string id);
 	[Signal] public delegate void JoiningEventHandler(string id);
@@ -201,6 +437,8 @@ public partial class Game : Singleton<Game>
 	public bool IsClient() 
 		=> !IsServer();
 
+	#endregion
+
 	/// <summary>
 	/// if it's running in the editor
 	/// </summary>
@@ -246,6 +484,9 @@ public partial class Game : Singleton<Game>
 	}
 
 	public void Quit() => GetTree().Quit();
+
+
+	#region Loading
 
 	public static async Task Loaded() {
 		while (!IsLoaded)
@@ -327,6 +568,10 @@ public partial class Game : Singleton<Game>
 
 		IsLoaded = true;
 	}
+
+
+	#endregion
+
 
 	public override void _Notification(int what)
 	{
