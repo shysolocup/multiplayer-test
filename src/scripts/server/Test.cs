@@ -7,8 +7,8 @@ public partial class Test : Behavior
 
     public override void OnReady()
     {
-        print("Test script is ready on the server!");
-
         part = workspace.GetNode<CsgBox3D>("Part");
+
+        part.Position = new Vector3(0, 100, 0);
     }
 }

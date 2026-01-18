@@ -63,16 +63,15 @@ public partial class LightingSystem : Singleton3D<LightingSystem>
 
 	private float DaylightFactor()
 	{
-		float t = Mathf.PosMod(TimeOfDay, 24f);
+		float t = Mathf.PosMod(TimeOfDay, 24);
 
-		float morning = Mathf.InverseLerp(0f, 7f, t);
-		float evening = 1f - Mathf.InverseLerp(17f, 24f, t);
+		float morning = Mathf.InverseLerp(0f, 7, t);
+		float evening = 1 - Mathf.InverseLerp(17, 24, t);
 
 		float daylight = Mathf.Min(morning, evening);
-		daylight = Mathf.Clamp(daylight, 0f, 1f);
+		daylight = Mathf.Clamp(daylight, 0, 1);
 
-		// HARD falloff
-		daylight = Mathf.Pow(daylight, 25.0f); // ← increase for darker faster
+		daylight = Mathf.Pow(daylight, 25);
 
 		return daylight;
 	}
