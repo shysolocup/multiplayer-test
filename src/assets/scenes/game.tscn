@@ -12,11 +12,11 @@
 [ext_resource type="Script" uid="uid://iqerivcko5tq" path="res://src/core/CameraSystem.cs" id="6_pm1mm"]
 [ext_resource type="Script" uid="uid://dd1he2wiyd6x4" path="res://src/core/AudioSystem.cs" id="7_pm1mm"]
 [ext_resource type="Script" uid="uid://clxq4bmgf2uqd" path="res://src/core/Players.cs" id="9_bd8mh"]
-[ext_resource type="PackedScene" uid="uid://b3vie0tjo3arm" path="res://src/scenes/core_gui.tscn" id="11_44dqv"]
-[ext_resource type="PackedScene" uid="uid://c3w57vg3x48cu" path="res://src/scenes/server_scripts.tscn" id="14_44dqv"]
+[ext_resource type="PackedScene" uid="uid://b3vie0tjo3arm" path="res://src/assets/scenes/core_gui.tscn" id="11_44dqv"]
+[ext_resource type="PackedScene" uid="uid://c3w57vg3x48cu" path="res://src/assets/scenes/server_scripts.tscn" id="14_44dqv"]
 [ext_resource type="Script" uid="uid://i1i7viij1r0d" path="res://src/core/discord/DiscordRPCNode.gd" id="15_3xp0n"]
-[ext_resource type="PackedScene" uid="uid://ds6x2baksbent" path="res://src/scenes/shaders.tscn" id="18_44dqv"]
-[ext_resource type="PackedScene" uid="uid://by5f8a6nan5nk" path="res://src/scenes/client_scripts.tscn" id="19_3xp0n"]
+[ext_resource type="PackedScene" uid="uid://ds6x2baksbent" path="res://src/assets/scenes/shaders.tscn" id="18_44dqv"]
+[ext_resource type="PackedScene" uid="uid://by5f8a6nan5nk" path="res://src/assets/scenes/client_scripts.tscn" id="19_3xp0n"]
 [ext_resource type="Script" uid="uid://3u0cd6x7v7xf" path="res://src/core/GlobalStorage.cs" id="19_lkrtx"]
 [ext_resource type="Script" uid="uid://bxtd783k615yg" path="res://src/core/Replicator.cs" id="22_p02ep"]
 
@@ -45,7 +45,7 @@ metadata/_custom_type_script = "uid://hilik46ime86"
 [node name="map" type="Node3D" parent="workspace" node_paths=PackedStringArray("Map")]
 transform = Transform3D(-0.99987966, 0, -0.015515357, 0, 1, 0, 0.015515357, 0, -0.99987966, 0, 0, 0)
 script = ExtResource("3_44dqv")
-Map = NodePath("default")
+Map = NodePath("@Node3D@26790")
 metadata/_custom_type_script = "uid://c3yamjsvvi4eo"
 
 [node name="lighting" type="Node3D" parent="workspace" node_paths=PackedStringArray("World", "Lights")]

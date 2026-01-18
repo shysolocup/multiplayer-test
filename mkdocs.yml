@@ -1,0 +1,5 @@
+site_name: Godot Coreblocks
+nav:
+  - Home: index.md
+  - Getting Started: getting_started.md
+theme: readthedocs

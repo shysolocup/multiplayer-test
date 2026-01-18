@@ -1,4 +1,4 @@
-# Godot Coreblock
+# Godot Coreblocks
 A mini-engine built on top of Godot comprising core building blocks for multiplayer P2P games innovating on the service-based structure of Roblox
 
 Coreblock improves upon Roblox's foundation by having Godot-specific systems

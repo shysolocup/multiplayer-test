@@ -8,7 +8,7 @@ public partial class MapSystem : Singleton3D<MapSystem>
 {
 	[Signal] public delegate void MapChangedEventHandler();
 
-	static public readonly string SceneDir = "res://src/maps";
+	static public readonly string SceneDir = "res://src/assets/maps";
 	static public string DefaultScene = "default";
 
 	public static Dictionary<string, PackedScene> SceneCache = new() {

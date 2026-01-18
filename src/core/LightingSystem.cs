@@ -9,7 +9,7 @@ public partial class LightingSystem : Singleton3D<LightingSystem>
 	[Signal] public delegate void LightingChangedEventHandler();
 	[Signal] public delegate void LightingDisabledEventHandler();
 
-	static public readonly string SceneDir = "res://src/lightings";
+	static public readonly string SceneDir = "res://src/assets/lightings";
 	static private string DefaultScene = "default";
 
 	public static Dictionary<string, PackedScene> SceneCache = new() {
