@@ -1,6 +1,6 @@
 [gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://n3b7tjbajaob"]
 
-[ext_resource type="Texture2D" uid="uid://choqkivw23fvp" path="res://addons/coreblocks/core/assets/mat_placeholder_01.png" id="1_3qabi"]
+[ext_resource type="Texture2D" uid="uid://choqkivw23fvp" path="res://addons/coreblocks/assets/mat_placeholder_01.png" id="1_3qabi"]
 
 [resource]
 transparency = 1

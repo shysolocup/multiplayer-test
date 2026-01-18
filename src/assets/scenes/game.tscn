@@ -1,9 +1,10 @@
-[gd_scene load_steps=21 format=3 uid="uid://cg6684xj7fjx"]
+[gd_scene load_steps=23 format=3 uid="uid://cg6684xj7fjx"]
 
 [ext_resource type="Script" uid="uid://dj3d8j4qfl1st" path="res://addons/coreblocks/core/Game.cs" id="1_covw0"]
 [ext_resource type="Script" uid="uid://c5frf4qgle4bf" path="res://addons/coreblocks/core/GuiSystem.cs" id="2_276xm"]
 [ext_resource type="Script" uid="uid://d0t5vb0wvm7b6" path="res://addons/coreblocks/core/Workspace.cs" id="2_ta85g"]
 [ext_resource type="Script" uid="uid://c3yamjsvvi4eo" path="res://addons/coreblocks/core/MapSystem.cs" id="3_44dqv"]
+[ext_resource type="Script" uid="uid://x07bhixndr2y" path="res://addons/coreblocks/core/classes/Part.cs" id="3_a37p6"]
 [ext_resource type="Script" uid="uid://hilik46ime86" path="res://addons/coreblocks/core/Characters.cs" id="3_kcfyl"]
 [ext_resource type="Script" uid="uid://cv04eaa2q8bhx" path="res://addons/coreblocks/core/LightingSystem.cs" id="4_44dqv"]
 [ext_resource type="Script" uid="uid://d1k532y44p2cq" path="res://addons/coreblocks/core/Server.cs" id="5_lcg6w"]
@@ -20,6 +21,10 @@
 [ext_resource type="Script" uid="uid://3u0cd6x7v7xf" path="res://addons/coreblocks/core/GlobalStorage.cs" id="19_lkrtx"]
 [ext_resource type="Script" uid="uid://bxtd783k615yg" path="res://addons/coreblocks/core/Replicator.cs" id="22_p02ep"]
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_a37p6"]
+transparency = 4
+stencil_flags = 2
+
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_kcfyl"]
 blend_mode = 2
 
@@ -34,9 +39,14 @@ Gravity = 50.0
 metadata/_custom_type_script = "uid://d0t5vb0wvm7b6"
 
 [node name="part" type="CSGBox3D" parent="workspace"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.35986328, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1090167, 0)
 use_collision = true
 size = Vector3(1.12, 0.28, 0.56)
+material = SubResource("StandardMaterial3D_a37p6")
+script = ExtResource("3_a37p6")
+Color = Color(1, 1, 1, 1)
+Shaded = true
+CanCollide = true
 
 [node name="characters" type="Node3D" parent="workspace"]
 script = ExtResource("3_kcfyl")
@@ -45,14 +55,14 @@ metadata/_custom_type_script = "uid://hilik46ime86"
 [node name="map" type="Node3D" parent="workspace" node_paths=PackedStringArray("Map")]
 transform = Transform3D(-0.99987966, 0, -0.015515357, 0, 1, 0, 0.015515357, 0, -0.99987966, 0, 0, 0)
 script = ExtResource("3_44dqv")
-Map = NodePath("default")
+Map = NodePath("@Node3D@30977")
 metadata/_custom_type_script = "uid://c3yamjsvvi4eo"
 
 [node name="lighting" type="Node3D" parent="workspace" node_paths=PackedStringArray("World", "Lights")]
-transform = Transform3D(0.9918993, 0.12702346, 0, -0.12702344, 0.9918994, 0, 0, 0, 1, 0, 0, 0)
+transform = Transform3D(0.13519675, 0.9908184, 0, -0.9908183, 0.13519676, 0, 0, 0, 1, 0, 0, 0)
 script = ExtResource("4_44dqv")
-TargetTimeOfDay = 11.513492
-TimeOfDay = 11.513492
+TargetTimeOfDay = 6.518
+TimeOfDay = 6.518
 SkyMaterial = ExtResource("6_44dqv")
 World = NodePath("world")
 Lights = NodePath("lights")

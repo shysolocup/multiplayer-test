@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://b3vie0tjo3arm"]
 
-[ext_resource type="Texture2D" uid="uid://dt4t7trtn334h" path="res://addons/coreblocks/core/assets/shiftlock.png" id="1_cm4xc"]
+[ext_resource type="Texture2D" uid="uid://dt4t7trtn334h" path="res://addons/coreblocks/assets/shiftlock.png" id="1_cm4xc"]
 
 [node name="core" type="CanvasLayer"]
 layer = -1
