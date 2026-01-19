@@ -3,12 +3,18 @@ using Godot;
 [OnServer]
 public partial class Test : Behavior
 {
-    private CsgBox3D part { get; set; }
-
     public override void OnReady()
     {
-        part = workspace.GetNode<CsgBox3D>("Part");
+        var remote = global.GetEvent("test");
 
-        part.Position = new Vector3(0, 100, 0);
+        remote.OnServerEvent += (sender, args) =>
+        {
+            GD.Print(sender, args);
+        };
+
+        task.Delay(2, async () =>
+        {
+            remote.FireAllClients("a", "b");
+        });
     }
 }

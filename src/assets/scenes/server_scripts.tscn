@@ -15,8 +15,10 @@ metadata/_custom_type_script = "uid://cyc4es7ctr5a8"
 
 [node name="grunkTinkely" type="Node" parent="tests"]
 script = ExtResource("2_23hjc")
+Enabled = true
 metadata/_custom_type_script = "uid://c3lflpkmclxja"
 
 [node name="test" type="Node" parent="tests"]
 script = ExtResource("4_4p0sw")
+Enabled = true
 metadata/_custom_type_script = "uid://c3lflpkmclxja"

@@ -153,7 +153,7 @@ public partial class Players : Singleton<Players>
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/// <summary>
-	/// Gets a player by their peer id
+	/// Gets a player by their string online id
 	/// </summary>
 	public Player GetPlayerById(string id)
 	{
@@ -162,6 +162,22 @@ public partial class Players : Singleton<Players>
 		foreach (var player in players)
 		{
 			if (player.GetId() == id) return player;
+		}
+
+		return null;
+	}
+
+
+	/// <summary>
+	/// Gets a player by their peer id
+	/// </summary>
+	public Player GetPlayerById(int id)
+	{
+		var players = GetPlayers();
+
+		foreach (var player in players)
+		{
+			if (player.GetPeerId() == id) return player;
 		}
 
 		return null;

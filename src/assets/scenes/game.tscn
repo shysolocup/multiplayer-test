@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://cg6684xj7fjx"]
+[gd_scene load_steps=24 format=3 uid="uid://cg6684xj7fjx"]
 
 [ext_resource type="Script" uid="uid://dj3d8j4qfl1st" path="res://addons/coreblocks/core/Game.cs" id="1_covw0"]
 [ext_resource type="Script" uid="uid://c5frf4qgle4bf" path="res://addons/coreblocks/core/GuiSystem.cs" id="2_276xm"]
@@ -18,6 +18,7 @@
 [ext_resource type="Script" uid="uid://i1i7viij1r0d" path="res://addons/coreblocks/core/discord/DiscordRPCNode.gd" id="15_3xp0n"]
 [ext_resource type="PackedScene" uid="uid://ds6x2baksbent" path="res://src/assets/scenes/shaders.tscn" id="18_44dqv"]
 [ext_resource type="PackedScene" uid="uid://by5f8a6nan5nk" path="res://src/assets/scenes/client_scripts.tscn" id="19_3xp0n"]
+[ext_resource type="Script" uid="uid://c54icdqd81ovu" path="res://addons/coreblocks/core/classes/MultiplayerRemote.cs" id="19_bw78x"]
 [ext_resource type="Script" uid="uid://3u0cd6x7v7xf" path="res://addons/coreblocks/core/GlobalStorage.cs" id="19_lkrtx"]
 [ext_resource type="Script" uid="uid://bxtd783k615yg" path="res://addons/coreblocks/core/Replicator.cs" id="22_p02ep"]
 
@@ -55,14 +56,14 @@ metadata/_custom_type_script = "uid://hilik46ime86"
 [node name="map" type="Node3D" parent="workspace" node_paths=PackedStringArray("Map")]
 transform = Transform3D(-0.99987966, 0, -0.015515357, 0, 1, 0, 0.015515357, 0, -0.99987966, 0, 0, 0)
 script = ExtResource("3_44dqv")
-Map = NodePath("default")
+Map = NodePath("@Node3D@26182")
 metadata/_custom_type_script = "uid://c3yamjsvvi4eo"
 
 [node name="lighting" type="Node3D" parent="workspace" node_paths=PackedStringArray("World", "Lights")]
-transform = Transform3D(0.5176913, 0.85556686, 0, -0.8555668, 0.5176914, 0, 0, 0, 1, 0, 0, 0)
+transform = Transform3D(0.51769197, 0.8555663, 0, -0.8555663, 0.51769197, 0, 0, 0, 1, 0, 0, 0)
 script = ExtResource("4_44dqv")
-TargetTimeOfDay = 8.078503
-TimeOfDay = 8.078503
+TargetTimeOfDay = 8.0785055
+TimeOfDay = 8.0785055
 SkyMaterial = ExtResource("6_44dqv")
 World = NodePath("world")
 Lights = NodePath("lights")
@@ -176,6 +177,10 @@ script = ExtResource("5_lcg6w")
 unique_name_in_owner = true
 script = ExtResource("19_lkrtx")
 metadata/_custom_type_script = "uid://3u0cd6x7v7xf"
+
+[node name="test" type="Node" parent="global"]
+script = ExtResource("19_bw78x")
+metadata/_custom_type_script = "uid://c54icdqd81ovu"
 
 [node name="players" type="Node" parent="."]
 unique_name_in_owner = true
