@@ -38,7 +38,7 @@ public partial class MultiplayerRemote : Node
     [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true)]
     public void FireClient(Player player, params Variant[] args)
     {
-        if (!Game.IsServer()) return;
+        Behavior.assert(Game.IsServer(), $"Cannot fire event {this} client to client.");
         
         var arr = new Array<Variant>(args);
         RpcId(player.GetPeerId(), MethodName._fireClient, arr);
@@ -48,7 +48,7 @@ public partial class MultiplayerRemote : Node
     [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true)]
     public void FireAllClients(params Variant[] args)
     {
-        if (!Game.IsServer()) return;
+        Behavior.assert(Game.IsServer(), $"Cannot fire event {this} client to client.");
 
         var arr = new Array<Variant>(args);
         Rpc(MethodName._fireClient, arr);
