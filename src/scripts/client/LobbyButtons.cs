@@ -3,6 +3,7 @@ using Godot;
 
 
 [Prerunner]
+[OnClient]
 public partial class LobbyButtons : Behavior
 {
 	private LineEdit lobby;

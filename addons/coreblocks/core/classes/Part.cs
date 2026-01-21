@@ -1,6 +1,4 @@
-using System;
 using Godot;
-using Godot.Collections;
 
 
 [Tool]

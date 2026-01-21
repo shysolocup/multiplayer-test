@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://5tihhnhgdwvp"]
 
-[ext_resource type="Script" uid="uid://dt8uj46t5g8ny" path="res://addons/coreblocks/core/scripts/Crosshair.cs" id="1_yeooo"]
+[ext_resource type="Script" uid="uid://dt8uj46t5g8ny" path="res://addons/coreblocks/scripts/Crosshair.cs" id="1_yeooo"]
 
 [node name="coreScripts" type="Node"]
 

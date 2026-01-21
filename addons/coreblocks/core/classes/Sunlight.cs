@@ -1,5 +1,4 @@
 using Godot;
-using System;
 
 /// <summary>
 /// class exclusively for light energy scaling

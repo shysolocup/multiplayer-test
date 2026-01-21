@@ -1,5 +1,6 @@
 using Godot;
 
+[OnClient]
 public partial class RemoteTest : Behavior
 {
     public override void OnReady()

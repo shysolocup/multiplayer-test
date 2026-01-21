@@ -23,7 +23,7 @@ config/icon="res://src/assets/images/icon.svg"
 
 DiscordRPCLoader="*res://addons/discord-rpc-gd/nodes/discord_autoload.gd"
 Ext="*res://addons/coreblocks/core/libs/Ext.cs"
-HiddenSingletons="*res://addons/coreblocks/core/scenes/hidden_singletons.tscn"
+HiddenSingletons="*res://addons/coreblocks/scenes/hidden_singletons.tscn"
 
 [display]
 
