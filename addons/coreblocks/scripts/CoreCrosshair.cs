@@ -1,8 +1,7 @@
 using Godot;
 
 
-[OnClient]
-public partial class CoreCrosshair : Behavior
+public partial class CoreCrosshair : ClientBehavior
 {
 	// Called when the script node and its dependencies are ready.
 	public override async void OnReady()

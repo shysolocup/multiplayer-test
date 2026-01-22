@@ -1,8 +1,7 @@
 using Godot;
 
 
-[OnClient]
-public partial class CorePause : Behavior
+public partial class CorePause : ClientBehavior
 {
     private CoreGui coreGui;
     private Button button;

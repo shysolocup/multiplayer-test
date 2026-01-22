@@ -1,7 +1,7 @@
 using Godot;
 
-[OnServer]
-public partial class Test : Behavior
+
+public partial class Test : ServerBehavior
 {
     public override void OnReady()
     {

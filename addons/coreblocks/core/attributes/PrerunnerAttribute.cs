@@ -5,7 +5,7 @@ using System;
 /// behaviors usually wait until the player has connected to run, this makes it so it doesn't
 /// <para/>
 /// </summary>
-[AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+[AttributeUsage(AttributeTargets.All, AllowMultiple = false, Inherited = true)]
 public class PrerunnerAttribute : Attribute
 {
 }

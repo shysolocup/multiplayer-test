@@ -1,5 +1,5 @@
-[OnServer]
-public partial class GrunkTinkely : Behavior
+
+public partial class GrunkTinkely : ServerBehavior
 {
 	public override async void OnReady()
 	{

@@ -13,11 +13,11 @@
 [ext_resource type="Script" uid="uid://iqerivcko5tq" path="res://addons/coreblocks/core/CameraSystem.cs" id="6_pm1mm"]
 [ext_resource type="Script" uid="uid://dd1he2wiyd6x4" path="res://addons/coreblocks/core/AudioSystem.cs" id="7_pm1mm"]
 [ext_resource type="Script" uid="uid://clxq4bmgf2uqd" path="res://addons/coreblocks/core/Players.cs" id="9_bd8mh"]
-[ext_resource type="PackedScene" uid="uid://b3vie0tjo3arm" path="res://src/assets/scenes/core_gui.tscn" id="11_44dqv"]
-[ext_resource type="PackedScene" uid="uid://c3w57vg3x48cu" path="res://src/assets/scenes/server_scripts.tscn" id="14_44dqv"]
+[ext_resource type="PackedScene" uid="uid://b3vie0tjo3arm" path="res://src/assets/scenes/core/core_gui.tscn" id="11_44dqv"]
+[ext_resource type="PackedScene" uid="uid://c3w57vg3x48cu" path="res://src/assets/scenes/scripts/server_scripts.tscn" id="14_44dqv"]
 [ext_resource type="Script" uid="uid://i1i7viij1r0d" path="res://addons/coreblocks/core/discord/DiscordRPCNode.gd" id="15_3xp0n"]
 [ext_resource type="PackedScene" uid="uid://ds6x2baksbent" path="res://src/assets/scenes/shaders.tscn" id="18_44dqv"]
-[ext_resource type="PackedScene" uid="uid://by5f8a6nan5nk" path="res://src/assets/scenes/client_scripts.tscn" id="19_3xp0n"]
+[ext_resource type="PackedScene" uid="uid://by5f8a6nan5nk" path="res://src/assets/scenes/scripts/client_scripts.tscn" id="19_3xp0n"]
 [ext_resource type="Script" uid="uid://c54icdqd81ovu" path="res://addons/coreblocks/core/classes/MultiplayerRemote.cs" id="19_bw78x"]
 [ext_resource type="Script" uid="uid://3u0cd6x7v7xf" path="res://addons/coreblocks/core/GlobalStorage.cs" id="19_lkrtx"]
 [ext_resource type="Script" uid="uid://bxtd783k615yg" path="res://addons/coreblocks/core/Replicator.cs" id="22_p02ep"]
@@ -56,14 +56,14 @@ metadata/_custom_type_script = "uid://hilik46ime86"
 [node name="map" type="Node3D" parent="workspace" node_paths=PackedStringArray("Map")]
 transform = Transform3D(-0.99987966, 0, -0.015515357, 0, 1, 0, 0.015515357, 0, -0.99987966, 0, 0, 0)
 script = ExtResource("3_44dqv")
-Map = NodePath("default")
+Map = NodePath("@Node3D@21941")
 metadata/_custom_type_script = "uid://c3yamjsvvi4eo"
 
 [node name="lighting" type="Node3D" parent="workspace" node_paths=PackedStringArray("World", "Lights")]
-transform = Transform3D(0.51769197, 0.8555663, 0, -0.8555663, 0.51769197, 0, 0, 0, 1, 0, 0, 0)
+transform = Transform3D(0.9335572, 0.35842687, 0, -0.35842687, 0.9335572, 0, 0, 0, 1, 0, 0, 0)
 script = ExtResource("4_44dqv")
-TargetTimeOfDay = 8.0785055
-TimeOfDay = 8.0785055
+TargetTimeOfDay = 10.599758
+TimeOfDay = 10.599758
 SkyMaterial = ExtResource("6_44dqv")
 World = NodePath("world")
 Lights = NodePath("lights")

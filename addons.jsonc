@@ -24,6 +24,11 @@
       "url": "https://github.com/curtjs/nodetunnel",
       "checkout": "main",
       "subfolder": "addons/nodetunnel"
+    },
+    "coreblocks": {
+      "url": "https://github.com/shysolocup/coreblocks",
+      "checkout": "main",
+      "subfolder": "addons/coreblocks"
     }
   }
 }

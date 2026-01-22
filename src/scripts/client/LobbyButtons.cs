@@ -3,8 +3,7 @@ using Godot;
 
 
 [Prerunner]
-[OnClient]
-public partial class LobbyButtons : Behavior
+public partial class LobbyButtons : ClientBehavior
 {
 	private LineEdit lobby;
 	private Button hostButton;
@@ -80,7 +79,7 @@ public partial class LobbyButtons : Behavior
 		{
 			if (node is Control control)
 			{
-				control.Visible = false;
+				control.Hide();
 			}
 		}
 	}

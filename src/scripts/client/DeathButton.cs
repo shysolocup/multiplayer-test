@@ -1,8 +1,7 @@
 using Godot;
 
 [Prerunner]
-[OnClient]
-public partial class DeathButton : Behavior
+public partial class DeathButton : ClientBehavior
 {
 	public override void OnKeyPressed(InputEventKey key)
 	{
