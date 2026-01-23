@@ -28,14 +28,13 @@ public partial class Characters : Singleton3D<Characters>
 		)
 	]
 	#region character physics
-	public override void _PhysicsProcess(double delta)
+	public void DoPhysics(double delta)
 	{
-		base._PhysicsProcess(delta);
-
 		var player = Client.LocalPlayer;
 		var chara = player?.Character;
 
-		if (chara is not null && !cameras.FreecamActive)
+		// if a. no ui is active b. the character is not null and c. the freecam is not active it'll move the player
+		if (this.IsUnhandled() && chara is not null && !cameras.FreecamActive)
 		{
 			Vector3 velocity = chara.Velocity;
 
@@ -96,6 +95,13 @@ public partial class Characters : Singleton3D<Characters>
 			chara.Velocity = velocity;
 			chara.MoveAndSlide();
 		}	
+	}
+
+	public override void _PhysicsProcess(double delta)
+	{
+		base._PhysicsProcess(delta);
+
+		DoPhysics(delta);
 	}
 	#endregion
 

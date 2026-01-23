@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://bpw5knwg1eohj"]
+[gd_scene load_steps=12 format=3 uid="uid://bpw5knwg1eohj"]
 
 [ext_resource type="Script" uid="uid://da68dgxcsirv3" path="res://addons/coreblocks/core/singletons/Mouse.cs" id="1_bvsnt"]
 [ext_resource type="PackedScene" uid="uid://5tihhnhgdwvp" path="res://src/assets/scenes/core/core_scripts.tscn" id="1_esq2d"]
@@ -8,6 +8,7 @@
 [ext_resource type="Script" uid="uid://ws1xb0ii3wd5" path="res://addons/coreblocks/core/libs/FileLib.cs" id="4_f784k"]
 [ext_resource type="Script" uid="uid://ty7o1cv1dcvo" path="res://addons/coreblocks/core/singletons/Screen.cs" id="5_tuapi"]
 [ext_resource type="Texture2D" uid="uid://mojdceb4jaa1" path="res://addons/coreblocks/assets/bear5.png" id="6_eilea"]
+[ext_resource type="Script" uid="uid://dt1k7mqyx54ec" path="res://addons/coreblocks/core/singletons/ModSystem.cs" id="9_rlucs"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tuapi"]
 transparency = 1
@@ -46,6 +47,10 @@ metadata/_custom_type_script = "uid://ws1xb0ii3wd5"
 [node name="screen" type="Node" parent="."]
 script = ExtResource("5_tuapi")
 metadata/_custom_type_script = "uid://ty7o1cv1dcvo"
+
+[node name="mods" type="Node" parent="."]
+script = ExtResource("9_rlucs")
+metadata/_custom_type_script = "uid://dt1k7mqyx54ec"
 
 [node name="bear5" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 187.48846, 2.4899325, 0)

@@ -17,13 +17,14 @@ public partial class Ext : Node {}
 public static class NodeE
 {
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	#region IsUnhandled
 
-	#region Timer.Restart
-
-	public static void Restart(this Godot.Timer timer)
-	{
-		timer.Stop(); timer.Start();
-	}
+	/// <summary>
+	/// checks if the user is currently in focus of a ui
+	/// </summary>
+	public static bool IsUnhandled(this Node node)
+		=> node.GetViewport().GuiGetFocusOwner() != null;
 
 	#endregion
 

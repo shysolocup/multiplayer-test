@@ -137,9 +137,9 @@ using Godot;
 /// 
 /// <para/> Input event functions:
 /// 
-/// <para/><c> + OnKeyPressed(InputEventKey key) </c>
-/// <para/><c> + OnKeyReleased(InputEventKey key) </c>
-/// <para/><c> + OnInput(InputEvent @event) </c>
+/// <para/><c> + OnKeyPressed(InputEventKey key, bool shouldBeUnhandled) </c>
+/// <para/><c> + OnKeyReleased(InputEventKey key, bool shouldBeUnhandled) </c>
+/// <para/><c> + OnInput(InputEvent @event, bool shouldBeUnhandled) </c>
 /// 
 /// <para/> Tab event functions:
 /// 
@@ -162,28 +162,81 @@ public partial class Behavior : Node
 
 	#region overridable events
 
-	public bool isActionPressed(StringName actionName) => Input.IsActionPressed(actionName);
-	public bool wasActionJustReleased(StringName actionName) => Input.IsActionJustReleased(actionName);
-	public bool wasActionJustPressed(StringName actionName) => Input.IsActionJustPressed(actionName);
+	/// <summary>
+	/// checks if an action is actively being pressed
+	/// </summary>
+	/// <param name="actionName">name of the action to check for</param>
+	/// <param name="shouldBeUnhandled">if the user is unfocused and the input is untouched by anything else</param>
+	public bool isActionPressed(StringName actionName, bool shouldBeUnhandled = false) => 
+		shouldBeUnhandled ? this.IsUnhandled() && Input.IsActionPressed(actionName) : Input.IsActionPressed(actionName);
 
-	public bool isKeyPressed(Key key) => Input.IsKeyPressed(key);
 
-	public virtual void OnKeyPressed(InputEventKey key)
+	/// <summary>
+	/// checks if an action was just released
+	/// </summary>
+	/// <param name="actionName">name of the action to check for</param>
+	/// <param name="shouldBeUnhandled">if the user is unfocused and the input is untouched by anything else</param>
+	public bool wasActionJustReleased(StringName actionName, bool shouldBeUnhandled  = false) => 
+		shouldBeUnhandled ? this.IsUnhandled() && Input.IsActionJustReleased(actionName) : Input.IsActionJustReleased(actionName);
+
+	
+	/// <summary>
+	/// checks if an action was just pressed
+	/// </summary>
+	/// <param name="actionName">name of the action to check for</param>
+	/// <param name="shouldBeUnhandled">if the user is unfocused and the input is untouched by anything else</param>
+	public bool wasActionJustPressed(StringName actionName, bool shouldBeUnhandled  = false) => 
+		shouldBeUnhandled ? this.IsUnhandled() && Input.IsActionJustPressed(actionName) : Input.IsActionJustPressed(actionName);
+
+	/// <summary>
+	/// checks if a key is actively being pressed
+	/// </summary>
+	/// <param name="key">key to check for</param>
+	/// <param name="shouldBeUnhandled">if the user is unfocused and the input is untouched by anything else</param>
+	public bool isKeyPressed(Key key, bool shouldBeUnhandled  = false) => 
+		shouldBeUnhandled ? this.IsUnhandled() && Input.IsKeyPressed(key) : Input.IsKeyPressed(key);
+
+
+	/// <summary>
+	/// Overridable event function for when a key is pressed
+	/// </summary>
+	/// <param name="key">key event</param>
+	/// <param name="unhandled">if the user is unfocused and the input is untouched by anything else</param>
+	public virtual void OnKeyPressed(InputEventKey key, bool unhandled)
 	{
 	}
 
-	public virtual void OnKeyReleased(InputEventKey key)
+	/// <summary>
+	/// Overridable event function for when a key was just released
+	/// </summary>
+	/// <param name="key">key event</param>
+	/// <param name="unhandled">if the user is unfocused and the input is untouched by anything else</param>
+	public virtual void OnKeyReleased(InputEventKey key, bool unhandled)
 	{
 	}
 
-	public virtual void OnInput(InputEvent @event)
+
+	/// <summary>
+	/// Overridable event function for when an input was just made
+	/// </summary>
+	/// <param name="event">input event</param>
+	/// <param name="unhandled">if the user is unfocused and the input is untouched by anything else</param>
+	public virtual void OnInput(InputEvent @event, bool unhandled)
 	{
 	}
 
+
+	/// <summary>
+	/// Overridable event function for when the user tabs into the window
+	/// </summary>
 	public virtual void OnTabbedIn()
 	{
 	}
 
+
+	/// <summary>
+	/// Overridable event function for when the user tabs out of the window
+	/// </summary>
 	public virtual void OnTabbedOut()
 	{
 	}
@@ -516,19 +569,24 @@ public partial class Behavior : Node
 		}
 	}
 
-	public override async void _UnhandledInput(InputEvent @event)
+	public override async void _Input(InputEvent @event)
 	{
-		base._UnhandledInput(@event);
+		base._Input(@event);
 
 		if (!Game.IsConnected()) return;
 
+		var guh = this.IsUnhandled();
+
 		if (CanRunOnContext("OnInput"))
-			OnInput(@event);
+			OnInput(@event, guh);
 
 		if (@event is InputEventKey key)
 		{
-			if (key.Pressed && CanRunOnContext("OnKeyPressed")) OnKeyPressed(key);    
-			else if (CanRunOnContext("OnKeyReleased")) OnKeyReleased(key);
+			if (key.Pressed && CanRunOnContext("OnKeyPressed"))
+				OnKeyPressed(key, guh);
+
+			else if (CanRunOnContext("OnKeyReleased"))
+				OnKeyReleased(key, guh);
 		}
 	}
 

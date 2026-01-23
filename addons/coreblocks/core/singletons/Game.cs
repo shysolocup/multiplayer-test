@@ -273,6 +273,9 @@ public partial class Game : Singleton<Game>
 		public static FileLib FileLib { get; set; }
 		public static JsonLib JsonLib { get; set; }
 		public static TaskLib TaskLib { get; set; }
+		public static Chat Chat { get; set; }
+		public static ModSystem ModSystem { get; set; }
+		public static CoreGui CoreGui { get; set; }
     }
 
 	#endregion
@@ -497,67 +500,29 @@ public partial class Game : Singleton<Game>
 	/// </summary>
 	public async Task Load()
 	{
-		var loadString = "started loading,";
+		var loadString = "started loading, ";
 
-		// children
-		Systems.Workspace = await Workspace.Instance();
-		loadString += "loaded workspace,";
+		var properties = typeof(Systems).GetProperties(
+			BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy
+		);
 
-		Systems.Server = await Server.Instance();
-		loadString += "loaded server,";
+		foreach (var prop in properties)
+		{
+			var type = prop.PropertyType;
 
-		Systems.Client = await Client.Instance();
-		loadString += "loaded client,";
+			var method = type.GetMethod(
+				"Instance",
+				BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy
+			);
 
-		Systems.Players = await Players.Instance();
-		loadString += "loaded players,";
+			if (method is null)
+				continue;
 
-		Systems.GlobalStorage = await GlobalStorage.Instance();
-		loadString += "loaded global storage,";
-
-		Systems.Replicator = await Replicator.Instance();
-		loadString += "loaded replicator,";
-		
-		Systems.ServerScriptSystem = await ServerScriptSystem.Instance();
-		loadString += "loaded server scripts,";
-
-		Systems.ClientScriptSystem = await ClientScriptSystem.Instance();
-		loadString += "loaded client scripts,";
-
-		Systems.GuiSystem = await GuiSystem.Instance();
-		loadString += "loaded guis,";
-
-		Systems.ShaderSystem = await ShaderSystem.Instance();
-		loadString += "loaded shaders,";
-
-		Systems.Characters = await Characters.Instance();
-		loadString += "loaded characters,";
-		
-		Systems.CameraSystem = await CameraSystem.Instance();
-		loadString += "loaded cameras,";
-
-		Systems.MapSystem = await MapSystem.Instance();
-		loadString += "loaded maps,";
-
-		Systems.LightingSystem = await LightingSystem.Instance();
-		loadString += "loaded lightings,";
-
-		Systems.AudioSystem = await AudioSystem.Instance();
-		loadString += "loaded audios,";
-
-		Systems.Mouse = await Mouse.Instance();
-		loadString += "loaded mouse,";
-
-		Systems.FileLib = await FileLib.Instance();
-		loadString += "loaded file lib,";
-		
-		Systems.TaskLib = await TaskLib.Instance();
-		loadString += "loaded task lib,";
-
-		Systems.Screen = await Screen.Instance();
-		loadString += "loaded screen,";
-
-		loadString += "game loaded";
+			var task = method.Invoke(null, null);
+			await (Task)task;
+			
+			loadString += $"loaded {type.Name.ToLower()}, ";
+		}
 
 		GD.Print(loadString);
 

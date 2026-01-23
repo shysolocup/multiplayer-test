@@ -64,7 +64,8 @@ public partial class Chat : SingletonControl<Chat>
         if (@event is InputEventKey key && key.Keycode == Key.Slash)
         {
             Visible = true;
-            DisappearTimer.Restart();
+            Label.GrabFocus();
+            DisappearTimer.Start();
         } 
     }
 
@@ -146,12 +147,15 @@ public partial class Chat : SingletonControl<Chat>
     {
         Visible ^= true;
 
-        if (Visible)
-            DisappearTimer.Restart();
+        if (Visible) 
+            DisappearTimer.Start();
     }
 
+    public ScrollContainer GetCurrentChannel()
+        => GetChannel(Channels.CurrentTab);
+
     public ScrollContainer GetChannel(int tab)
-        => Channels.GetChild<ScrollContainer>(tab);
+        => Channels.GetChildOrNull<ScrollContainer>(tab);
 
     public ScrollContainer GetChannel(string tab)
         => Channels.GetNode<ScrollContainer>(tab);
