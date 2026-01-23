@@ -24,7 +24,7 @@ public static class NodeE
 	/// checks if the user is currently in focus of a ui
 	/// </summary>
 	public static bool IsUnhandled(this Node node)
-		=> node.GetViewport().GuiGetFocusOwner() != null;
+		=> node.GetViewport().GuiGetFocusOwner() == null;
 
 	#endregion
 

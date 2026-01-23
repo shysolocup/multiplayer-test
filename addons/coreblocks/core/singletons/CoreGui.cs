@@ -10,8 +10,12 @@ public partial class CoreGui : SingletonCanvas<CoreGui>
     [Signal] public delegate void PauseGuiEnabledEventHandler();
     [Signal] public delegate void PauseGuiDisabledEventHandler();
 
+    [Signal] public delegate void ChatGuiEnabledEventHandler();
+    [Signal] public delegate void ChatGuiDisabledEventHandler();
+
     private bool shiftlockGui = true;
     private bool pauseGui = true;
+    private bool chatGui = true;
 
     [Export] public bool DefaultShiftlockGuiEnabled
     {
@@ -37,6 +41,20 @@ public partial class CoreGui : SingletonCanvas<CoreGui>
             }
             else if (!value && pauseGui)
                 EmitSignalPauseGuiDisabled();
+
+            pauseGui = value;
+        }
+    }
+    [Export] public bool DefaultChatGuiEnabled {
+        get => chatGui;
+        set
+        {
+            if (value && !chatGui) {
+                EmitSignalChatGuiEnabled();
+
+            }
+            else if (!value && chatGui)
+                EmitSignalChatGuiDisabled();
 
             pauseGui = value;
         }

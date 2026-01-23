@@ -28,6 +28,3 @@ layout_mode = 2
 theme = ExtResource("2_11fb2")
 text = "Chat '/help' for a list of chat commands."
 fit_content = true
-
-[node name="messageSpawner" type="MultiplayerSpawner" parent="."]
-spawn_path = NodePath("../content")

@@ -520,8 +520,14 @@ public partial class Game : Singleton<Game>
 
 			var task = method.Invoke(null, null);
 			await (Task)task;
-			
-			loadString += $"loaded {type.Name.ToLower()}, ";
+
+			if (task.GetType().GetProperty("Result") is PropertyInfo result)
+			{
+				var system = result.GetValue(task);
+				prop.SetValue(null, system);
+
+				loadString += $"loaded {type.Name.ToLower()}, ";	
+			}
 		}
 
 		GD.Print(loadString);

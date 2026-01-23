@@ -357,7 +357,7 @@ public partial class CameraSystem : Singleton3D<CameraSystem>
 
 	private void FreecamProcess(double delta)
 	{
-		if (FreecamActive && FreecamCamera is not null && !Engine.IsEditorHint()) {
+		if (this.IsUnhandled() && FreecamActive && FreecamCamera is not null && !Engine.IsEditorHint()) {
 			mouse.SetBindingMode(Mouse.PriorityChannel.Camera, 
 				Input.IsActionPressed("camera_move")
 					? Input.MouseModeEnum.Captured 
@@ -412,7 +412,7 @@ public partial class CameraSystem : Singleton3D<CameraSystem>
 
 	private void FreecamInput(InputEvent @event)
 	{
-		if (Input.IsActionJustPressed("freecam") && FreecamCamera is not null)
+		if (this.IsUnhandled() && Input.IsActionJustPressed("freecam") && FreecamCamera is not null)
 		{
 			FreecamActive ^= true;
 
@@ -435,7 +435,7 @@ public partial class CameraSystem : Singleton3D<CameraSystem>
 		if (FreecamActive && FreecamCamera is not null && !Engine.IsEditorHint())
 		{
 			// Turn around
-			if (@event is InputEventMouseMotion motion && Input.IsActionPressed("camera_move"))
+			if (this.IsUnhandled() && @event is InputEventMouseMotion motion && Input.IsActionPressed("camera_move"))
 			{
 				var realSens = Sensitivity;
 				var rot = FreecamCamera.Rotation;
@@ -449,7 +449,7 @@ public partial class CameraSystem : Singleton3D<CameraSystem>
 				FreecamCamera.Rotation = rot;
 			}
 
-			if (@event is InputEventMouseButton mouse)
+			if (this.IsUnhandled() && @event is InputEventMouseButton mouse)
 			{
 				if (mouse.ButtonIndex == MouseButton.WheelUp && mouse.Pressed)
 				{
@@ -535,35 +535,32 @@ public partial class CameraSystem : Singleton3D<CameraSystem>
 
 	private void ThirdPersonUnhandled(InputEvent @event)
 	{
-		if (CameraType == CameraTypeEnum.ThirdPerson && !Engine.IsEditorHint())
+		if (CameraType == CameraTypeEnum.ThirdPerson && !Engine.IsEditorHint() && @event is InputEventMouseButton wheel)
 		{
-			if (Input.IsActionJustPressed("shift_lock") && !FreecamActive)
+			if (wheel.ButtonIndex == MouseButton.WheelUp)
 			{
-				ShiftLocked ^= true;
-
-				if (ShiftLocked)
-					EmitSignalShiftLockEnabled();
-				else
-					EmitSignalShiftLockDisabled();
+				TargetZoom = Mathf.Clamp(TargetZoom - ZoomStep, MinZoom, MaxZoom);
 			}
 
-			if (@event is InputEventMouseButton wheel)
+			else if (wheel.ButtonIndex == MouseButton.WheelDown)
 			{
-				if (wheel.ButtonIndex == MouseButton.WheelUp)
-				{
-					TargetZoom = Mathf.Clamp(TargetZoom - ZoomStep, MinZoom, MaxZoom);
-				}
-
-				else if (wheel.ButtonIndex == MouseButton.WheelDown)
-				{
-					TargetZoom = Mathf.Clamp(TargetZoom + ZoomStep, MinZoom, MaxZoom);
-				}
+				TargetZoom = Mathf.Clamp(TargetZoom + ZoomStep, MinZoom, MaxZoom);
 			}	
 		}
 	}
 
 	private void ThirdPersonInput(InputEvent @event)
 	{
+		if (this.IsUnhandled() && CameraType == CameraTypeEnum.ThirdPerson && !Engine.IsEditorHint() && Input.IsActionJustPressed("shift_lock") && !FreecamActive)
+		{
+			ShiftLocked ^= true;
+
+			if (ShiftLocked)
+				EmitSignalShiftLockEnabled();
+			else
+				EmitSignalShiftLockDisabled();
+		}
+
 		if (
 			@event is InputEventMouseMotion mouse 
 				&& (Input.IsActionPressed("camera_move") || ShiftLocked) // if shiftlocked or holding rmb move camera to mouse relative
@@ -593,11 +590,9 @@ public partial class CameraSystem : Singleton3D<CameraSystem>
 
 	private void FirstPersonProcess(double delta)
 	{
-		if (CameraType == CameraTypeEnum.FirstPerson && !Engine.IsEditorHint())
+		if (this.IsUnhandled() && CameraType == CameraTypeEnum.FirstPerson && !Engine.IsEditorHint())
 		{
 			mouse.SetBindingMode(Mouse.PriorityChannel.Camera, Input.MouseModeEnum.Captured);
-
-	
 
 			if (Subject is not null || (Subject is Character character && character.Head is not null))
 			{
@@ -623,6 +618,7 @@ public partial class CameraSystem : Singleton3D<CameraSystem>
 				&& CameraType == CameraTypeEnum.FirstPerson 
 				&& !Engine.IsEditorHint()
 				&& CanMoveCamera
+				&& this.IsUnhandled()
 		)
 		{
 			var rot = FirstPersonCamera.Rotation;
