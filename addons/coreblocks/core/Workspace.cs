@@ -35,6 +35,7 @@ public partial class Workspace : Singleton3D<Workspace>
 	public LightingSystem Lighting;
 	public MapSystem Map;
 	public Characters Characters;
+	public AudioSystem Audios;
 	
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -47,7 +48,8 @@ public partial class Workspace : Singleton3D<Workspace>
 		{
 			Lighting = GetNode<LightingSystem>("./lighting");
 			Map = GetNode<MapSystem>("./map");
-			Characters = GetNode<Characters>("./characters");	
+			Characters = GetNode<Characters>("./characters");
+			Audios = GetNode<AudioSystem>("./audios");
 		}
 	}
 

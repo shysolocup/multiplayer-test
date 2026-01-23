@@ -4,6 +4,7 @@ using Godot;
 public partial class GuiSystem : SingletonControl<GuiSystem>
 {
 	public static ShaderSystem Shaders { get; set; }
+	public static CoreGui CoreGui { get; set; }
 	
 	// Called when the node enters the scene tree for the first time.
 	public override async void _Ready()
@@ -11,6 +12,7 @@ public partial class GuiSystem : SingletonControl<GuiSystem>
 		base._Ready();
 
 		Shaders = await ShaderSystem.Instance();
+		CoreGui = await CoreGui.Instance();
 	}
 
 	public override void _ExitTree()

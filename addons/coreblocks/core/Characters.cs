@@ -6,7 +6,7 @@ using Godot.Collections;
 public partial class Characters : Singleton3D<Characters>
 {	
 	[Export]
-	public PackedScene StarterCharacter = ResourceLoader.Load<PackedScene>($"res://src/assets/scenes/starter_character.tscn", "", ResourceLoader.CacheMode.Replace);
+	public PackedScene StarterCharacter = ResourceLoader.Load<PackedScene>($"res://src/assets/scenes/models/starter_character.tscn", "", ResourceLoader.CacheMode.Replace);
 
 	[Signal]
 	public delegate void CharacterSpawnedEventHandler(Character character);

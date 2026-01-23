@@ -1,0 +1,100 @@
+[gd_scene load_steps=23 format=3 uid="uid://c3qaynap7lsgs"]
+
+[ext_resource type="Script" uid="uid://dj3d8j4qfl1st" path="res://addons/coreblocks/core/Game.cs" id="1_efwiw"]
+[ext_resource type="Script" uid="uid://d0t5vb0wvm7b6" path="res://addons/coreblocks/core/Workspace.cs" id="2_jkvvx"]
+[ext_resource type="Script" uid="uid://hilik46ime86" path="res://addons/coreblocks/core/Characters.cs" id="3_kx1dm"]
+[ext_resource type="Script" uid="uid://c3yamjsvvi4eo" path="res://addons/coreblocks/core/MapSystem.cs" id="4_14mns"]
+[ext_resource type="Script" uid="uid://cv04eaa2q8bhx" path="res://addons/coreblocks/core/LightingSystem.cs" id="5_ba1kl"]
+[ext_resource type="Script" uid="uid://dd1he2wiyd6x4" path="res://addons/coreblocks/core/AudioSystem.cs" id="6_xv0yj"]
+[ext_resource type="Script" uid="uid://dcblggjtpvjin" path="res://addons/coreblocks/core/Client.cs" id="7_mgxbw"]
+[ext_resource type="Script" uid="uid://iqerivcko5tq" path="res://addons/coreblocks/core/CameraSystem.cs" id="8_2yhw3"]
+[ext_resource type="Script" uid="uid://c5frf4qgle4bf" path="res://addons/coreblocks/core/GuiSystem.cs" id="9_6b58t"]
+[ext_resource type="PackedScene" uid="uid://b3vie0tjo3arm" path="res://src/assets/scenes/core/core_gui.tscn" id="10_s3jm6"]
+[ext_resource type="Script" uid="uid://th3kn0pfoo7m" path="res://addons/coreblocks/core/CoreGui.cs" id="11_2cv0r"]
+[ext_resource type="PackedScene" uid="uid://ds6x2baksbent" path="res://src/assets/scenes/shaders.tscn" id="12_02tlm"]
+[ext_resource type="Script" uid="uid://css84aji0fro1" path="res://addons/coreblocks/core/ShaderSystem.cs" id="13_m3qla"]
+[ext_resource type="PackedScene" uid="uid://by5f8a6nan5nk" path="res://src/assets/scenes/scripts/client_scripts.tscn" id="14_pqb7o"]
+[ext_resource type="Script" uid="uid://bb5na7uref4ps" path="res://addons/coreblocks/core/ClientScriptSystem.cs" id="15_q7oxh"]
+[ext_resource type="Script" uid="uid://i1i7viij1r0d" path="res://addons/coreblocks/core/discord/DiscordRPCNode.gd" id="16_n5nqn"]
+[ext_resource type="Script" uid="uid://d1k532y44p2cq" path="res://addons/coreblocks/core/Server.cs" id="17_5fvc3"]
+[ext_resource type="PackedScene" uid="uid://c3w57vg3x48cu" path="res://src/assets/scenes/scripts/server_scripts.tscn" id="18_l4efv"]
+[ext_resource type="Script" uid="uid://cro0v0l0cdq5v" path="res://addons/coreblocks/core/ServerScriptSystem.cs" id="19_sqkrc"]
+[ext_resource type="Script" uid="uid://3u0cd6x7v7xf" path="res://addons/coreblocks/core/GlobalStorage.cs" id="20_tq1ox"]
+[ext_resource type="Script" uid="uid://clxq4bmgf2uqd" path="res://addons/coreblocks/core/Players.cs" id="21_jhxkd"]
+[ext_resource type="Script" uid="uid://bxtd783k615yg" path="res://addons/coreblocks/core/Replicator.cs" id="22_gvhem"]
+
+[node name="game" type="Node"]
+script = ExtResource("1_efwiw")
+
+[node name="workspace" type="Node3D" parent="." node_paths=PackedStringArray("Spawn")]
+script = ExtResource("2_jkvvx")
+Spawn = NodePath("spawn")
+Gravity = 50.0
+
+[node name="spawn" type="Marker3D" parent="workspace"]
+
+[node name="characters" type="Node3D" parent="workspace"]
+script = ExtResource("3_kx1dm")
+
+[node name="map" type="Node3D" parent="workspace"]
+script = ExtResource("4_14mns")
+
+[node name="lighting" type="Node3D" parent="workspace"]
+script = ExtResource("5_ba1kl")
+
+[node name="audios" type="Node3D" parent="workspace"]
+script = ExtResource("6_xv0yj")
+
+[node name="client" type="Node" parent="."]
+script = ExtResource("7_mgxbw")
+
+[node name="cameras" type="Node3D" parent="client" node_paths=PackedStringArray("CurrentCamera")]
+script = ExtResource("8_2yhw3")
+CurrentCamera = NodePath("thirdPerson")
+
+[node name="freecam" type="Camera3D" parent="client/cameras"]
+
+[node name="firstPerson" type="Camera3D" parent="client/cameras"]
+
+[node name="thirdPerson" type="Camera3D" parent="client/cameras"]
+current = true
+
+[node name="gui" type="Control" parent="client"]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("9_6b58t")
+
+[node name="coreGui" type="CanvasLayer" parent="client/gui" instance=ExtResource("10_s3jm6")]
+layer = 100
+script = ExtResource("11_2cv0r")
+
+[node name="shaders" type="CanvasLayer" parent="client/gui" instance=ExtResource("12_02tlm")]
+script = ExtResource("13_m3qla")
+metadata/_custom_type_script = "uid://css84aji0fro1"
+
+[node name="scripts" type="Node" parent="client" instance=ExtResource("14_pqb7o")]
+script = ExtResource("15_q7oxh")
+
+[node name="discord" type="Node" parent="client"]
+script = ExtResource("16_n5nqn")
+
+[node name="server" type="Node" parent="."]
+script = ExtResource("17_5fvc3")
+
+[node name="scripts" type="Node" parent="server" instance=ExtResource("18_l4efv")]
+script = ExtResource("19_sqkrc")
+
+[node name="global" type="Node" parent="."]
+script = ExtResource("20_tq1ox")
+
+[node name="players" type="Node" parent="."]
+script = ExtResource("21_jhxkd")
+
+[node name="replicator" type="Node" parent="."]
+script = ExtResource("22_gvhem")
+
+[node name="playerSpawner" type="MultiplayerSpawner" parent="replicator"]
+spawn_path = NodePath("../../players")
+
+[node name="characterSpawner" type="MultiplayerSpawner" parent="replicator"]
+spawn_path = NodePath("../../workspace/characters")

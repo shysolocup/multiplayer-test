@@ -9,7 +9,7 @@ using Godot.Collections;
 public partial class Players : Singleton<Players>
 {
 	[Export]
-	public PackedScene StarterPlayer = ResourceLoader.Load<PackedScene>($"res://src/assets/scenes/starter_player.tscn", "", ResourceLoader.CacheMode.Replace);
+	public PackedScene StarterPlayer = ResourceLoader.Load<PackedScene>($"res://src/assets/scenes/models/starter_player.tscn", "", ResourceLoader.CacheMode.Replace);
 
 	private Characters characters { get; set; }
 	private Client client { get; set; }

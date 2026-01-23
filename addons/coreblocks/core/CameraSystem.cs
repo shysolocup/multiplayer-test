@@ -241,6 +241,8 @@ public partial class CameraSystem : Singleton3D<CameraSystem>
 	{
 		base._Ready();
 
+		var game = await Game.Instance();
+
 		ThirdPersonCamera = GetNode<Camera3D>("./thirdPerson");
 		FreecamCamera = GetNode<Camera3D>("./freecam");
 		FirstPersonCamera = GetNode<Camera3D>("./firstPerson");

@@ -170,7 +170,8 @@ public partial class Mouse : Singleton<Mouse>
 			Input.MouseMode = mode;
 	}
 
-	private RayCast3D Ray { get; set; }
+	[Export]
+	public RayCast3D Ray { get; set; }
 
 	public Vector2 Position
 	{
@@ -205,10 +206,15 @@ public partial class Mouse : Singleton<Mouse>
 	#nullable disable
 
 	// Called when the node enters the scene tree for the first time.
-	public override void _Ready()
+	public override async void _Ready()
 	{
+		var game = await Game.Instance();
+		
 		base._Ready();
-		Ray = new RayCast3D();
+		Ray ??= new RayCast3D();
 		AddChild(Ray);
+
+		if (Engine.IsEditorHint()) 
+			Ray.Owner = game;
 	}
 }

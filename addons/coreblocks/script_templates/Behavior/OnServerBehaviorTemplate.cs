@@ -1,12 +1,12 @@
 // meta-name: On Server Behavior Template
-// meta-description: A simple base template for a behavior/script set to run the server server
+// meta-description: A simple base template for a behavior/script set to run on the server
 // meta-default: true
 
 using _BINDINGS_NAMESPACE_;
 using System;
 
 
-// check the hover text for the base Behavior class for method names
+// check the hover text for the class for method names
 [OnServer]
 public partial class _CLASS_ : _BASE_
 {

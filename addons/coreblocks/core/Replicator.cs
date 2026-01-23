@@ -18,14 +18,46 @@ public partial class Replicator : Singleton<Replicator>
     {
         base._Ready();
 
-        PlayerSpawner = GetNode<MultiplayerSpawner>("./playerSpawner");
-        CharacterSpawner = GetNode<MultiplayerSpawner>("./characterSpawner");
-
+        var game = await Game.Instance();
         workspace = await Workspace.Instance();
         players = await Players.Instance();
         global = await GlobalStorage.Instance();
         cameras = await CameraSystem.Instance();
         characters = await Characters.Instance();
+
+        PlayerSpawner = GetNode<MultiplayerSpawner>("./playerSpawner");
+        CharacterSpawner = GetNode<MultiplayerSpawner>("./characterSpawner");
+
+        if (PlayerSpawner is null)
+		{
+			PlayerSpawner = new()
+			{
+				Name = "playerSpawner",
+                SpawnPath = players.GetPath()
+			};
+
+			AddChild(PlayerSpawner);
+			if (Engine.IsEditorHint()) {
+				PlayerSpawner.Owner = game;
+			}
+		}
+
+        if (CharacterSpawner is null)
+		{
+			CharacterSpawner = new()
+			{
+				Name = "characterSpawner",
+                SpawnPath = characters.GetPath()
+			};
+
+			AddChild(CharacterSpawner);
+			if (Engine.IsEditorHint()) {
+				CharacterSpawner.Owner = game;
+			}
+		}
+
+
+        if (Engine.IsEditorHint()) return;
 
 
         PlayerSpawner.SpawnFunction = Callable.From( (Godot.Collections.Array array) =>

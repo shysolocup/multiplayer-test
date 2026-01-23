@@ -1,5 +1,5 @@
-// meta-name: Behavior Template
-// meta-description: A simple base global behavior/script template
+// meta-name: On Client Behavior Template
+// meta-description: A simple base template for a behavior/script set to run on the client
 // meta-default: true
 
 using _BINDINGS_NAMESPACE_;
@@ -7,6 +7,7 @@ using System;
 
 
 // check the hover text for the class for method names
+[OnClient]
 public partial class _CLASS_ : _BASE_
 {
     // Called when the script node and its dependencies are ready.

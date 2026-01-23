@@ -48,7 +48,7 @@ public static class NodeE
 	/// </code></para>
     /// </summary>
 	public static T GetNodeOfType<T>(this Node self) where T : Node
-		=> self.FindChild<T>();
+		=> self.FindChildren("*", typeof(T).Name).First() as T;
 
 	#endregion
 

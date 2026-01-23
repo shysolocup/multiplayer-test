@@ -57,8 +57,7 @@ public partial class Client : Singleton<Client>
 		Cameras ??= GetNode<CameraSystem>("./cameras");
 		Scripts ??= await ClientScriptSystem.Instance();
 		Replicator ??= await Replicator.Instance();
-
-		players = await Players.Instance();
+		players ??= await Players.Instance();
 		
 
 		GD.PushWarning("loaded client stuff");

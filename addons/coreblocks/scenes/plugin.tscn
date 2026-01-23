@@ -1,5 +1,75 @@
-[gd_scene format=3 uid="uid://bobvjm56c1w6g"]
+[gd_scene load_steps=6 format=3 uid="uid://bobvjm56c1w6g"]
+
+[ext_resource type="Texture2D" uid="uid://cr2l07lnbg74c" path="res://addons/coreblocks/assets/Workspace.png" id="1_5pxw8"]
+[ext_resource type="Shader" uid="uid://rtcapvrmcnwp" path="res://addons/coreblocks/assets/shaders/plugin_background.gdshader" id="1_7xs8x"]
+[ext_resource type="Script" uid="uid://c6ojy70kwl7os" path="res://addons/coreblocks/core/classes/ShaderRect.cs" id="2_gfbsl"]
+[ext_resource type="Texture2D" uid="uid://cixg7owcnagkq" path="res://addons/coreblocks/assets/mat_placeholder_02.png" id="3_5pxw8"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_5pxw8"]
+shader = ExtResource("1_7xs8x")
+shader_parameter/scroll_speed = 0.08
+shader_parameter/angle_degrees = 45.0
+shader_parameter/repeat_x = 1.0
+shader_parameter/repeat_y = 1.0
+shader_parameter/row_offset = 1.0
+shader_parameter/scale = 1.0
+shader_parameter/texture_to_scroll = ExtResource("3_5pxw8")
 
 [node name="Coreblocks" type="Control"]
 layout_mode = 3
-anchors_preset = 0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="container" type="VBoxContainer" parent="."]
+z_index = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 31.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 29
+
+[node name="label" type="RichTextLabel" parent="container"]
+z_index = 1
+layout_mode = 2
+theme_override_font_sizes/bold_font_size = 46
+bbcode_enabled = true
+text = "[img=75]uid://dtistgsm0s5n8[/img]
+[rainbow][wave][b]Coreblocks[/b][/wave][/rainbow]"
+fit_content = true
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="maker" type="Button" parent="container"]
+z_index = 1
+layout_mode = 2
+text = "Make new Coreblocks game scene"
+icon = ExtResource("1_5pxw8")
+
+[node name="confirmMaker" type="ConfirmationDialog" parent="."]
+oversampling_override = 1.0
+initial_position = 2
+size = Vector2i(510, 132)
+ok_button_text = "Mmm okay I guess"
+dialog_text = "Are you sure you want to start the new Coreblocks game scene?
+
+(WARNING: This overwrites nodes in the tree with the default layout)"
+
+[node name="scroller" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_5pxw8")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("2_gfbsl")
+Shader = ExtResource("1_7xs8x")
+ShaderMaterial = SubResource("ShaderMaterial_5pxw8")
+metadata/_custom_type_script = "uid://c6ojy70kwl7os"
