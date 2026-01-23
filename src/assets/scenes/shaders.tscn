@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://ds6x2baksbent"]
 
-[ext_resource type="Script" uid="uid://css84aji0fro1" path="res://addons/coreblocks/core/ShaderSystem.cs" id="1_r63nx"]
+[ext_resource type="Script" uid="uid://css84aji0fro1" path="res://addons/coreblocks/core/singletons/ShaderSystem.cs" id="1_r63nx"]
 [ext_resource type="Shader" uid="uid://dvoxvdndgot3u" path="res://src/assets/shaders/canvas.test.gdshader" id="2_qwnq1"]
 [ext_resource type="Material" uid="uid://bblh7gef8l4y6" path="res://src/assets/shaders/canvas.kuwahara.tres" id="2_wp0mi"]
 [ext_resource type="Script" uid="uid://c6ojy70kwl7os" path="res://addons/coreblocks/core/classes/ShaderRect.cs" id="3_qwnq1"]

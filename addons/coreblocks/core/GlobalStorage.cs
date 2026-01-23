@@ -1,8 +1,0 @@
-using Godot;
-
-[GlobalClass, Icon("uid://dda83k1ok1hyq")]
-public partial class GlobalStorage : Singleton<GlobalStorage>
-{
-    public MultiplayerRemote GetEvent(NodePath name)
-        => GetNode(name) is MultiplayerRemote remote ? remote : null;
-}

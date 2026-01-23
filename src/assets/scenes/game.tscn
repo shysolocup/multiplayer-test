@@ -1,26 +1,25 @@
-[gd_scene load_steps=24 format=3 uid="uid://cg6684xj7fjx"]
+[gd_scene load_steps=23 format=3 uid="uid://cg6684xj7fjx"]
 
-[ext_resource type="Script" uid="uid://dj3d8j4qfl1st" path="res://addons/coreblocks/core/Game.cs" id="1_covw0"]
-[ext_resource type="Script" uid="uid://c5frf4qgle4bf" path="res://addons/coreblocks/core/GuiSystem.cs" id="2_276xm"]
-[ext_resource type="Script" uid="uid://d0t5vb0wvm7b6" path="res://addons/coreblocks/core/Workspace.cs" id="2_ta85g"]
-[ext_resource type="Script" uid="uid://c3yamjsvvi4eo" path="res://addons/coreblocks/core/MapSystem.cs" id="3_44dqv"]
+[ext_resource type="Script" uid="uid://dj3d8j4qfl1st" path="res://addons/coreblocks/core/singletons/Game.cs" id="1_covw0"]
+[ext_resource type="Script" uid="uid://c5frf4qgle4bf" path="res://addons/coreblocks/core/singletons/GuiSystem.cs" id="2_276xm"]
+[ext_resource type="Script" uid="uid://d0t5vb0wvm7b6" path="res://addons/coreblocks/core/singletons/Workspace.cs" id="2_ta85g"]
+[ext_resource type="Script" uid="uid://c3yamjsvvi4eo" path="res://addons/coreblocks/core/singletons/MapSystem.cs" id="3_44dqv"]
 [ext_resource type="Script" uid="uid://x8ujmfkjr2ap" path="res://addons/coreblocks/core/classes/Part.cs" id="3_a37p6"]
-[ext_resource type="Script" uid="uid://hilik46ime86" path="res://addons/coreblocks/core/Characters.cs" id="3_kcfyl"]
-[ext_resource type="Script" uid="uid://cv04eaa2q8bhx" path="res://addons/coreblocks/core/LightingSystem.cs" id="4_44dqv"]
-[ext_resource type="Script" uid="uid://d1k532y44p2cq" path="res://addons/coreblocks/core/Server.cs" id="5_lcg6w"]
+[ext_resource type="Script" uid="uid://hilik46ime86" path="res://addons/coreblocks/core/singletons/Characters.cs" id="3_kcfyl"]
+[ext_resource type="Script" uid="uid://cv04eaa2q8bhx" path="res://addons/coreblocks/core/singletons/LightingSystem.cs" id="4_44dqv"]
+[ext_resource type="Script" uid="uid://d1k532y44p2cq" path="res://addons/coreblocks/core/singletons/Server.cs" id="5_lcg6w"]
 [ext_resource type="Material" uid="uid://7wuop4abysij" path="res://src/assets/resources/skies/res_sky_realistic.tres" id="6_44dqv"]
-[ext_resource type="Script" uid="uid://dcblggjtpvjin" path="res://addons/coreblocks/core/Client.cs" id="6_gh3at"]
-[ext_resource type="Script" uid="uid://iqerivcko5tq" path="res://addons/coreblocks/core/CameraSystem.cs" id="6_pm1mm"]
-[ext_resource type="Script" uid="uid://dd1he2wiyd6x4" path="res://addons/coreblocks/core/AudioSystem.cs" id="7_pm1mm"]
-[ext_resource type="Script" uid="uid://clxq4bmgf2uqd" path="res://addons/coreblocks/core/Players.cs" id="9_bd8mh"]
-[ext_resource type="PackedScene" uid="uid://b3vie0tjo3arm" path="res://src/assets/scenes/core/core_gui.tscn" id="11_44dqv"]
+[ext_resource type="Script" uid="uid://dcblggjtpvjin" path="res://addons/coreblocks/core/singletons/Client.cs" id="6_gh3at"]
+[ext_resource type="Script" uid="uid://iqerivcko5tq" path="res://addons/coreblocks/core/singletons/CameraSystem.cs" id="6_pm1mm"]
+[ext_resource type="Script" uid="uid://dd1he2wiyd6x4" path="res://addons/coreblocks/core/singletons/AudioSystem.cs" id="7_pm1mm"]
+[ext_resource type="Script" uid="uid://clxq4bmgf2uqd" path="res://addons/coreblocks/core/singletons/Players.cs" id="9_bd8mh"]
 [ext_resource type="PackedScene" uid="uid://c3w57vg3x48cu" path="res://src/assets/scenes/scripts/server_scripts.tscn" id="14_44dqv"]
 [ext_resource type="Script" uid="uid://i1i7viij1r0d" path="res://addons/coreblocks/core/discord/DiscordRPCNode.gd" id="15_3xp0n"]
 [ext_resource type="PackedScene" uid="uid://ds6x2baksbent" path="res://src/assets/scenes/shaders.tscn" id="18_44dqv"]
 [ext_resource type="PackedScene" uid="uid://by5f8a6nan5nk" path="res://src/assets/scenes/scripts/client_scripts.tscn" id="19_3xp0n"]
 [ext_resource type="Script" uid="uid://c54icdqd81ovu" path="res://addons/coreblocks/core/classes/MultiplayerRemote.cs" id="19_bw78x"]
-[ext_resource type="Script" uid="uid://3u0cd6x7v7xf" path="res://addons/coreblocks/core/GlobalStorage.cs" id="19_lkrtx"]
-[ext_resource type="Script" uid="uid://bxtd783k615yg" path="res://addons/coreblocks/core/Replicator.cs" id="22_p02ep"]
+[ext_resource type="Script" uid="uid://3u0cd6x7v7xf" path="res://addons/coreblocks/core/singletons/GlobalStorage.cs" id="19_lkrtx"]
+[ext_resource type="Script" uid="uid://bxtd783k615yg" path="res://addons/coreblocks/core/singletons/Replicator.cs" id="22_p02ep"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_a37p6"]
 transparency = 4
@@ -56,7 +55,7 @@ metadata/_custom_type_script = "uid://hilik46ime86"
 [node name="map" type="Node3D" parent="workspace" node_paths=PackedStringArray("Map")]
 transform = Transform3D(-0.99987966, 0, -0.015515357, 0, 1, 0, 0.015515357, 0, -0.99987966, 0, 0, 0)
 script = ExtResource("3_44dqv")
-Map = NodePath("@Node3D@22148")
+Map = NodePath("default")
 metadata/_custom_type_script = "uid://c3yamjsvvi4eo"
 
 [node name="lighting" type="Node3D" parent="workspace" node_paths=PackedStringArray("World", "Lights")]
@@ -103,8 +102,6 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("2_276xm")
 metadata/_edit_use_anchors_ = true
-
-[node name="coreGui" parent="client/gui" instance=ExtResource("11_44dqv")]
 
 [node name="shaders" parent="client/gui" instance=ExtResource("18_44dqv")]
 layer = -1

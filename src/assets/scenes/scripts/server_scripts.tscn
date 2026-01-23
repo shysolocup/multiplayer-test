@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://c3w57vg3x48cu"]
 
-[ext_resource type="Script" uid="uid://cro0v0l0cdq5v" path="res://addons/coreblocks/core/ServerScriptSystem.cs" id="1_6whnc"]
+[ext_resource type="Script" uid="uid://cro0v0l0cdq5v" path="res://addons/coreblocks/core/singletons/ServerScriptSystem.cs" id="1_6whnc"]
 [ext_resource type="Script" uid="uid://brxcpgmp23vds" path="res://src/scripts/server/GrunkTinkely.cs" id="2_23hjc"]
 [ext_resource type="Script" uid="uid://cyc4es7ctr5a8" path="res://addons/coreblocks/core/classes/BehaviorFolder.cs" id="2_t8tjx"]
 [ext_resource type="Script" uid="uid://dokftiwgu3klb" path="res://src/scripts/server/Test.cs" id="4_4p0sw"]

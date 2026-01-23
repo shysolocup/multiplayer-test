@@ -56,7 +56,7 @@ func make_new_scene():
 	# make Workspace
 	var workspace = query(game, "Workspace");
 	if (workspace is not Workspace):
-		var _script: CSharpScript = preload(base + "core/Workspace.cs")
+		var _script: CSharpScript = load(base + "core/singletons/Workspace.cs")
 
 		workspace = Node3D.new();
 		workspace.name = "workspace";
@@ -77,7 +77,7 @@ func make_new_scene():
 	var characters = query(game, "Characters");
 	if (characters is not Characters):
 		
-		var _script: CSharpScript = preload(base + "core/Characters.cs")
+		var _script: CSharpScript = load(base + "core/singletons/Characters.cs")
 		characters = Node3D.new();
 		characters.name = "characters";
 
@@ -90,7 +90,7 @@ func make_new_scene():
 	var map = query(game, "MapSystem");
 	if (map is not MapSystem):
 
-		var _script: CSharpScript = preload(base + "core/MapSystem.cs")
+		var _script: CSharpScript = load(base + "core/singletons/MapSystem.cs")
 		map = Node3D.new();
 		map.name = "map";
 
@@ -103,7 +103,7 @@ func make_new_scene():
 	var lighting = query(game, "LightingSystem");
 	if (lighting is not LightingSystem):
 
-		var _script: CSharpScript = preload(base + "core/LightingSystem.cs")
+		var _script: CSharpScript = load(base + "core/singletons/LightingSystem.cs")
 		lighting = Node3D.new();
 		lighting.name = "lighting";
 
@@ -115,7 +115,7 @@ func make_new_scene():
 	# spawn AudioSystem
 	var audios = query(game, "AudioSystem");
 	if (audios is not AudioSystem):
-		var _script: CSharpScript = preload(base + "core/AudioSystem.cs")
+		var _script: CSharpScript = load(base + "core/singletons/AudioSystem.cs")
 		audios = Node3D.new();
 		audios.name = "audios"
 
@@ -131,7 +131,7 @@ func make_new_scene():
 	var client = query(game, "Client");
 	if (client is not Client):
 
-		var _script: CSharpScript = preload(base + "core/Client.cs")
+		var _script: CSharpScript = load(base + "core/singletons/Client.cs")
 		client = Node.new();
 		client.name = "client";
 
@@ -144,7 +144,7 @@ func make_new_scene():
 	var cameras = query(game, "CameraSystem");
 	if (cameras is not CameraSystem):
 
-		var _script: CSharpScript = preload(base + "core/CameraSystem.cs")
+		var _script: CSharpScript = load(base + "core/singletons/CameraSystem.cs")
 		cameras = Node3D.new();
 		cameras.name = "cameras";
 
@@ -174,7 +174,7 @@ func make_new_scene():
 	var gui = query(game, "GuiSystem");
 	if (gui is not GuiSystem):
 
-		var _script: CSharpScript = preload(base + "core/GuiSystem.cs")
+		var _script: CSharpScript = load(base + "core/singletons/GuiSystem.cs")
 		gui = Control.new();
 		gui.name = "gui";
 
@@ -182,22 +182,12 @@ func make_new_scene():
 		gui.owner = game;
 
 		gui.set_script(_script);
-	
-	# spawn CoreGui
-	var coreGui = query(game, "CoreGui");
-	if (coreGui is not CoreGui):
-
-		coreGui = preload("res://src/assets/scenes/core/core_gui.tscn").instantiate();
-		coreGui.name = "coreGui";
-
-		gui.add_child(coreGui);
-		coreGui.owner = game;
 
 	# spawn ShaderSystem
 	var shaders = query(game, "ShaderSystem");
 	if (shaders is not ShaderSystem):
 
-		shaders = preload("res://src/assets/scenes/shaders.tscn").instantiate();
+		shaders = load("res://src/assets/scenes/shaders.tscn").instantiate();
 		shaders.name = "shaders";
 
 		gui.add_child(shaders);
@@ -207,7 +197,7 @@ func make_new_scene():
 	var clientScripts = query(game, "ClientScriptSystem");
 	if (clientScripts is not ClientScriptSystem):
 
-		clientScripts = preload("res://src/assets/scenes/scripts/client_scripts.tscn").instantiate();
+		clientScripts = load("res://src/assets/scenes/scripts/client_scripts.tscn").instantiate();
 		clientScripts.name = "scripts";
 
 		client.add_child(clientScripts);
@@ -230,7 +220,7 @@ func make_new_scene():
 	var server = query(game, "Server");
 	if (server is not Server):
 
-		var _script: CSharpScript = preload(base + "core/Server.cs")
+		var _script: CSharpScript = load(base + "core/singletons/Server.cs")
 		server = Node.new();
 		server.name = "server";
 
@@ -243,7 +233,7 @@ func make_new_scene():
 	var serverScripts = query(game, "ServerScriptSystem");
 	if (serverScripts is not ServerScriptSystem):
 		
-		serverScripts = preload("res://src/assets/scenes/scripts/server_scripts.tscn").instantiate();
+		serverScripts = load("res://src/assets/scenes/scripts/server_scripts.tscn").instantiate();
 		serverScripts.name = "scripts";
 
 		server.add_child(serverScripts);
@@ -255,7 +245,7 @@ func make_new_scene():
 	var globalStorage = query(game, "GlobalStorage");
 	if (globalStorage is not GlobalStorage):
 		
-		var _script: CSharpScript = preload(base + "core/GlobalStorage.cs")
+		var _script: CSharpScript = load(base + "core/singletons/GlobalStorage.cs")
 		globalStorage = Node.new();
 		globalStorage.name = "global";
 
@@ -268,7 +258,7 @@ func make_new_scene():
 	var players = query(game, "Players");
 	if (players is not Replicator):
 		
-		var _script: CSharpScript = preload(base + "core/Players.cs")
+		var _script: CSharpScript = load(base + "core/singletons/Players.cs")
 		players = Node.new();
 		players.name = "players";
 		players.set_script(_script);
@@ -280,7 +270,7 @@ func make_new_scene():
 	var replicator = query(game, "Replicator");
 	if (replicator is not Replicator):
 		
-		var _script: CSharpScript = preload(base + "core/Replicator.cs")
+		var _script: CSharpScript = load(base + "core/singletons/Replicator.cs")
 		replicator = Node.new();
 		replicator.name = "replicator";
 
@@ -304,7 +294,7 @@ func make_new_scene():
 	# make Game last
 	if (game is not Game):
 
-		var _script: CSharpScript = preload(base + "core/Game.cs")
+		var _script: CSharpScript = load(base + "core/singletons/Game.cs")
 
 		game.name = "game";
 		game.set_script(_script);

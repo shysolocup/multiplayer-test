@@ -588,11 +588,19 @@ public partial class Behavior : Node
 		Server = 1
 	}
 
+	private bool enabled = true;
+
 	[Export]
 	public bool Enabled
 	{
-		get => ProcessMode != ProcessModeEnum.Disabled;
-		set => ProcessMode = value ? ProcessModeEnum.Inherit : ProcessModeEnum.Disabled;
+		get => Engine.IsEditorHint() ? enabled : ProcessMode != ProcessModeEnum.Disabled;
+		set
+		{
+			if (Engine.IsEditorHint()) 
+				enabled = value;
+			else
+				ProcessMode = value ? ProcessModeEnum.Inherit : ProcessModeEnum.Disabled;	
+		}
 	}
 
 	#endregion
