@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://c5frf4qgle4bf" path="res://addons/coreblocks/core/GuiSystem.cs" id="2_276xm"]
 [ext_resource type="Script" uid="uid://d0t5vb0wvm7b6" path="res://addons/coreblocks/core/Workspace.cs" id="2_ta85g"]
 [ext_resource type="Script" uid="uid://c3yamjsvvi4eo" path="res://addons/coreblocks/core/MapSystem.cs" id="3_44dqv"]
-[ext_resource type="Script" uid="uid://x07bhixndr2y" path="res://addons/coreblocks/core/classes/Part.cs" id="3_a37p6"]
+[ext_resource type="Script" uid="uid://x8ujmfkjr2ap" path="res://addons/coreblocks/core/classes/Part.cs" id="3_a37p6"]
 [ext_resource type="Script" uid="uid://hilik46ime86" path="res://addons/coreblocks/core/Characters.cs" id="3_kcfyl"]
 [ext_resource type="Script" uid="uid://cv04eaa2q8bhx" path="res://addons/coreblocks/core/LightingSystem.cs" id="4_44dqv"]
 [ext_resource type="Script" uid="uid://d1k532y44p2cq" path="res://addons/coreblocks/core/Server.cs" id="5_lcg6w"]
@@ -56,7 +56,7 @@ metadata/_custom_type_script = "uid://hilik46ime86"
 [node name="map" type="Node3D" parent="workspace" node_paths=PackedStringArray("Map")]
 transform = Transform3D(-0.99987966, 0, -0.015515357, 0, 1, 0, 0.015515357, 0, -0.99987966, 0, 0, 0)
 script = ExtResource("3_44dqv")
-Map = NodePath("default")
+Map = NodePath("@Node3D@22148")
 metadata/_custom_type_script = "uid://c3yamjsvvi4eo"
 
 [node name="lighting" type="Node3D" parent="workspace" node_paths=PackedStringArray("World", "Lights")]

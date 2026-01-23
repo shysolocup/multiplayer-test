@@ -59,4 +59,14 @@ public partial class Part : CsgBox3D
             ShadingMode = Shaded ? BaseMaterial3D.ShadingModeEnum.PerPixel : BaseMaterial3D.ShadingModeEnum.Unshaded
         };
     }
+
+    public override void _Ready()
+    {
+        base._Ready();
+    }
+
+    public override void _Process(double delta)
+    {
+        base._Process(delta);
+    }
 }
