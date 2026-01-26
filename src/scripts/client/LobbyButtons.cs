@@ -1,7 +1,5 @@
 using Godot;
 
-
-
 [Prerunner]
 public partial class LobbyButtons : ClientBehavior
 {
@@ -29,7 +27,7 @@ public partial class LobbyButtons : ClientBehavior
 
 		mouse.BindActor(
 			actor: this, 
-			channel: Mouse.PriorityChannel.Ui, 
+			channel: Enum.PriorityChannel.Ui, 
 			mode: Input.MouseModeEnum.Visible,
 			persist: true
 		);
@@ -38,7 +36,7 @@ public partial class LobbyButtons : ClientBehavior
 
 	private void joining(string id)
 	{
-		mouse.UnbindActor(this, Mouse.PriorityChannel.Ui);
+		mouse.UnbindActor(this, Enum.PriorityChannel.Ui);
 		goaway();
 	}
 
@@ -48,7 +46,7 @@ public partial class LobbyButtons : ClientBehavior
 		lobby.Text = id;
 		goaway();
 
-		mouse.UnbindActor(this, Mouse.PriorityChannel.Ui);
+		mouse.UnbindActor(this, Enum.PriorityChannel.Ui);
 	}
 
 	private async void join()

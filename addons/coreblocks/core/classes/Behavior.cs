@@ -466,7 +466,7 @@ public partial class Behavior : Node
 	/// <returns></returns>
 	#nullable enable
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
-	public ContextEnum GetContext(string? methodName = null) {
+	public Enum.RunContext GetContext(string? methodName = null) {
 		var t = GetType();
 		
 		var onServer = typeof(OnServerAttribute);
@@ -485,8 +485,8 @@ public partial class Behavior : Node
 		bool methodIsClient = method is not null && Attribute.IsDefined(method, onClient);
 
 		return (scriptIsServer || methodIsServer) && !methodIsClient
-			? ContextEnum.Server 
-			: ContextEnum.Client;
+			? Enum.RunContext.Server 
+			: Enum.RunContext.Client;
 	}
 
 
@@ -502,7 +502,7 @@ public partial class Behavior : Node
 
 		var context = GetContext(methodName);
 
-		return (context == ContextEnum.Server && isServer()) || context == ContextEnum.Client;
+		return (context == Enum.RunContext.Server && isServer()) || context == Enum.RunContext.Client;
 	}
 
 	#nullable disable
@@ -639,12 +639,6 @@ public partial class Behavior : Node
 	#endregion
 
 	#region exports
-
-	public enum ContextEnum
-	{	
-		Client = 0,
-		Server = 1
-	}
 
 	private bool enabled = true;
 

@@ -26,12 +26,6 @@ public partial class Chat : SingletonControl<Chat>
     [Export]
     public Theme MessageTheme = GD.Load<Theme>("res://addons/coreblocks/assets/materials/coregui_message_style.tres");
 
-    public enum TextChannel
-    {
-        General = 0,
-        Team = 1
-    }
-
 
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
     public override async void _Ready()
@@ -68,7 +62,7 @@ public partial class Chat : SingletonControl<Chat>
             MakeChannel("Team");
         }
 
-        GotoChannel(TextChannel.General);
+        GotoChannel(Enum.TextChannel.General);
 
         SendButton.Pressed += sendMessage;
         Label.TextSubmitted += text => sendMessage();
@@ -214,7 +208,7 @@ public partial class Chat : SingletonControl<Chat>
     public void GotoChannel(int channel)
         => Channels.CurrentTab = channel;
 
-    public void GotoChannel(TextChannel channel) 
+    public void GotoChannel(Enum.TextChannel channel) 
         => GotoChannel((int)channel);
 
     public void GotoChannel(string channel)
@@ -223,7 +217,7 @@ public partial class Chat : SingletonControl<Chat>
     public ScrollContainer GetChannel(int channel)
         => Channels.GetChildOrNull<ScrollContainer>(channel);
 
-    public ScrollContainer GetChannel(TextChannel channel)
+    public ScrollContainer GetChannel(Enum.TextChannel channel)
         => GetChannel((int)channel);
 
     public ScrollContainer GetChannel(string tab)

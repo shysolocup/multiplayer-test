@@ -20,7 +20,7 @@ public partial class Mouse : Singleton<Mouse>
 	/// <para/> if the mode is set to <see cref="Input.MouseModeEnum.Captured"/> the mouse will be invisible and locked into the window
 	/// <para/> if the mode is set to <see cref="Input.MouseModeEnum.Visible"/> the mouse will be unlocked and visible
 	/// </summary>
-	public MouseModeBinding BindActor(Node actor, PriorityChannel channel, bool persist = false, Input.MouseModeEnum? mode = null)
+	public MouseModeBinding BindActor(Node actor, Enum.PriorityChannel channel, bool persist = false, Input.MouseModeEnum? mode = null)
 		=> BindActor(actor, (int)channel, persist, mode);
 
 
@@ -29,7 +29,7 @@ public partial class Mouse : Singleton<Mouse>
 	/// <para/>if the persist param is false (default) it'll set the mode to null once all actors are disconnected from the channel
 	/// </summary>
 	/// <param name="actor">acting node that </param>
-	/// <param name="priority">priority level, optionally an int</param>
+	/// <param name="channel">priority level, optionally an int</param>
 	/// <param name="persist">if the mode should persist after all actors are unbound, default false meaning once all the actors disconnect it'll set the mode to null</param>
 	/// <returns></returns>
 	public MouseModeBinding BindActor(Node actor, int channel, bool persist = false, Input.MouseModeEnum? mode = null)
@@ -63,13 +63,13 @@ public partial class Mouse : Singleton<Mouse>
 	}
 
 
-	public MouseModeBinding GetBindng(PriorityChannel channel)
+	public MouseModeBinding GetBindng(Enum.PriorityChannel channel)
 		=> PriorityList.GetValueOrDefault((int)channel);
 
 	public MouseModeBinding GetBindng(int channel)
 		=> PriorityList.GetValueOrDefault(channel);
 
-	public Array<Node> GetActors(PriorityChannel channel)
+	public Array<Node> GetActors(Enum.PriorityChannel channel)
 		=> GetBindng(channel).Actors;
 
 	public Array<Node> GetActors(int channel)
@@ -79,7 +79,7 @@ public partial class Mouse : Singleton<Mouse>
 	/// <summary>
 	/// sets the mode of the <see cref="MouseModeBinding"/>
 	/// </summary>
-	public Mouse SetBindingMode(PriorityChannel channel, Input.MouseModeEnum mode)
+	public Mouse SetBindingMode(Enum.PriorityChannel channel, Input.MouseModeEnum mode)
 		=> SetBindingMode((int)channel, mode);
 
 
@@ -110,7 +110,7 @@ public partial class Mouse : Singleton<Mouse>
 	/// <summary>
 	/// unbinds a <see cref="MouseModeBinding"/>
 	/// </summary>
-	public bool UnbindActor(Node actor, PriorityChannel channel)
+	public bool UnbindActor(Node actor, Enum.PriorityChannel channel)
 		=> UnbindActor(actor, (int)channel);
 
 	/// <summary>
@@ -123,14 +123,6 @@ public partial class Mouse : Singleton<Mouse>
 			return value.Actors.Remove(actor);
 		}
 		return false;
-	}
-
-
-	public enum PriorityChannel
-	{
-		Master,
-		Ui,
-		Camera
 	}
 
 

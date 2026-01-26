@@ -10,7 +10,7 @@ using Godot;
 public partial class CameraSystem : Singleton3D<CameraSystem>
 {
 
-	[Signal] public delegate void CameraTypeChangedEventHandler(CameraTypeEnum cameraType);
+	[Signal] public delegate void CameraTypeChangedEventHandler(Enum.CameraType cameraType);
 	[Signal] public delegate void SubjectChangedEventHandler(Node3D subject);
 	[Signal] public delegate void CurrentCameraChangedEventHandler(Camera3D camera);
 
@@ -25,10 +25,10 @@ public partial class CameraSystem : Singleton3D<CameraSystem>
 	/// this is the camera type it'll go to going in and out of fullscreen
 	/// this changes when the normal CameraType is changed
 	/// </summary>
-	public CameraTypeEnum GotoCameraType = CameraTypeEnum.ThirdPerson;
+	public Enum.CameraType GotoCameraType = Enum.CameraType.ThirdPerson;
 
 	[Export]
-	public CameraTypeEnum CameraType
+	public Enum.CameraType CameraType
 	{
 		get {
 			if (Engine.IsEditorHint())
@@ -38,22 +38,22 @@ public partial class CameraSystem : Singleton3D<CameraSystem>
 				FirstPersonCamera ??= GetNode<Camera3D>("./firstPerson");
 			}
 
-			CameraTypeEnum value;
+			Enum.CameraType value;
 
 			try
 			{
 				value = 
-					FreecamCamera.Current || FreecamActive || GotoCameraType == CameraTypeEnum.Custom
+					FreecamCamera.Current || FreecamActive || GotoCameraType == Enum.CameraType.Custom
 						? GotoCameraType
 					: ThirdPersonCamera.Current 
-						? CameraTypeEnum.ThirdPerson
+						? Enum.CameraType.ThirdPerson
 					: FirstPersonCamera.Current
-						? CameraTypeEnum.FirstPerson
-					: CameraTypeEnum.Custom;
+						? Enum.CameraType.FirstPerson
+					: Enum.CameraType.Custom;
 			}
 			catch
 			{
-				return CameraTypeEnum.Custom;
+				return Enum.CameraType.Custom;
 			}
 
 			GotoCameraType = value;
@@ -72,20 +72,13 @@ public partial class CameraSystem : Singleton3D<CameraSystem>
 
 			GotoCameraType = value;
 
-			if (value == CameraTypeEnum.FirstPerson)
+			if (value == Enum.CameraType.FirstPerson)
 				CurrentCamera = FirstPersonCamera;
-			else if (value ==  CameraTypeEnum.ThirdPerson)
+			else if (value ==  Enum.CameraType.ThirdPerson)
 				CurrentCamera = ThirdPersonCamera;
 
 			EmitSignalCameraTypeChanged(value);
 		}
-	}
-
-	public enum CameraTypeEnum
-	{
-		ThirdPerson = 0,
-		FirstPerson = 2,
-		Custom = 3
 	}
 
 	#endregion
@@ -154,9 +147,9 @@ public partial class CameraSystem : Singleton3D<CameraSystem>
 				value != FreecamCamera 
 				&& value != ThirdPersonCamera 
 				&& value != FirstPersonCamera 
-				&& (CameraType == CameraTypeEnum.ThirdPerson || CameraType == CameraTypeEnum.FirstPerson)
+				&& (CameraType == Enum.CameraType.ThirdPerson || CameraType == Enum.CameraType.FirstPerson)
 			)
-				CameraType = CameraTypeEnum.Custom;
+				CameraType = Enum.CameraType.Custom;
 
 
 			if (value != FreecamCamera && FreecamActive)
@@ -289,7 +282,7 @@ public partial class CameraSystem : Singleton3D<CameraSystem>
 
 		mouse = await Mouse.Instance();
 
-		mouse.BindActor(this, Mouse.PriorityChannel.Camera);
+		mouse.BindActor(this, Enum.PriorityChannel.Camera);
 	}
 
 
@@ -358,7 +351,7 @@ public partial class CameraSystem : Singleton3D<CameraSystem>
 	private void FreecamProcess(double delta)
 	{
 		if (this.IsUnhandled() && FreecamActive && FreecamCamera is not null && !Engine.IsEditorHint()) {
-			mouse.SetBindingMode(Mouse.PriorityChannel.Camera, 
+			mouse.SetBindingMode(Enum.PriorityChannel.Camera, 
 				Input.IsActionPressed("camera_move")
 					? Input.MouseModeEnum.Captured 
 					: Input.MouseModeEnum.Visible
@@ -496,9 +489,9 @@ public partial class CameraSystem : Singleton3D<CameraSystem>
 
 	private void ThirdPersonProcess(double delta)
 	{
-		if (CameraType == CameraTypeEnum.ThirdPerson && !Engine.IsEditorHint())
+		if (CameraType == Enum.CameraType.ThirdPerson && !Engine.IsEditorHint())
 		{
-			mouse.SetBindingMode(Mouse.PriorityChannel.Camera, 
+			mouse.SetBindingMode(Enum.PriorityChannel.Camera, 
 				Input.IsActionPressed("camera_move") || ShiftLocked
 					? Input.MouseModeEnum.Captured 
 					: Input.MouseModeEnum.Visible
@@ -535,7 +528,7 @@ public partial class CameraSystem : Singleton3D<CameraSystem>
 
 	private void ThirdPersonUnhandled(InputEvent @event)
 	{
-		if (CameraType == CameraTypeEnum.ThirdPerson && !Engine.IsEditorHint() && @event is InputEventMouseButton wheel)
+		if (CameraType == Enum.CameraType.ThirdPerson && !Engine.IsEditorHint() && @event is InputEventMouseButton wheel)
 		{
 			if (wheel.ButtonIndex == MouseButton.WheelUp)
 			{
@@ -551,7 +544,7 @@ public partial class CameraSystem : Singleton3D<CameraSystem>
 
 	private void ThirdPersonInput(InputEvent @event)
 	{
-		if (this.IsUnhandled() && CameraType == CameraTypeEnum.ThirdPerson && !Engine.IsEditorHint() && Input.IsActionJustPressed("shift_lock") && !FreecamActive)
+		if (this.IsUnhandled() && CameraType == Enum.CameraType.ThirdPerson && !Engine.IsEditorHint() && Input.IsActionJustPressed("shift_lock") && !FreecamActive)
 		{
 			ShiftLocked ^= true;
 
@@ -565,7 +558,7 @@ public partial class CameraSystem : Singleton3D<CameraSystem>
 			@event is InputEventMouseMotion mouse 
 				&& (Input.IsActionPressed("camera_move") || ShiftLocked) // if shiftlocked or holding rmb move camera to mouse relative
 				&& Subject is not null 
-				&& CameraType == CameraTypeEnum.ThirdPerson 
+				&& CameraType == Enum.CameraType.ThirdPerson 
 				&& !Engine.IsEditorHint()
 				&& CanMoveCamera
 		)
@@ -590,9 +583,9 @@ public partial class CameraSystem : Singleton3D<CameraSystem>
 
 	private void FirstPersonProcess(double delta)
 	{
-		if (this.IsUnhandled() && CameraType == CameraTypeEnum.FirstPerson && !Engine.IsEditorHint())
+		if (this.IsUnhandled() && CameraType == Enum.CameraType.FirstPerson && !Engine.IsEditorHint())
 		{
-			mouse.SetBindingMode(Mouse.PriorityChannel.Camera, Input.MouseModeEnum.Captured);
+			mouse.SetBindingMode(Enum.PriorityChannel.Camera, Input.MouseModeEnum.Captured);
 
 			if (Subject is not null || (Subject is Character character && character.Head is not null))
 			{
@@ -615,7 +608,7 @@ public partial class CameraSystem : Singleton3D<CameraSystem>
 		if (
 			@event is InputEventMouseMotion mouse
 				&& Subject is not null 
-				&& CameraType == CameraTypeEnum.FirstPerson 
+				&& CameraType == Enum.CameraType.FirstPerson 
 				&& !Engine.IsEditorHint()
 				&& CanMoveCamera
 				&& this.IsUnhandled()
