@@ -3,15 +3,16 @@
 
 {% include-markdown "../../types/classdef.md" start="<!--class_head-->" end="<!--class_head_end-->" %}
 
-# Game
+# Server
 ##### Inherits from <code><a href="https://docs.godotengine.org/en/stable/classes/class_node.html">Node</a></code>, <code><a href="../IBaseSingleton">IBaseSingleton</a></code> ➜ <code><a href="../Singleton">Singleton</a></code>
 
 {% include-markdown "../../types/classdef.md" start="<!--unrep-->" end="<!--unrep_end-->" %}
+{% include-markdown "../../types/classdef.md" start="<!--server-->" end="<!--server_end-->" %}
 
 !!! note
     This is a core singleton and should not be initialized, duplicated, or deleted.
 
-Root of the game also containing networking methods and properties.
+Handles serverside related things and also contains server data like the host and the multiplayer peer as well as other serverside singletons.
 
 ---
 

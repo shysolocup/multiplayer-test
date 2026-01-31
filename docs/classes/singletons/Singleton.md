@@ -1,14 +1,16 @@
 
 ---
 
-{% include-markdown "../../helper/engine_class_header.md" %}
+{% include-markdown "../../types/classdef.md" start="<!--class_head-->" end="<!--class_head_end-->" %}
 
 # Singleton<T\>
-##### Inherits from <code><a href="https://docs.godotengine.org/en/stable/classes/class_node.html">Node</a></code>, <code><a href="./IBaseSingleton.md">IBaseSingleton</a></code>
+##### Inherits from <code><a href="https://docs.godotengine.org/en/stable/classes/class_node.html">Node</a></code>, <code><a href="../IBaseSingleton">IBaseSingleton</a></code>
+
+{% include-markdown "../../types/classdef.md" start="<!--unrep-->" end="<!--unrep_end-->" %}
 
 Base for singleton instances extending from a <code><a href="https://docs.godotengine.org/en/stable/classes/class_node.html">Node</a></code>.
 
-<code>T</code> is the instance you're creating so for example [`Game`](./Game.md) extends from `Singleton<Game>`.
+<code>T</code> is the instance you're creating so for example [`Game`](./Game) extends from `Singleton<Game>`.
 
 ---
 

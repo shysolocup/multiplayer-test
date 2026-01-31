@@ -4,6 +4,25 @@ nav:
   - Home: index.md
   - Getting Started: getting_started.md
   - Engine Classes: 
+    - Objects:
+      - Part: classes/objects/Part.md
+      - Behavior: classes/objects/Behavior.md
+      - ServerBehavior: classes/objects/ServerBehavior.md
+      - ClientBehavior: classes/objects/ClientBehavior.md
+      - BehaviorFolder: classes/objects/BehaviorFolder.md
+      - Player: classes/objects/Player.md
+      - Character: classes/objects/Character.md
+      - SingletonBehavior: classes/objects/SingletonBehavior.md
+      - Image3D: classes/objects/Image3D.md
+      - ShaderRect: classes/objects/ShaderRect.md
+      - MouseModeBinding: classes/objects/MouseModeBinding.md
+      - MultiplayerRemote: classes/objects/MultiplayerRemote.md
+      - Sunlight: classes/objects/Sunlight.md
+      - SurfaceGui: classes/objects/SurfaceGui.md
+      - Trigger3D: classes/objects/Trigger3D.md
+      - UDim2: classes/objects/UDim2.md
+      - UDim2Anchor: classes/objects/UDim2Anchor.md
+
     - Singletons:
       - Game: classes/singletons/Game.md
       - Workspace: classes/singletons/Workspace.md
@@ -30,6 +49,19 @@ nav:
       - SingletonControl: classes/singletons/SingletonControl.md
       - IBaseSingleton: classes/singletons/IBaseSingleton.md
 
+    - Libraries:
+      - Task: classes/libs/TaskLib.md
+      - Json: classes/libs/JsonLib.md
+      - Ext: classes/libs/Ext.md
+      - File: classes/libs/FileLib.md
+      - Core: classes/libs/Core.md
+
+    - Attributes:
+      - OnClient: classes/attributes/OnClient.md
+      - OnServer: classes/attributes/OnServer.md
+      - Prerunner: classes/attributes/Prerunner.md
+
+
   - Enums:
     - PriorityChannel: enums/PriorityChannel.md
 
@@ -51,3 +83,8 @@ theme:
 
 plugins:
   - include-markdown
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences

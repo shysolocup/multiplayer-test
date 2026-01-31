@@ -28,8 +28,8 @@
 
 
     {% include-markdown "./function.md" start="<!--new-->" end="<!--new_end-->" %} 
-    GetSystem<<code><a href="../classes/singletons/IBaseSingleton.md">IBaseSingleton</a></code>>() : 
-    {% include-markdown "./classdef.md" start="<!--singleton-->" end="<!--singleton_end-->" %},
+    GetSystem<<code><a href="../../classes/singletons/IBaseSingleton">IBaseSingleton</a></code>>() : 
+    {% include-markdown "./classdef.md" start="<!--generic-->" end="<!--generic_end-->" %},
     {% include-markdown "./classdef.md" start="<!--async-->" end="<!--async_end-->" %}
     {% include-markdown "./classdef.md" start="<!--desc-->" end="<!--desc_end-->" %} 
     Gets a singleton system by its generic type
@@ -42,8 +42,8 @@ var guis = Game.GetSystem<GuiSystem>();
 
 
     {% include-markdown "./function.md" start="<!--new-->" end="<!--new_end-->" %} 
-    GetSystems<<code><a href="../classes/singletons/IBaseSingleton.md">IBaseSingleton...</a></code>>() : 
-    {% include-markdown "./classdef.md" start="<!--tuple-->" end="<!--tuple_end-->" %}<{% include-markdown "./classdef.md" start="<!--singleton-->" end="<!--singleton_end-->" %}>,
+    GetSystems<<code><a href="../../classes/singletons/IBaseSingleton">IBaseSingleton</a></code>...>() : 
+    {% include-markdown "./classdef.md" start="<!--tuple-->" end="<!--tuple_end-->" %}<{% include-markdown "./classdef.md" start="<!--generic-->" end="<!--generic_end-->" %}>,
     {% include-markdown "./classdef.md" start="<!--async-->" end="<!--async_end-->" %}
     {% include-markdown "./classdef.md" start="<!--desc-->" end="<!--desc_end-->" %} 
     Gets up to 10 singleton systems by their generic types

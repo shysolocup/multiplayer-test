@@ -1,3 +1,13 @@
+<!--class_head-->
+
+##### Coreblocks Class
+
+<!--class_head_end-->
+<!--enum_head-->
+
+##### Enum
+
+<!--enum_head_end-->
 <!--desc-->
 
 </b>
@@ -79,7 +89,7 @@
 
 <a href="https://learn.microsoft.com/en-us/dotnet/csharp/asynchronous-programming/">
 
-<i><code>@async</code><i>
+<i><code>@async</code></i>
 
 </a>
 
@@ -91,17 +101,65 @@
 
 <a href="https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/static">
 
-<i><code>@static</code><i>
+<i><code>@static</code></i>
 
 </a>
 
 <!--static_end-->
+<!--client-->
+
+</b>
+</font>
+
+<a href="../Client">
+
+<i><code>@client</code></i>
+
+</a>
+
+<!--client_end-->
+<!--server-->
+
+</b>
+</font>
+
+<a href="../Server">
+
+<i><code>@server</code></i>
+
+</a>
+
+<!--server_end-->
+<!--rep-->
+
+</b>
+</font>
+
+<a href="../Replicator">
+
+<i><code>@replicated</code></i>
+
+</a>
+
+<!--rep_end-->
+<!--unrep-->
+
+</b>
+</font>
+
+<a href="../Replicator">
+
+<i><code>@unreplicated</code></i>
+
+</a>
+
+<!--unrep_end-->
 <!--singleton-->
 
 </b>
 </font>
 
-<a href="../classes/singletons/Singleton.md">
+<a href="../Singleton">
 
 <code>Singleton</code>
 
@@ -120,3 +178,27 @@
 </a>
 
 <!--generic_end-->
+<!--interface-->
+
+</b>
+</font>
+
+<a href="https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/types/interfaces">
+
+<i><code>@interface</code></i>
+
+</a>
+
+<!--interface_end-->
+<!--attribute-->
+
+</b>
+</font>
+
+<a href="https://learn.microsoft.com/en-us/dotnet/csharp/advanced-topics/reflection-and-attributes/">
+
+<i><code>@attribute</code></i>
+
+</a>
+
+<!--attribute_end-->
