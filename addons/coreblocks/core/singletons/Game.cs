@@ -287,6 +287,9 @@ public partial class Game : Singleton<Game>
 	[Signal] public delegate void LeftConnectionEventHandler();
 
 
+	/// <summary>
+	/// checks if the player is connected to the server
+	/// </summary>
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
 	public static bool IsConnected()
 		=> Systems.Server is not null 
@@ -298,6 +301,9 @@ public partial class Game : Singleton<Game>
 			);
 
 
+	/// <summary>
+	/// checks if the player is connected to the server
+	/// </summary>
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
 	public bool IsConnected(object _ = null)
 		=> Game.IsConnected();

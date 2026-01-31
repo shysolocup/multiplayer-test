@@ -690,6 +690,23 @@ public partial class Behavior : Node
 	public bool isClient() 
 		=> !isServer();
 
+
+	/// <summary>
+	/// Checks if the player is connected to the server
+	/// </summary>
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
+	public bool isConnected() 
+		=> game.IsConnected();
+	
+
+	/// <summary>
+	/// Checks if the player is connected to the server
+	/// </summary>
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
+	public static bool isConnected(object _ = null) 
+		=> Game.IsConnected();
+
+
 	/// <summary>
 	/// 
 	/// </summary>

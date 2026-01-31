@@ -1,5 +1,51 @@
 site_name: Godot Coreblocks
+
 nav:
   - Home: index.md
   - Getting Started: getting_started.md
-theme: readthedocs
+  - Engine Classes: 
+    - Singletons:
+      - Game: classes/singletons/Game.md
+      - Workspace: classes/singletons/Workspace.md
+      - Players: classes/singletons/Players.md
+      - Client: classes/singletons/Client.md
+      - Server: classes/singletons/Server.md
+      - Chat: classes/singletons/Chat.md
+      - Mouse: classes/singletons/Mouse.md
+      - Screen: classes/singletons/Screen.md
+      - GuiSystem: classes/singletons/GuiSystem.md
+      - AudioSystem: classes/singletons/AudioSystem.md
+      - LightingSystem: classes/singletons/LightingSystem.md
+      - ModSystem: classes/singletons/ModSystem.md
+      - CameraSystem: classes/singletons/CameraSystem.md
+      - MapSystem: classes/singletons/MapSystem.md
+      - ShaderSystem: classes/singletons/ShaderSystem.md
+      - ClientScriptSystem: classes/singletons/ClientScriptSystem.md
+      - ServerScriptSystem: classes/singletons/ServerScriptSystem.md
+      - Replicator: classes/singletons/Replicator.md
+      - CoreGui: classes/singletons/CoreGui.md
+      - Singleton: classes/singletons/Singleton.md
+      - Singleton3D: classes/singletons/Singleton3D.md
+      - SingletonCanvas: classes/singletons/SingletonCanvas.md
+      - SingletonControl: classes/singletons/SingletonControl.md
+      - IBaseSingleton: classes/singletons/IBaseSingleton.md
+
+  - Enums:
+    - PriorityChannel: enums/PriorityChannel.md
+
+# these are basically just the properties in a md file
+exclude_docs: |
+  /types
+  /helper
+
+theme: 
+  name: material
+  color_mode: dark
+  scheme: slate
+  locale: en
+  highlightjs: true
+  hljs_languages:
+    - csharp
+
+plugins:
+  - include-markdown

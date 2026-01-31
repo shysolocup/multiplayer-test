@@ -3,7 +3,7 @@ public partial class GrunkTinkely : ServerBehavior
 {
 	public override async void OnReady()
 	{
-		print(game.IsConnected());
+		print(isConnected());
 		print(isServer());
 
 		warn("AAAAAAAAAAAAAAAAAAAAAAA");
