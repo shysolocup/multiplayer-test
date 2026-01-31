@@ -1,9 +1,10 @@
-[gd_scene load_steps=6 format=3 uid="uid://bobvjm56c1w6g"]
+[gd_scene load_steps=7 format=3 uid="uid://bobvjm56c1w6g"]
 
-[ext_resource type="Texture2D" uid="uid://cr2l07lnbg74c" path="res://addons/coreblocks/assets/Workspace.png" id="1_5pxw8"]
+[ext_resource type="Texture2D" uid="uid://cr2l07lnbg74c" path="res://addons/coreblocks/assets/textures/Workspace.png" id="1_5pxw8"]
 [ext_resource type="Shader" uid="uid://rtcapvrmcnwp" path="res://addons/coreblocks/assets/shaders/plugin_background.gdshader" id="1_7xs8x"]
 [ext_resource type="Script" uid="uid://c6ojy70kwl7os" path="res://addons/coreblocks/core/classes/ShaderRect.cs" id="2_gfbsl"]
-[ext_resource type="Texture2D" uid="uid://cixg7owcnagkq" path="res://addons/coreblocks/assets/mat_placeholder_02.png" id="3_5pxw8"]
+[ext_resource type="Texture2D" uid="uid://dyd44y0npnuv7" path="res://addons/coreblocks/assets/textures/Folder.svg" id="2_usd6c"]
+[ext_resource type="Texture2D" uid="uid://cixg7owcnagkq" path="res://addons/coreblocks/assets/textures/mat_placeholder_02.png" id="3_5pxw8"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_5pxw8"]
 shader = ExtResource("1_7xs8x")
@@ -29,7 +30,8 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = 31.0
+offset_top = 22.0
+offset_bottom = 31.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 29
@@ -45,11 +47,32 @@ fit_content = true
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="maker" type="Button" parent="container"]
+[node name="tabs" type="TabContainer" parent="container"]
+layout_mode = 2
+size_flags_vertical = 3
+current_tab = 0
+
+[node name="workspace" type="VBoxContainer" parent="container/tabs"]
+layout_mode = 2
+metadata/_tab_index = 0
+
+[node name="maker" type="Button" parent="container/tabs/workspace"]
 z_index = 1
 layout_mode = 2
 text = "Make new Coreblocks game scene"
 icon = ExtResource("1_5pxw8")
+
+[node name="project" type="VBoxContainer" parent="container/tabs"]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 1
+
+[node name="fix" type="Button" parent="container/tabs/project"]
+z_index = 1
+layout_mode = 2
+text = "Fix project directories creating 
+or fixing contents in the src folder"
+icon = ExtResource("2_usd6c")
 
 [node name="confirmMaker" type="ConfirmationDialog" parent="."]
 oversampling_override = 1.0

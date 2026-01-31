@@ -1,1 +1,1 @@
-scripts that are made to be ran inbetween or separate from server and client, thus they're shared
+guh

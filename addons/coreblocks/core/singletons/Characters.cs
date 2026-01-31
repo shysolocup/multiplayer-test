@@ -50,7 +50,7 @@ public partial class Characters : Singleton3D<Characters>
 
 			Vector2 inputDir = Input.GetVector("ui_left", "ui_right", "ui_up", "ui_down");
 
-			if (cameras.ShiftLocked || cameras.CameraType == CameraSystem.CameraTypeEnum.FirstPerson)
+			if (cameras.ShiftLocked || cameras.CameraType == Enum.CameraType.FirstPerson)
 			{
 				var rot = chara.GlobalRotation;
 				
@@ -74,7 +74,7 @@ public partial class Characters : Singleton3D<Characters>
 
 				Vector3 moveDir = (right * inputDir.X + forward * -inputDir.Y).Normalized();
 
-				if (!cameras.ShiftLocked && cameras.CameraType != CameraSystem.CameraTypeEnum.FirstPerson)
+				if (!cameras.ShiftLocked && cameras.CameraType != Enum.CameraType.FirstPerson)
 				{
 					float yaw = Mathf.Atan2(moveDir.X, moveDir.Z);
 					yaw = Mathf.LerpAngle(chara.Rotation.Y, yaw, (float)delta * 10f);

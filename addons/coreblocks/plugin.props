@@ -1,0 +1,15 @@
+<Project>
+  <ItemGroup>
+    
+    <!--
+      Script Templates
+    -->
+    <Compile Remove="addons/coreblocks/script_templates/**/*.cs" />
+
+    <!--
+      Imports
+    -->
+    <PackageReference Include="ImGui.NET" Version="1.91.6.1" />
+
+  </ItemGroup>
+</Project>

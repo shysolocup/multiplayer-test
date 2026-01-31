@@ -6,11 +6,5 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="addons/coreblocks/script_templates/**/*.cs" /> <!-- All .cs files in a directory subtree -->
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="ImGui.NET" Version="1.91.6.1" />
-  </ItemGroup>
+  <Import Project="addons/coreblocks/plugin.props" />
 </Project>

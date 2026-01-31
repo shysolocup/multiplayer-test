@@ -3,17 +3,61 @@
 @tool
 extends EditorPlugin
 
-const base: String = "res://addons/coreblocks/"
+const baseName = "coreblocks"
+
+const base: String = "res://addons/" + baseName + "/"
 var dock
 
-#region enter tree
-func _enter_tree():
-	# if c# is enabled then instantiate the plugin scene
-	# if not direct them to the download website
+const gitignoreContent = """# Godot 4+ specific ignores
+.godot/
+/android/
+!addons/.editorconfig
+.addons/"""
 
-	# there's like no documentation on this but one of these has to work
-	if ProjectSettings.get_setting("dotnet/project/assembly_name", "") == "" and not OS.has_feature("dotnet"):
-		push_error(".NET C# is not enabled, download at https://dotnet.microsoft.com/en-us/download/dotnet/8.0")
+#region csproj stuff
+
+# this is for finding the csproj file
+func csprojTickler() -> String:
+	var dir := DirAccess.open("res://")
+	
+	if dir == null:
+		return ""
+
+	dir.list_dir_begin()
+	var file := dir.get_next()
+
+	while file != "":
+		if file.ends_with(".csproj"):
+			return "res://%s" % file
+		
+		file = dir.get_next()
+
+	return ""
+
+# tjis checks the csproj file for if it has the importer
+func hasImporter(path: String) -> bool:
+	var parser := XMLParser.new()
+	var err = parser.open(path)
+	if err != OK:
+		push_error(error_string(err))
+		return false
+
+	while parser.read() == OK:
+		if parser.get_node_type() == XMLParser.NODE_ELEMENT:
+			if parser.get_node_name() == "Import":
+				var project_attr := parser.get_named_attribute_value("Project")
+				if project_attr == "addons/" + baseName +"/plugin.props":
+					return true
+
+	return false
+
+
+#endregion
+#region enter tree
+
+
+func _enter_tree():
+	fixProjectDir()
 
 	var editor_interface = get_editor_interface()
 	var main_screen = editor_interface.get_editor_main_screen()
@@ -34,12 +78,74 @@ func _enter_tree():
 
 	add_control_to_dock(DOCK_SLOT_LEFT_BL, dock)
 
-	var maker: Button = dock.get_node("./container/maker");
-	var dialog: ConfirmationDialog = dock.get_node("./confirmMaker");	
+	var maker: Button = dock.get_node("./container/tabs/workspace/maker")
+	var dialog: ConfirmationDialog = dock.get_node("./confirmMaker")	
+
 	maker.pressed.connect(dialog.show);
 	dialog.confirmed.connect(make_new_scene);
 
+	var fixer: Button = dock.get_node("./container/tabs/project/fix")
+
+	fixer.pressed.connect(fixProjectDir)
+
 #endregion
+
+
+func fixProjectDir():
+	var dir := DirAccess.open("res://");
+
+	if dir == null:
+		push_error("failed to open res folder")
+		return
+
+	var gitignore := FileAccess.open("res://.gitignore", FileAccess.READ)
+	if gitignore == null or gitignore.get_as_text().is_empty():
+		var ignorewriter := FileAccess.open("res://.gitignore", FileAccess.WRITE)
+		ignorewriter.store_string(gitignoreContent)
+		ignorewriter.close()
+		gitignore.close()
+
+	var src = dir.open("src")
+	if src == null:
+		var err = DirAccess.make_dir_recursive_absolute("res://src")
+		print("src " + error_string(err))
+
+	var scripts = dir.open("res://src/scripts")
+	if scripts == null:
+		var err = DirAccess.make_dir_recursive_absolute("res://src/scripts")
+		print("scripts " + error_string(err))
+
+	var client = dir.open("res://src/scripts/client")
+	if client == null:
+		var err = DirAccess.make_dir_recursive_absolute("res://src/scripts/client")
+		print("client " + error_string(err))
+
+	var server = dir.open("res://src/scripts/server")
+	if server == null:
+		var err = DirAccess.make_dir_recursive_absolute("res://src/scripts/server")
+		print("server " +  error_string(err))
+
+	var shared = dir.open("res://src/scripts/shared")
+	if shared == null:
+		var err = DirAccess.make_dir_recursive_absolute("res://src/scripts/shared")
+		print("shared " + error_string(err))
+
+	
+
+	# if c# is enabled then instantiate the plugin scene
+	# if not direct them to the download website
+
+	# there's like no documentation on this but one of these has to work
+	if ProjectSettings.get_setting("dotnet/project/assembly_name", "") == "" and not OS.has_feature("dotnet"):
+		push_error(".NET C# is not enabled, download at https://dotnet.microsoft.com/en-us/download/dotnet/8.0")
+
+
+	# csproj controls
+	var csprojPath = csprojTickler()
+	if csprojPath != null and not csprojPath.is_empty() and not hasImporter(csprojPath):
+		push_error('go to your .csproj file and add <Import Project="addons/' + baseName + '/plugin.props" /> to import coreblocks')
+
+	print("fixed project directory")
 
 
 func query(parent: Node, systemName: String) -> Node:
@@ -298,6 +404,8 @@ func make_new_scene():
 
 		game.name = "game";
 		game.set_script(_script);
+
+	print("made new scene")
 
 
 func _exit_tree():
