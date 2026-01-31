@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://mojdceb4jaa1"
-path.s3tc="res://.godot/imported/bear5.png-1ae6d504bbd8bd73646df3045f8e7221.s3tc.ctex"
+path.s3tc="res://.godot/imported/bear5.png-e94f3a24ca523ed8ea19a25f9167fa92.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://addons/coreblocks/assets/bear5.png"
-dest_files=["res://.godot/imported/bear5.png-1ae6d504bbd8bd73646df3045f8e7221.s3tc.ctex"]
+source_file="res://addons/coreblocks/assets/textures/bear5.png"
+dest_files=["res://.godot/imported/bear5.png-e94f3a24ca523ed8ea19a25f9167fa92.s3tc.ctex"]
 
 [params]
 

@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bougdaf1abff1"
-path="res://.godot/imported/MultiplayerRemote.png-576779b922484973d8090a806db83d4b.ctex"
+path="res://.godot/imported/MultiplayerRemote.png-a896b6f0fded1633dae91c7b44b162f7.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/coreblocks/assets/MultiplayerRemote.png"
-dest_files=["res://.godot/imported/MultiplayerRemote.png-576779b922484973d8090a806db83d4b.ctex"]
+source_file="res://addons/coreblocks/assets/textures/MultiplayerRemote.png"
+dest_files=["res://.godot/imported/MultiplayerRemote.png-a896b6f0fded1633dae91c7b44b162f7.ctex"]
 
 [params]
 

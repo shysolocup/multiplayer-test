@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cyipqyv61ywf6"
-path="res://.godot/imported/Players.png-7094ad58a924257ad6f57104bac8824a.ctex"
+path="res://.godot/imported/Players.png-4495a977ad4cb350ea1a02d3c770ab8d.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/coreblocks/assets/Players.png"
-dest_files=["res://.godot/imported/Players.png-7094ad58a924257ad6f57104bac8824a.ctex"]
+source_file="res://addons/coreblocks/assets/textures/Players.png"
+dest_files=["res://.godot/imported/Players.png-4495a977ad4cb350ea1a02d3c770ab8d.ctex"]
 
 [params]
 

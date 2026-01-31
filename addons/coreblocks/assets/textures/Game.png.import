@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://boo8iw5pvoaa8"
-path.s3tc="res://.godot/imported/Game.png-9670d0e13d024606ac9c53ab4c55dd2b.s3tc.ctex"
+path.s3tc="res://.godot/imported/Game.png-034206e75881064fe8389440445babc5.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://addons/coreblocks/assets/Game.png"
-dest_files=["res://.godot/imported/Game.png-9670d0e13d024606ac9c53ab4c55dd2b.s3tc.ctex"]
+source_file="res://addons/coreblocks/assets/textures/Game.png"
+dest_files=["res://.godot/imported/Game.png-034206e75881064fe8389440445babc5.s3tc.ctex"]
 
 [params]
 

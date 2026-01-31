@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://c31ypj3dcauw3"
-path="res://.godot/imported/SurfaceGui.png-67a928bc917dc6c392ce18fadf6216c0.ctex"
+path="res://.godot/imported/SurfaceGui.png-4c57a3f013bce554d44f7ca98f29dea5.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/coreblocks/assets/SurfaceGui.png"
-dest_files=["res://.godot/imported/SurfaceGui.png-67a928bc917dc6c392ce18fadf6216c0.ctex"]
+source_file="res://addons/coreblocks/assets/textures/SurfaceGui.png"
+dest_files=["res://.godot/imported/SurfaceGui.png-4c57a3f013bce554d44f7ca98f29dea5.ctex"]
 
 [params]
 

@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cqfrrgjnbgcur"
-path="res://.godot/imported/PartAdornment.png-31d7d377269ad9730d6387132466edb9.ctex"
+path="res://.godot/imported/PartAdornment.png-5572cece6ec6d7fbee90d352598be321.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/coreblocks/assets/PartAdornment.png"
-dest_files=["res://.godot/imported/PartAdornment.png-31d7d377269ad9730d6387132466edb9.ctex"]
+source_file="res://addons/coreblocks/assets/textures/PartAdornment.png"
+dest_files=["res://.godot/imported/PartAdornment.png-5572cece6ec6d7fbee90d352598be321.ctex"]
 
 [params]
 

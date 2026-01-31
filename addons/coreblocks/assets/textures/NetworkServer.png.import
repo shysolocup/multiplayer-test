@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cx7nfcxc0as46"
-path="res://.godot/imported/NetworkServer.png-e1daa5516a2efb6f2f0a257c4a34f2db.ctex"
+path="res://.godot/imported/NetworkServer.png-93737adbf531c6f9cb6339950a55248b.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/coreblocks/assets/NetworkServer.png"
-dest_files=["res://.godot/imported/NetworkServer.png-e1daa5516a2efb6f2f0a257c4a34f2db.ctex"]
+source_file="res://addons/coreblocks/assets/textures/NetworkServer.png"
+dest_files=["res://.godot/imported/NetworkServer.png-93737adbf531c6f9cb6339950a55248b.ctex"]
 
 [params]
 

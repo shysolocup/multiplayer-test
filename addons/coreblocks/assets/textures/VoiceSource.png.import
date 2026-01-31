@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://baj26nnh5kkfg"
-path="res://.godot/imported/VoiceSource.png-5f7615dc2c7b07f30b8d596ba5f19a46.ctex"
+path="res://.godot/imported/VoiceSource.png-3d2f6a3a8eb7cae4606d51359fee9b1c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/coreblocks/assets/VoiceSource.png"
-dest_files=["res://.godot/imported/VoiceSource.png-5f7615dc2c7b07f30b8d596ba5f19a46.ctex"]
+source_file="res://addons/coreblocks/assets/textures/VoiceSource.png"
+dest_files=["res://.godot/imported/VoiceSource.png-3d2f6a3a8eb7cae4606d51359fee9b1c.ctex"]
 
 [params]
 

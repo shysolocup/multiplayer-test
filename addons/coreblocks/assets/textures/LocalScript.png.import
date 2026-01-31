@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dajl85q1ep7j4"
-path="res://.godot/imported/LocalScript.png-c0ba134ead29ee9043dceaa29b09eb50.ctex"
+path="res://.godot/imported/LocalScript.png-205a1aa8bd0510fdd49ad1a1440d03a9.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/coreblocks/assets/LocalScript.png"
-dest_files=["res://.godot/imported/LocalScript.png-c0ba134ead29ee9043dceaa29b09eb50.ctex"]
+source_file="res://addons/coreblocks/assets/textures/LocalScript.png"
+dest_files=["res://.godot/imported/LocalScript.png-205a1aa8bd0510fdd49ad1a1440d03a9.ctex"]
 
 [params]
 

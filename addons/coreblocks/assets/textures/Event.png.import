@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://b1mrpempxy0vk"
-path="res://.godot/imported/Event.png-83811d37c1c3c243a059b18b2c7a97ae.ctex"
+path="res://.godot/imported/Event.png-e8705ea8f13036d710f72d9031958611.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/coreblocks/assets/Event.png"
-dest_files=["res://.godot/imported/Event.png-83811d37c1c3c243a059b18b2c7a97ae.ctex"]
+source_file="res://addons/coreblocks/assets/textures/Event.png"
+dest_files=["res://.godot/imported/Event.png-e8705ea8f13036d710f72d9031958611.ctex"]
 
 [params]
 

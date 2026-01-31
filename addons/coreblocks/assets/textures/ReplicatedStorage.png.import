@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dda83k1ok1hyq"
-path="res://.godot/imported/ReplicatedStorage.png-14e71c6e7671fc642bdb360bcd90d4b1.ctex"
+path="res://.godot/imported/ReplicatedStorage.png-5683eb20f507460bdeb3d245b0167381.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/coreblocks/assets/ReplicatedStorage.png"
-dest_files=["res://.godot/imported/ReplicatedStorage.png-14e71c6e7671fc642bdb360bcd90d4b1.ctex"]
+source_file="res://addons/coreblocks/assets/textures/ReplicatedStorage.png"
+dest_files=["res://.godot/imported/ReplicatedStorage.png-5683eb20f507460bdeb3d245b0167381.ctex"]
 
 [params]
 

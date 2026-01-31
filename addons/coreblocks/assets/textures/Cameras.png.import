@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://nxhbjfaqej4p"
-path="res://.godot/imported/Cameras.png-909027363e80bc2b6469ea92fa5107b4.ctex"
+path="res://.godot/imported/Cameras.png-818a62a5ebeb24d3a881c8112877bebc.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/coreblocks/assets/Cameras.png"
-dest_files=["res://.godot/imported/Cameras.png-909027363e80bc2b6469ea92fa5107b4.ctex"]
+source_file="res://addons/coreblocks/assets/textures/Cameras.png"
+dest_files=["res://.godot/imported/Cameras.png-818a62a5ebeb24d3a881c8112877bebc.ctex"]
 
 [params]
 

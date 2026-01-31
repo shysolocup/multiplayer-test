@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cr2l07lnbg74c"
-path="res://.godot/imported/Workspace.png-dbf0e8959887a552d8056f52c2806cb0.ctex"
+path="res://.godot/imported/Workspace.png-5a917274872c4b99dd1af6612b8d5357.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/coreblocks/assets/Workspace.png"
-dest_files=["res://.godot/imported/Workspace.png-dbf0e8959887a552d8056f52c2806cb0.ctex"]
+source_file="res://addons/coreblocks/assets/textures/Workspace.png"
+dest_files=["res://.godot/imported/Workspace.png-5a917274872c4b99dd1af6612b8d5357.ctex"]
 
 [params]
 

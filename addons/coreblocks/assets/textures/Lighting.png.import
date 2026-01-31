@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://caemrook4v2la"
-path="res://.godot/imported/Lighting.png-0872e560671e93e08b16e6f750b44bfe.ctex"
+path="res://.godot/imported/Lighting.png-7c4accbb77112050f92d04ad45b0a1ec.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/coreblocks/assets/Lighting.png"
-dest_files=["res://.godot/imported/Lighting.png-0872e560671e93e08b16e6f750b44bfe.ctex"]
+source_file="res://addons/coreblocks/assets/textures/Lighting.png"
+dest_files=["res://.godot/imported/Lighting.png-7c4accbb77112050f92d04ad45b0a1ec.ctex"]
 
 [params]
 

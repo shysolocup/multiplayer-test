@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dwbnqewotd3wq"
-path="res://.godot/imported/GameSettings.png-553f61d32f3560dceee302eeb8036e49.ctex"
+path="res://.godot/imported/GameSettings.png-9ce997724ab9dc1bac6d99c4dbfd3a16.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/coreblocks/assets/GameSettings.png"
-dest_files=["res://.godot/imported/GameSettings.png-553f61d32f3560dceee302eeb8036e49.ctex"]
+source_file="res://addons/coreblocks/assets/textures/GameSettings.png"
+dest_files=["res://.godot/imported/GameSettings.png-9ce997724ab9dc1bac6d99c4dbfd3a16.ctex"]
 
 [params]
 

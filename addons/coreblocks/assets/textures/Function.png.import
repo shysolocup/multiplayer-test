@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://c2gt2uvk66g3w"
-path="res://.godot/imported/Function.png-0f145b9c330b5d6b86d408dc7f223689.ctex"
+path="res://.godot/imported/Function.png-3e85e9997e8bff1e43ce9ae4dcfba5f8.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/coreblocks/assets/Function.png"
-dest_files=["res://.godot/imported/Function.png-0f145b9c330b5d6b86d408dc7f223689.ctex"]
+source_file="res://addons/coreblocks/assets/textures/Function.png"
+dest_files=["res://.godot/imported/Function.png-3e85e9997e8bff1e43ce9ae4dcfba5f8.ctex"]
 
 [params]
 

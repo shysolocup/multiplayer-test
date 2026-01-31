@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bd2ep30fvfeix"
-path="res://.godot/imported/Mouse.png-053d004ccdfdabbaebe02310d169cfbf.ctex"
+path="res://.godot/imported/Mouse.png-8000591f81dcd83a522150a796c31b35.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/coreblocks/assets/Mouse.png"
-dest_files=["res://.godot/imported/Mouse.png-053d004ccdfdabbaebe02310d169cfbf.ctex"]
+source_file="res://addons/coreblocks/assets/textures/Mouse.png"
+dest_files=["res://.godot/imported/Mouse.png-8000591f81dcd83a522150a796c31b35.ctex"]
 
 [params]
 

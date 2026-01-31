@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://7xxdvadqtbc3"
-path="res://.godot/imported/StarterGui.png-9f33bf7b2b18febdda912329ae7079ac.ctex"
+path="res://.godot/imported/StarterGui.png-a369bffe40e7a0d36c60af903ab51fa4.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/coreblocks/assets/StarterGui.png"
-dest_files=["res://.godot/imported/StarterGui.png-9f33bf7b2b18febdda912329ae7079ac.ctex"]
+source_file="res://addons/coreblocks/assets/textures/StarterGui.png"
+dest_files=["res://.godot/imported/StarterGui.png-a369bffe40e7a0d36c60af903ab51fa4.ctex"]
 
 [params]
 

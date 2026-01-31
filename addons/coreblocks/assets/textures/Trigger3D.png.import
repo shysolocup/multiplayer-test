@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dooue5vjaj4k"
-path="res://.godot/imported/Trigger3D.png-0dc24040d040ca61e25a364922710c6c.ctex"
+path="res://.godot/imported/Trigger3D.png-31ceb04e5563793f80277fdd568507c4.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/coreblocks/assets/Trigger3D.png"
-dest_files=["res://.godot/imported/Trigger3D.png-0dc24040d040ca61e25a364922710c6c.ctex"]
+source_file="res://addons/coreblocks/assets/textures/Trigger3D.png"
+dest_files=["res://.godot/imported/Trigger3D.png-31ceb04e5563793f80277fdd568507c4.ctex"]
 
 [params]
 

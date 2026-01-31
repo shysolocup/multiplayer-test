@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://c3h6eietljlln"
-path="res://.godot/imported/ServerScript.png-2680089b1b5c145f4938463b66817bce.ctex"
+path="res://.godot/imported/ServerScript.png-15c076782aec7d536e77fc9078f27407.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/coreblocks/assets/ServerScript.png"
-dest_files=["res://.godot/imported/ServerScript.png-2680089b1b5c145f4938463b66817bce.ctex"]
+source_file="res://addons/coreblocks/assets/textures/ServerScript.png"
+dest_files=["res://.godot/imported/ServerScript.png-15c076782aec7d536e77fc9078f27407.ctex"]
 
 [params]
 

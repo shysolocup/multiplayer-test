@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://choqkivw23fvp"
-path.s3tc="res://.godot/imported/mat_placeholder_01.png-a32217a22ab8cae56262da80571cf80e.s3tc.ctex"
+path.s3tc="res://.godot/imported/mat_placeholder_01.png-f6161ddb41a33b0cea6329c03cfd8cc0.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://addons/coreblocks/assets/mat_placeholder_01.png"
-dest_files=["res://.godot/imported/mat_placeholder_01.png-a32217a22ab8cae56262da80571cf80e.s3tc.ctex"]
+source_file="res://addons/coreblocks/assets/textures/mat_placeholder_01.png"
+dest_files=["res://.godot/imported/mat_placeholder_01.png-f6161ddb41a33b0cea6329c03cfd8cc0.s3tc.ctex"]
 
 [params]
 

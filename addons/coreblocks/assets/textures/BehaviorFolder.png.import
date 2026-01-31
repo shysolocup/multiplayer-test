@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dfm372ed5c238"
-path="res://.godot/imported/BehaviorFolder.png-838bbd7f2003e499d2d6f5846d706dc0.ctex"
+path="res://.godot/imported/BehaviorFolder.png-cb9701634c8daccdd3f39a431d740034.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/coreblocks/assets/BehaviorFolder.png"
-dest_files=["res://.godot/imported/BehaviorFolder.png-838bbd7f2003e499d2d6f5846d706dc0.ctex"]
+source_file="res://addons/coreblocks/assets/textures/BehaviorFolder.png"
+dest_files=["res://.godot/imported/BehaviorFolder.png-cb9701634c8daccdd3f39a431d740034.ctex"]
 
 [params]
 
