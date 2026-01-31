@@ -41,10 +41,12 @@ exclude_docs: |
 theme: 
   name: material
   color_mode: dark
-  scheme: slate
+  palette:
+    scheme: slate
   locale: en
   highlightjs: true
   hljs_languages:
+    - cs
     - csharp
 
 plugins:

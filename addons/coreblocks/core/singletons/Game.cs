@@ -26,7 +26,7 @@ public partial class Game : Singleton<Game>
 	/// <summary>
 	/// Get a singleton system by generic type
 	/// <para/><code>
-	/// Game.GetSystem&lt;GuiSystem&gt;()
+	/// Game.GetSystem&lt;GuiSystem&gt;();
 	/// </code>
 	/// </summary>
 	public static async Task<T> GetSystem<T>() where T : class, IBaseSingleton<GodotObject>

@@ -1,22 +1,25 @@
 <!--desc-->
 
 </b>
+</font>
 </td>
 </tr>
 <tr>
 <td>
 
 <!--desc_end-->
-<!--end-->
+<!--close-->
 
 </b>
+</font>
 </td>
 </tr>
 
-<!--end_end-->
+<!--close_end-->
 <!--void-->
 
 </b>
+</font>
 
 <code>void</code>
 
@@ -24,6 +27,7 @@
 <!--boolean-->
 
 </b>
+</font>
 
 <a href="https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/bool">
 
@@ -32,9 +36,46 @@
 </a>
 
 <!--boolean_end-->
+<!--string-->
+
+</b>
+</font>
+
+<a href="https://learn.microsoft.com/en-us/dotnet/api/system.string?view=net-10.0">
+
+<code>string</code>
+
+</a>
+
+<!--string_end-->
+<!--signal-->
+
+</b>
+</font>
+
+<a href="https://docs.godotengine.org/en/stable/classes/class_signal.html">
+
+<code>Signal</code>
+
+</a>
+
+<!--signal_end-->
+<!--tuple-->
+
+</b>
+</font>
+
+<a href="https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/value-tuples">
+
+<code>tuple</code>
+
+</a>
+
+<!--tuple_end-->
 <!--async-->
 
 </b>
+</font>
 
 <a href="https://learn.microsoft.com/en-us/dotnet/csharp/asynchronous-programming/">
 
@@ -46,6 +87,7 @@
 <!--static-->
 
 </b>
+</font>
 
 <a href="https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/static">
 
@@ -57,6 +99,7 @@
 <!--singleton-->
 
 </b>
+</font>
 
 <a href="../classes/singletons/Singleton.md">
 
@@ -65,3 +108,15 @@
 </a>
 
 <!--singleton_end-->
+<!--generic-->
+
+</b>
+</font>
+
+<a href="https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/types/generics">
+
+<i><code>T</code></i>
+
+</a>
+
+<!--generic_end-->
