@@ -23,9 +23,15 @@ public partial class CoreGui : SingletonCanvas<CoreGui>
         set
         {
             if (value && !shiftlockGui) {
+                Connect(SignalName.ShiftlockGuiEnabled, showShiftlock);
+                Connect(SignalName.ShiftlockGuiDisabled, hideShiftlock);
+
                 EmitSignalShiftlockGuiEnabled();
             }
             else if (!value && shiftlockGui)
+                Disconnect(SignalName.ShiftlockGuiEnabled, showShiftlock);
+                Disconnect(SignalName.ShiftlockGuiDisabled, hideShiftlock);
+
                 EmitSignalShiftlockGuiDisabled();
 
             shiftlockGui = value;
@@ -50,10 +56,16 @@ public partial class CoreGui : SingletonCanvas<CoreGui>
         set
         {
             if (value && !chatGui) {
+                Connect(SignalName.ChatGuiEnabled, showChat);
+                Connect(SignalName.ChatGuiDisabled, hideChat);
+
                 EmitSignalChatGuiEnabled();
 
             }
             else if (!value && chatGui)
+                Disconnect(SignalName.ChatGuiEnabled, showChat);
+                Disconnect(SignalName.ChatGuiDisabled, hideChat);
+
                 EmitSignalChatGuiDisabled();
 
             pauseGui = value;
@@ -66,6 +78,13 @@ public partial class CoreGui : SingletonCanvas<CoreGui>
     public static Button ChatButton { get; set; }
     public static Chat Chat { get; set; }
     public static TextureRect Crosshair { get; set; }
+
+
+    private Callable showShiftlock => new(Crosshair, MethodName.Show);
+    private Callable hideShiftlock => new(Crosshair, MethodName.Hide);
+    private Callable showChat => new(this, MethodName.EnableChat);
+    private Callable hideChat => new(this, MethodName.DisableChat);
+
 
     public override async void _Ready()
     {
@@ -82,16 +101,34 @@ public partial class CoreGui : SingletonCanvas<CoreGui>
 
 		Crosshair.Hide();
 
-		if (DefaultShiftlockGuiEnabled)
-		{
-			cameras.ShiftLockEnabled += Crosshair.Show;
-			cameras.ShiftLockDisabled += Crosshair.Hide;	
-		}
-
         Chat = await Chat.Instance();
 
         ChatButton.Pressed += Chat.Toggle;
         PauseButton.Pressed += TogglePause;
+
+        if (DefaultShiftlockGuiEnabled)
+		{
+            Connect(SignalName.ShiftlockGuiEnabled, showShiftlock);
+            Connect(SignalName.ShiftlockGuiDisabled, hideShiftlock);
+		}
+
+        if (DefaultChatGuiEnabled)
+        {
+            Connect(SignalName.ChatGuiEnabled, showChat);
+            Connect(SignalName.ChatGuiDisabled, hideChat);
+        }
+    }
+
+    public void DisableChat()
+    {
+        Chat.Hide();
+        ChatButton.Hide();
+    }
+
+    public void EnableChat()
+    {
+        Chat.Hide();
+        ChatButton.Hide();
     }
 
     public void TogglePause()
