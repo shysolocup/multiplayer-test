@@ -42,9 +42,17 @@ var guis = Game.GetSystem<GuiSystem>();
 
 
     {% include-markdown "./function.md" start="<!--new-->" end="<!--new_end-->" %} 
-    GetSystems<<code><a href="../../classes/singletons/IBaseSingleton">IBaseSingleton</a></code>...>() : 
-    {% include-markdown "./classdef.md" start="<!--tuple-->" end="<!--tuple_end-->" %}<{% include-markdown "./classdef.md" start="<!--generic-->" end="<!--generic_end-->" %}>,
+
+    GetSystems() : 
+
+    {% include-markdown "./classdef.md" start="<!--static-->" end="<!--static_end-->" %}
     {% include-markdown "./classdef.md" start="<!--async-->" end="<!--async_end-->" %}
+
+    {% include-markdown "./classdef.md" start="<!--func-->" end="<!--func_end-->" %}
+    <<code><a href="../../classes/singletons/IBaseSingleton">IBaseSingleton</a></code>...>()
+    
+    => {% include-markdown "./classdef.md" start="<!--tuple-->" end="<!--tuple_end-->" %}<{% include-markdown "./classdef.md" start="<!--generic-->" end="<!--generic_end-->" %}>,
+
     {% include-markdown "./classdef.md" start="<!--desc-->" end="<!--desc_end-->" %} 
     Gets up to 10 singleton systems by their generic types
 

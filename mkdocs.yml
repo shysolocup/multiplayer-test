@@ -23,7 +23,7 @@ nav:
       - UDim2: classes/objects/UDim2.md
       - UDim2Anchor: classes/objects/UDim2Anchor.md
 
-    - Singletons:
+    - Systems:
       - Game: classes/singletons/Game.md
       - Workspace: classes/singletons/Workspace.md
       - Players: classes/singletons/Players.md
@@ -49,6 +49,9 @@ nav:
       - SingletonControl: classes/singletons/SingletonControl.md
       - IBaseSingleton: classes/singletons/IBaseSingleton.md
 
+    - Enums:
+      - PriorityChannel: enums/PriorityChannel.md
+
     - Libraries:
       - Task: classes/libs/TaskLib.md
       - Json: classes/libs/JsonLib.md
@@ -60,10 +63,6 @@ nav:
       - OnClient: classes/attributes/OnClient.md
       - OnServer: classes/attributes/OnServer.md
       - Prerunner: classes/attributes/Prerunner.md
-
-
-  - Enums:
-    - PriorityChannel: enums/PriorityChannel.md
 
 # these are basically just the properties in a md file
 exclude_docs: |
@@ -85,6 +84,7 @@ plugins:
   - include-markdown
 
 markdown_extensions:
+  - attr_list
   - admonition
   - pymdownx.details
   - pymdownx.superfences

@@ -70,6 +70,18 @@
 </a>
 
 <!--signal_end-->
+<!--func-->
+
+</b>
+</font>
+
+<a href="https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/classes-and-structs/local-functions">
+
+<i><code>function</code></i>
+
+</a>
+
+<!--func_end-->
 <!--tuple-->
 
 </b>
@@ -89,7 +101,7 @@
 
 <a href="https://learn.microsoft.com/en-us/dotnet/csharp/asynchronous-programming/">
 
-<i><code>@async</code></i>
+<i><code>async</code></i>
 
 </a>
 
@@ -101,7 +113,7 @@
 
 <a href="https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/static">
 
-<i><code>@static</code></i>
+<i><code>static</code></i>
 
 </a>
 

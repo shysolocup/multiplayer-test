@@ -7,6 +7,8 @@ public partial class GrunkTinkely : ServerBehavior
 		print(isServer());
 
 		warn("AAAAAAAAAAAAAAAAAAAAAAA");
+
+		print("You have been grunk tinkelyed!");
 	}
 
 }
