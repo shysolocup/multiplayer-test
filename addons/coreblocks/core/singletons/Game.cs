@@ -354,7 +354,7 @@ public partial class Game : Singleton<Game>
 		var peerId = peer.UniqueId;
 		var stringId = peer.OnlineId;
 
-		Server.HostId = stringId;
+		Systems.Server.SetHostId(stringId);
 
 		guh(peerId, stringId);
 		
@@ -390,7 +390,7 @@ public partial class Game : Singleton<Game>
 		var peerId = peer.UniqueId;
 		var stringId = peer.OnlineId;
 
-		Server.HostId = hostId;
+		Systems.Server.SetHostId(hostId);
 
 		Rpc(MethodName.EmitJoin, peerId, stringId);
 	}

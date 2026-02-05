@@ -2,9 +2,12 @@ using Core;
 using Godot;
 using Godot.Collections;
 using System;
+using System.Collections;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+
 
 // ignore this
 public partial class Ext : Node {}
@@ -14,8 +17,76 @@ public partial class Ext : Node {}
 /// extension lib class I kinda made that allows for more methods for roblox like stuff
 /// <para/> guh I'm tired ngl
 /// </summary>
-public static class NodeE
+public static class ENode
 {
+	private static Server server;
+
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	#region Replicate
+
+	private static void _replicate(this GodotObject self, Array<StringName> properties = null, bool recursive = true)
+	{
+		GD.Print("replicate function ran");
+	}
+
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
+	public static async Task<Error> Replicate(this GodotObject self, Array<StringName> properties = null, bool recursive = true)
+	{
+		server ??= await Server.Instance();
+		return server.Invoke(self, "_replicate");
+	}
+
+	public static Dictionary Pairs(this GodotObject self)
+	{
+		var propInfos = self.GetPropertyList();
+		Dictionary pairs = new();
+
+		foreach (var propInfo in propInfos)
+		{
+			foreach (var newprop in propInfo)
+			{
+				var name = propInfo.GetValueOrDefault("name").AsString();
+				pairs[name] = self.Get(name);
+			}
+		}
+
+		return pairs;
+	}
+
+	public static void MakeReplicated(this GodotObject self, bool recursive = true)
+	{
+		var properties = self.Pairs();
+
+		GD.Print(properties);
+
+		self.PropertyListChanged += () =>
+		{
+			var newprops = self.Pairs();
+			
+			// add this in later I have to go
+
+			properties = newprops;
+		};
+	}
+
+	#endregion
+
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	#region IsA
+
+	public static bool IsA<T>(this Node self)
+		=> self is T;
+
+	public static bool IsA(this Node self, Type t)
+		=> self.IsClass(t.Name);
+
+	public static bool IsA(this Node self, string className)
+		=> self.IsClass(className);
+
+	#endregion
+
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	#region IsUnhandled
@@ -43,6 +114,9 @@ public static class NodeE
 			{
 				node.QueueFree();
 			}
+
+			// fuck the stupid async warning let me ball bro
+			await Task.FromResult(0);
 		});
 	}
 

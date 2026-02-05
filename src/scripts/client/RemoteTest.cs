@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Godot;
 using Godot.Collections;
 
@@ -19,6 +20,8 @@ public partial class RemoteTest : ClientBehavior
         task.Delay(1, async () =>
         {
             remote.FireServer("a", "b");
+            // fuck the stupid async warning let me ball bro
+            await Task.FromResult(0);
         });
     }
 }

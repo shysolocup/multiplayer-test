@@ -192,8 +192,6 @@ public partial class Characters : Singleton3D<Characters>
 			GD.PushWarning($"spawned {name}'s character");
 		}
 
-		GD.Print(id == Server.GetId());
-
 		return character;
 	}
 

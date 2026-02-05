@@ -1,6 +1,7 @@
 using System;
 using Godot.Collections;
 using Godot;
+using System.Threading.Tasks;
 
 
 public partial class Test : ServerBehavior
@@ -19,6 +20,9 @@ public partial class Test : ServerBehavior
         task.Delay(2, async () =>
         {
             remote.FireAllClients("a", "b");
+
+            // fuck the stupid async warning let me ball bro
+            await Task.FromResult(0);
         });
     }
 }

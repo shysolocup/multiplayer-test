@@ -1,7 +1,7 @@
 
 public partial class GrunkTinkely : ServerBehavior
 {
-	public override async void OnReady()
+	public override void OnReady()
 	{
 		print(isConnected());
 		print(isServer());

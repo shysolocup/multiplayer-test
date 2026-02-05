@@ -70,9 +70,9 @@ public partial class Client : Singleton<Client>
 			CallLocal = true
 		)
 	]
-	private void _setLocalPlayer(ulong id)
+	private async void _setLocalPlayer(ulong id)
 	{
-		if (IsInstanceIdValid(id) && InstanceFromId(id) is Player player && player.GetId() == Server.GetId())
+		if (IsInstanceIdValid(id) && InstanceFromId(id) is Player player && player.GetId() == await GetId())
 		{
 			GD.Print("set local player");
 			LocalPlayer = player;	

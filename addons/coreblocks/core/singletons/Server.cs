@@ -1,5 +1,7 @@
 using Godot;
 using NodeTunnel;
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 [GlobalClass, Icon("uid://cx7nfcxc0as46")]
@@ -8,13 +10,29 @@ public partial class Server : Singleton<Server>
 
 	public static Replicator Replicator { get; set; }
 	public static ServerScriptSystem Scripts { get; set; }
+	public static Players players { get; set; }
+	private static Client client { get; set; }
 	
 	[Signal] public delegate void PlayerConnectedEventHandler(string hostId);
 
 	private static NodeTunnelPeer Peer { get; set; }
 	public static NodeTunnelPeer GetPeer() => Peer;
 
-	public static string GetId() => Peer.OnlineId;
+	[Export]
+	private string HostId { get; set; }
+
+	public void SetHostId(string hostId) => HostId = hostId;
+
+
+	/// <summary>
+	/// Gets the host's string id
+	/// </summary>
+	public string GetHostId() => HostId;
+
+	/// <summary>
+	/// Gets the host's peer id
+	/// </summary>
+	public long GetHostPeerId() => players.GetPlayerById(HostId).GetPeerId();
 
 	private const int Port = 9998;
 	private const string DefaultServerAddress = "relay.nodetunnel.io"; 
@@ -31,9 +49,6 @@ public partial class Server : Singleton<Server>
 	}
 
 
-	public static string HostId { get; set; }
-
-
 	public async Task<NodeTunnelPeer> ConnectToServer()
 	{
 		/// if (Peer is not null) throw new System.Exception("can't make another peer");
@@ -45,7 +60,7 @@ public partial class Server : Singleton<Server>
 
 		await Peer.WaitUntilRelayConnected();
 
-		var id = GetId();
+		var id = await client.GetId();
 
 		GD.PushWarning("initialized with peer id ", id);
 
@@ -58,6 +73,25 @@ public partial class Server : Singleton<Server>
 
 		Scripts = await ServerScriptSystem.Instance();
 		Replicator = await Replicator.Instance();
+		players = await Players.Instance();
+		client = await Client.Instance();
+
+		await this.Replicate([Server.PropertyName.HostId]);
+	}
+
+
+	[
+		Rpc(
+			MultiplayerApi.RpcMode.AnyPeer, 
+			CallLocal = true
+		)
+	]
+	private void _invoke(ulong objId, StringName method, Variant args)
+	{
+		if (Game.IsServer() && IsInstanceIdValid(objId) && InstanceFromId(objId) is GodotObject obj)
+		{
+			obj.Call(method, [.. args.AsGodotArray()]);
+		}
 	}
 
 
@@ -68,13 +102,18 @@ public partial class Server : Singleton<Server>
 	[
 		Rpc(
 			MultiplayerApi.RpcMode.AnyPeer, 
-			CallLocal = false,
-			TransferMode = MultiplayerPeer.TransferModeEnum.Reliable
+			CallLocal = true
 		)
 	]
 
-	public Error Invoke(StringName method, params Variant[] args)
+	public Error Invoke(GodotObject obj, StringName method, params Variant[] args)
 	{
-		return RpcId(1, method, args);
+		return RpcId(1, 
+			MethodName._invoke, 
+			obj, method, 
+			// turns Variant[] into godot array and then into a variant
+			// packing it to be unpacked and used as params in _invoke
+			Variant.From<Godot.Collections.Array>([.. args])
+		);
 	}
 }

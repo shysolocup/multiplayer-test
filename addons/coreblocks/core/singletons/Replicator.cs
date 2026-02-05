@@ -12,6 +12,7 @@ public partial class Replicator : Singleton<Replicator>
     private GlobalStorage global { get; set; }
     private Characters characters { get; set; }
     private CameraSystem cameras { get; set; }
+    private Client client { get; set; }
 
 
     public override async void _Ready()
@@ -24,6 +25,7 @@ public partial class Replicator : Singleton<Replicator>
         global = await GlobalStorage.Instance();
         cameras = await CameraSystem.Instance();
         characters = await Characters.Instance();
+        client = await Client.Instance();
 
         PlayerSpawner = GetNode<MultiplayerSpawner>("./playerSpawner");
         CharacterSpawner = GetNode<MultiplayerSpawner>("./characterSpawner");
@@ -90,6 +92,10 @@ public partial class Replicator : Singleton<Replicator>
             players.SetMultiplayerAuthority(id, recursive: true);
             workspace.SetMultiplayerAuthority(id, recursive: true);
 
+            workspace.MakeReplicated(true);
+            players.MakeReplicated(true);
+            workspace.MakeReplicated(true);
+
             GD.Print("set authority to server");
 
             players.PlayerJoined += OnJoin;
@@ -101,15 +107,21 @@ public partial class Replicator : Singleton<Replicator>
         }
     }
 
-    private void OnJoin(Player player)
+    private async void OnJoin(Player player)
     {
-        player.Spawned += chara => {
-            GD.Print("set character authority to client");
-            chara.SetMultiplayerAuthority((int)player.GetPeerId(), recursive: true);
+        player.Spawned += async chara => {
+            if (Game.IsServer())
+            {
+                GD.Print("set character authority to client");
+                chara.SetMultiplayerAuthority((int)player.GetPeerId(), recursive: true);
+            }
 
-            GD.Print(player.GetId(), Server.GetId());
+            var clientId = await client.GetId();
+            var playerId = player.GetId();
 
-            if (player.GetId() == Server.GetId())
+            GD.Print($"player id: {playerId}, client id: {clientId}");
+
+            if (playerId == clientId)
             {
                 cameras.SetSubject(player);
             }
@@ -117,12 +129,18 @@ public partial class Replicator : Singleton<Replicator>
 
         if (player.Character is Character chara)
         {
-            GD.Print("set character authority to client");
-            chara.SetMultiplayerAuthority((int)player.GetPeerId(), recursive: true);
+            if (Game.IsServer())
+            {
+                GD.Print("set character authority to client");
+                chara.SetMultiplayerAuthority((int)player.GetPeerId(), recursive: true);
+            }
 
-            GD.Print(player.GetId(), Server.GetId());
+            var clientId = await client.GetId();
+            var playerId = player.GetId();
 
-            if (player.GetId() == Server.GetId())
+            GD.Print($"player id: {playerId}, client id: {clientId}");
+
+            if (playerId == clientId)
             {
                 cameras.SetSubject(player);
             }

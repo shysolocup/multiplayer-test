@@ -23,6 +23,9 @@ namespace Core
 				{
 					node.QueueFree();
 				}
+
+				// fuck the stupid async warning let me ball bro
+				await Task.FromResult(0);
 			});
 		}
 

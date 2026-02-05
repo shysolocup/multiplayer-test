@@ -551,7 +551,7 @@ public partial class Behavior : Node
 
 	#region event handlers
 
-	public override async void _Notification(int what)
+	public override void _Notification(int what)
 	{
 		base._Notification(what);
 
@@ -569,7 +569,7 @@ public partial class Behavior : Node
 		}
 	}
 
-	public override async void _Input(InputEvent @event)
+	public override void _Input(InputEvent @event)
 	{
 		base._Input(@event);
 
