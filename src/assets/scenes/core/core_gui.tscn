@@ -1,8 +1,8 @@
 [gd_scene load_steps=5 format=3 uid="uid://b3vie0tjo3arm"]
 
 [ext_resource type="Script" uid="uid://th3kn0pfoo7m" path="res://addons/coreblocks/core/singletons/CoreGui.cs" id="1_ci1mv"]
-[ext_resource type="Texture2D" uid="uid://dt4t7trtn334h" path="res://addons/coreblocks/assets/shiftlock.png" id="1_cm4xc"]
-[ext_resource type="Texture2D" uid="uid://crh2p5n6n6h2" path="res://addons/coreblocks/assets/Chat.png" id="2_qk8kd"]
+[ext_resource type="Texture2D" uid="uid://dt4t7trtn334h" path="res://addons/coreblocks/assets/textures/shiftlock.png" id="1_cm4xc"]
+[ext_resource type="Texture2D" uid="uid://crh2p5n6n6h2" path="res://addons/coreblocks/assets/textures/Chat.png" id="2_qk8kd"]
 [ext_resource type="Script" uid="uid://birc6cpoa2y0q" path="res://addons/coreblocks/core/singletons/Chat.cs" id="2_uimny"]
 
 [node name="coreGui" type="CanvasLayer"]

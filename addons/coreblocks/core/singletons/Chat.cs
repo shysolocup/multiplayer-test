@@ -19,6 +19,9 @@ public partial class Chat : SingletonControl<Chat>
     public static Timer DisappearTimer { get; set; }
 
     private CoreGui coregui { get; set; }
+    private Replicator rep { get; set; }
+    private Players players { get; set; }
+    private Server server { get; set; }
 
     [Export]
     public PackedScene StarterChannel = GD.Load<PackedScene>("res://addons/coreblocks/scenes/starter_channel.tscn");
@@ -27,7 +30,6 @@ public partial class Chat : SingletonControl<Chat>
     public Theme MessageTheme = GD.Load<Theme>("res://addons/coreblocks/assets/materials/coregui_message_style.tres");
 
 
-    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
     public override async void _Ready()
     {
         base._Ready();
@@ -41,7 +43,11 @@ public partial class Chat : SingletonControl<Chat>
         Hide();
 
         await Game.WaitUntilConnected();
+        
         coregui = await CoreGui.Instance();
+        rep = await Replicator.Instance();
+        players = await Players.Instance();
+        server = await Server.Instance();
 
         Show();
 
@@ -74,6 +80,8 @@ public partial class Chat : SingletonControl<Chat>
 
         if (@event is InputEventKey key && key.Keycode == Key.Slash)
         {
+            if (!Game.IsConnected()) return;
+            
             Visible = true;
             Label.GrabFocus();
             DisappearTimer.Start();
@@ -100,7 +108,7 @@ public partial class Chat : SingletonControl<Chat>
 
 
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
-    public RichTextLabel MakeMessage(int index, string message, string name, ulong id)
+    protected private RichTextLabel MakeMessage(int index, string message, string name, ulong id)
     {
         var channel = GetChannel(index);
         message = message.Trim();
@@ -122,46 +130,50 @@ public partial class Chat : SingletonControl<Chat>
 
         channel.GetNode("./content").AddChild(label);
 
-        Rpc(MethodName.EmitMessage, player.GetInstanceId(), message, index);
+        DisappearTimer.Start();
 
         return label;
     }
 
 
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
-    protected private void sendMessage()
+    private void sendMessage()
     {
-        SendMessage(Channels.CurrentTab, Label.Text);
+        var id = (int)Client.LocalPlayer.GetPeerId();
+        var text = Label.Text;
+        var tab = Channels.CurrentTab;
+
+        if (Game.IsServer())
+            SendMessage(tab, text, id);
+        else
+            server.Invoke(
+                this, 
+                MethodName.SendMessage, 
+                tab,
+                text,
+                id
+            );
+        
         Label.Text = "";
         Label.ReleaseFocus();
     }
 
 
-    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
-    public Error SendMessage(int channel, string message)
+    [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = false)]
+    public Error SendMessage(int channel, string message, int id)
     {
-        if (Client.LocalPlayer is Player player)
-        {
-            if (Game.IsServer())
-            {
-                MakeMessage(
-                    channel, 
-                    message.Trim(), 
-                    player.GetPlayerName(),
-                    player.GetInstanceId()
-                );
+        var player = players.GetPlayerById(id);
 
-                return Error.Ok;
-            }
-            else
-            {
-                return Rpc(MethodName.MakeMessage, 
-                    channel, 
-                    message.Trim(), 
-                    player.GetPlayerName(),
-                    player.GetInstanceId()
-                );
-            }
+        // if it is the server then send the message out to all clients
+        if (Game.IsServer())
+        {
+            return Rpc(
+                MethodName.MakeMessage, 
+                channel, 
+                message.Trim(), 
+                player.GetPlayerName(),
+                player.GetInstanceId()
+            );
         }
 
         return Error.Failed;
@@ -183,7 +195,7 @@ public partial class Chat : SingletonControl<Chat>
         var helper = channel.GetNode<RichTextLabel>("./content/helper");
         helper.Theme = MessageTheme;
 
-        channel.StartReplicating(true);
+        rep.StartReplicating(channel, true);
 
         Rpc(MethodName.EmitChannel, channel.GetIndex());
 

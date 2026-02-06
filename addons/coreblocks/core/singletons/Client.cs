@@ -113,7 +113,6 @@ public partial class Client : Singleton<Client>
 
 		if (IsInstanceIdValid(objId) && InstanceFromId(objId) is GodotObject obj)
 		{
-			GD.Print("invoked ", method, " in ", obj);
 			obj.Call(method, [.. args.AsGodotArray()]);
 		}
 	}

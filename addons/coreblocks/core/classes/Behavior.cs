@@ -677,21 +677,6 @@ public partial class Behavior : Node
 
 
 	/// <summary>
-	/// Checks if the script is running on the client (STATIC)
-	/// </summary>
-	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
-	public static bool isClient(object _ = null)
-		=> !isServer();
-
-	/// <summary>
-	/// Checks if the script is running on the client
-	/// </summary>
-	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
-	public bool isClient() 
-		=> !isServer();
-
-
-	/// <summary>
 	/// Checks if the player is connected to the server
 	/// </summary>
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]

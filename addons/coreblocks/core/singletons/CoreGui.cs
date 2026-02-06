@@ -89,6 +89,8 @@ public partial class CoreGui : SingletonCanvas<CoreGui>
 
     public override async void _Ready()
     {
+        Hide();
+
         base._Ready();
 
         var cameras = await CameraSystem.Instance();
@@ -118,6 +120,10 @@ public partial class CoreGui : SingletonCanvas<CoreGui>
             Connect(SignalName.ChatGuiEnabled, showChat);
             Connect(SignalName.ChatGuiDisabled, hideChat);
         }
+
+        await Game.WaitUntilConnected();
+
+        Show();
     }
 
     public void DisableChat()

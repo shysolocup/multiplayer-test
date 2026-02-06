@@ -91,7 +91,6 @@ public partial class Server : Singleton<Server>
 
 		if (Game.IsServer() && IsInstanceIdValid(objId) && InstanceFromId(objId) is GodotObject obj)
 		{
-			GD.Print("invoked ", method, " in ", obj);
 			obj.Call(method, [.. args.AsGodotArray()]);
 		}
 	}

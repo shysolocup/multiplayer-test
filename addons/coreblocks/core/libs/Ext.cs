@@ -54,77 +54,8 @@ public static class ENode
 	#endregion
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	#region Replicate
 
-	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
-	public static async Task<Error> Sync(this GodotObject self, 
-		bool recursive = true, 
-		Array<StringName> properties = null
-	)
-	{
-		var replicator = await Replicator.Instance();
-		return await replicator.Sync(self, recursive: recursive, properties: properties);
-	}
-
-	[Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true)]
-	public static async Task<Error> Replicate(this GodotObject self, 
-		bool recursive = true, 
-		Array<StringName> properties = null,
-		Array<Node> filter = null
-	)
-	{
-		var replicator = await Replicator.Instance();
-		return await replicator.Replicate(self);
-	}
-
-
-	[Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true)]
-	public static async Task<Error> ReplicateFor(this GodotObject self, Player player, 
-		bool recursive = true, 
-		Array<StringName> properties = null,
-		Array<Node> filter = null
-	)
-	{
-		var replicator = await Replicator.Instance();
-		return await replicator.ReplicateFor(player, self);
-	}
-
-	[Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true)]
-	public static async Task<Error> ReplicateFor(this GodotObject self, long id, 
-		bool recursive = true, 
-		Array<StringName> properties = null,
-		Array<Node> filter = null
-	)
-	{
-		var replicator = await Replicator.Instance();
-		return await replicator.ReplicateFor(id, self);
-	}
-
-	[Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true)]
-	public static async Task<Error> ReplicateFor(this GodotObject self, string playerId, 
-		bool recursive = true, 
-		Array<StringName> properties = null,
-		Array<Node> filter = null
-	)
-	{
-		var replicator = await Replicator.Instance();
-		return await replicator.ReplicateFor(playerId, self);
-	}
-
-	public static async void StartReplicating(this GodotObject self, 
-		bool recursive = false, 
-		Array<StringName> properties = null,
-		Array<Node> filter = null
-	)
-	{
-		var replicator = await Replicator.Instance();
-		replicator.StartReplicating(self, recursive: recursive, properties: properties, filter: filter);
-	}
-
-	#endregion
-
-	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	#region GetPropertyPairs
 
 	#region GetPropertyPairs
 
@@ -135,20 +66,27 @@ public static class ENode
 
 		foreach (var propInfo in propInfos)
 		{
-			foreach (var newprop in propInfo)
+			try
 			{
-				try
-				{
-					var name = propInfo.GetValueOrDefault("name").AsString();
-					var value = self.Get(name);
-					pairs[name] = value;
-				}
-				catch { }
+				var name = propInfo.GetValueOrDefault("name").AsString();
+				
+				// Skip problematic properties that error when accessed
+				if (name.Contains("current_animation") || name.StartsWith("_"))
+					continue;
+
+				var value = self.Get(name);
+				pairs[name] = value;
+			}
+			catch (Exception ex)
+			{
+				GD.PushWarning($"Failed to get property: {ex.Message}");
 			}
 		}
 
 		return pairs;
 	}
+
+	#endregion
 
 	#endregion
 

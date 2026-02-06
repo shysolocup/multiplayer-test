@@ -427,21 +427,6 @@ public partial class Game : Singleton<Game>
 	public bool IsServer(object _ = null) 
 		=> Game.IsServer();
 
-
-	/// <summary>
-	/// Checks if the script is running on the client (STATIC)
-	/// </summary>
-	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
-	public static bool IsClient(object _ = null)
-		=> !IsServer();
-
-	/// <summary>
-	/// Checks if the script is running on the client
-	/// </summary>
-	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
-	public bool IsClient() 
-		=> !IsServer();
-
 	#endregion
 
 	/// <summary>
@@ -493,7 +478,7 @@ public partial class Game : Singleton<Game>
 
 	#region Loading
 
-	public static async Task Loaded() {
+	public static async Task WaitUntilLoaded() {
 		while (!IsLoaded)
 		{
 			await Task.Delay(10);
