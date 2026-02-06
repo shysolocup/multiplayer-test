@@ -2,16 +2,16 @@ using Godot;
 using NodeTunnel;
 using System.Threading.Tasks;
 
-
+[NotReplicated]
 [GlobalClass, Icon("uid://rqxgol7tuknt")]
 public partial class Client : Singleton<Client>
 {
-	private static Player _localPlayer { get; set; }
+	protected private static Player _localPlayer { get; set; }
 
 	public async Task<string> GetId() => (await Server.WaitUntilPeer()).OnlineId;
 
 	[Export]
-	private int PeerId
+	protected private int PeerId
 	{
 		get => Server.GetPeer() is NodeTunnelPeer peer ? peer.UniqueId : -1;
 		set {}
@@ -70,7 +70,7 @@ public partial class Client : Singleton<Client>
 			CallLocal = true
 		)
 	]
-	private async void _setLocalPlayer(ulong id)
+	protected private async void _setLocalPlayer(ulong id)
 	{
 		if (IsInstanceIdValid(id) && InstanceFromId(id) is Player player && player.GetId() == await GetId())
 		{
@@ -98,129 +98,87 @@ public partial class Client : Singleton<Client>
 
 
 	/// <summary>
-	/// More easily run a function directly to a client
-	/// <para/>@server
+	/// More easily run a function directly to the client
+	/// <para/>@client
 	/// </summary>
 	[
 		Rpc(
-			MultiplayerApi.RpcMode.Authority, 
-			CallLocal = true,
-			TransferMode = MultiplayerPeer.TransferModeEnum.Reliable
+			MultiplayerApi.RpcMode.AnyPeer, 
+			CallLocal = true
 		)
 	]
-
-	public Error Invoke(long id, StringName method, params Variant[] args)
+	protected private void _invoke(ulong objId, StringName method, Variant args)
 	{
-		return RpcId(id, method, args);
+		GD.Print(objId, IsInstanceIdValid(objId));
+
+		if (IsInstanceIdValid(objId) && InstanceFromId(objId) is GodotObject obj)
+		{
+			GD.Print("invoked ", method, " in ", obj);
+			obj.Call(method, [.. args.AsGodotArray()]);
+		}
 	}
 
 
-	/// <summary>
-	/// More easily run a function directly to a client
-	/// <para/>@server
-	/// </summary>
+	/// <inheritdoc cref="_invoke"/>
 	[
 		Rpc(
 			MultiplayerApi.RpcMode.Authority, 
-			CallLocal = true,
-			TransferMode = MultiplayerPeer.TransferModeEnum.Reliable
+			CallLocal = true
 		)
 	]
-
-	public Error Invoke(string id, StringName method, params Variant[] args)
+	public Error Invoke(long id, GodotObject obj, StringName method, params Variant[] args)
 	{
-		var player = players.GetPlayerById(id);
-
-		return RpcId(player.GetPeerId(), method, args);
+		return RpcId(id, 
+			MethodName._invoke, 
+			obj, method, 
+			// turns Variant[] into godot array and then into a variant
+			// packing it to be unpacked and used as params in _invoke
+			Variant.From<Godot.Collections.Array>([.. args])
+		);
 	}
 
 
-	/// <summary>
-	/// More easily run a function directly to a client
-	/// <para/>@server
-	/// </summary>
+	/// <inheritdoc cref="_invoke"/>
 	[
 		Rpc(
 			MultiplayerApi.RpcMode.Authority, 
-			CallLocal = true,
-			TransferMode = MultiplayerPeer.TransferModeEnum.Reliable
+			CallLocal = true
 		)
 	]
-	
-	public Error Invoke(Player player, StringName method, params Variant[] args)
-	{
-		return Invoke(player.GetPeerId(), method, args);
-	}
-
-
-	/// <summary>
-	/// More easily run a function directly to a client
-	/// <para/>@server
-	/// </summary>
-	[
-		Rpc(
-			MultiplayerApi.RpcMode.Authority, 
-			CallLocal = true,
-			TransferMode = MultiplayerPeer.TransferModeEnum.Reliable
-		)
-	]
-
-	public Error Invoke<T>(long id, T obj, StringName method, params Variant[] args) where T : Node
-	{
-		return obj.RpcId(id, method, args);
-	}
-
-
-	/// <summary>
-	/// More easily run a function directly to a client
-	/// <para/>@server
-	/// </summary>
-	[
-		Rpc(
-			MultiplayerApi.RpcMode.Authority, 
-			CallLocal = true,
-			TransferMode = MultiplayerPeer.TransferModeEnum.Reliable
-		)
-	]
-
-	public Error Invoke<T>(string id, T obj, StringName method, params Variant[] args)
-	{
-		var player = players.GetPlayerById(id);
-
-		return RpcId(player.GetPeerId(), method, args);
-	}
-
-	/// <summary>
-	/// More easily run a function directly to a client
-	/// <para/>@server
-	/// </summary>
-	[
-		Rpc(
-			MultiplayerApi.RpcMode.Authority, 
-			CallLocal = true,
-			TransferMode = MultiplayerPeer.TransferModeEnum.Reliable
-		)
-	]
-	
 	public Error Invoke(Player player, GodotObject obj, StringName method, params Variant[] args)
-	{
-		return Invoke(player.GetPeerId(), method, args);
-	}
+		=> Invoke(player.GetPeerId(), obj, method, args);
+
+
+	/// <inheritdoc cref="_invoke"/>
+	[
+		Rpc(
+			MultiplayerApi.RpcMode.Authority, 
+			CallLocal = true
+		)
+	]
+	public Error Invoke(string playerId, GodotObject obj, StringName method, params Variant[] args)
+		=> Invoke(players.GetPlayerById(playerId).GetPeerId(), obj, method, args);
+
 
 	/// <summary>
-	/// More easily run a function directly to ALL players
-	/// <para/>@server
+	/// More easily run a function directly to all clients
+	/// <para/>@client
 	/// </summary>
 	[
 		Rpc(
 			MultiplayerApi.RpcMode.Authority, 
-			CallLocal = true,
-			TransferMode = MultiplayerPeer.TransferModeEnum.Reliable
+			CallLocal = true
 		)
 	]
-
-	public void InvokeAll(StringName method, params Variant[] args)
+	public Error InvokeAll(GodotObject obj, StringName method, params Variant[] args)
 	{
-		Rpc(method, args);
+		return Rpc( 
+			MethodName._invoke, 
+			obj.GetInstanceId(), 
+			method, 
+			// turns Variant[] into godot array and then into a variant
+			// packing it to be unpacked and used as params in _invoke
+			Variant.From<Godot.Collections.Array>([.. args])
+		);
 	}
 } 

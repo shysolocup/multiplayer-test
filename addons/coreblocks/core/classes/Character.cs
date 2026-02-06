@@ -4,7 +4,7 @@ using Godot;
 public partial class Character : CharacterBody3D
 {
 
-	[Export] private string Id { get; set; }
+	[Export] protected private string Id { get; set; }
 
 	public string GetId() => Id;
 

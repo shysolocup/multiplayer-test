@@ -7,10 +7,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-
-
-// ignore this
-public partial class Ext : Node {}
+using Microsoft.VisualBasic;
 
 
 /// <summary>
@@ -19,25 +16,119 @@ public partial class Ext : Node {}
 /// </summary>
 public static class ENode
 {
-	private static Server server;
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	#region pairs ipairs
+
+	public static (TValue, int)[] IPairs<[MustBeVariant] TValue>(this GodotObject self, Array<TValue> arr)
+		=> [.. arr.ToArray().Select((value, i) => (value, i))];
+
+	public static (TKey, TValue)[] Pairs<[MustBeVariant] TKey, [MustBeVariant] TValue>(this GodotObject self, Godot.Collections.Dictionary<TKey, TValue> dict)
+	{
+		(TKey, TValue)[] array = [];
+
+		foreach (var pair in dict)
+		{
+			array.Append(
+				(pair.Key, pair.Value)
+			);
+		}
+
+		return array;
+	}
+
+	public static (Variant, Variant)[] Pairs(this GodotObject self, Godot.Collections.Dictionary dict)
+	{
+		(Variant, Variant)[] array = [];
+
+		foreach (var pair in dict)
+		{
+			array.Append(
+				(pair.Key, pair.Value)
+			);
+		}
+
+		return array;
+	}
+
+	#endregion
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	#region Replicate
 
-	private static void _replicate(this GodotObject self, Array<StringName> properties = null, bool recursive = true)
-	{
-		GD.Print("replicate function ran");
-	}
-
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
-	public static async Task<Error> Replicate(this GodotObject self, Array<StringName> properties = null, bool recursive = true)
+	public static async Task<Error> Sync(this GodotObject self, 
+		bool recursive = true, 
+		Array<StringName> properties = null
+	)
 	{
-		server ??= await Server.Instance();
-		return server.Invoke(self, "_replicate");
+		var replicator = await Replicator.Instance();
+		return await replicator.Sync(self, recursive: recursive, properties: properties);
 	}
 
-	public static Dictionary Pairs(this GodotObject self)
+	[Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true)]
+	public static async Task<Error> Replicate(this GodotObject self, 
+		bool recursive = true, 
+		Array<StringName> properties = null,
+		Array<Node> filter = null
+	)
+	{
+		var replicator = await Replicator.Instance();
+		return await replicator.Replicate(self);
+	}
+
+
+	[Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true)]
+	public static async Task<Error> ReplicateFor(this GodotObject self, Player player, 
+		bool recursive = true, 
+		Array<StringName> properties = null,
+		Array<Node> filter = null
+	)
+	{
+		var replicator = await Replicator.Instance();
+		return await replicator.ReplicateFor(player, self);
+	}
+
+	[Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true)]
+	public static async Task<Error> ReplicateFor(this GodotObject self, long id, 
+		bool recursive = true, 
+		Array<StringName> properties = null,
+		Array<Node> filter = null
+	)
+	{
+		var replicator = await Replicator.Instance();
+		return await replicator.ReplicateFor(id, self);
+	}
+
+	[Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true)]
+	public static async Task<Error> ReplicateFor(this GodotObject self, string playerId, 
+		bool recursive = true, 
+		Array<StringName> properties = null,
+		Array<Node> filter = null
+	)
+	{
+		var replicator = await Replicator.Instance();
+		return await replicator.ReplicateFor(playerId, self);
+	}
+
+	public static async void StartReplicating(this GodotObject self, 
+		bool recursive = false, 
+		Array<StringName> properties = null,
+		Array<Node> filter = null
+	)
+	{
+		var replicator = await Replicator.Instance();
+		replicator.StartReplicating(self, recursive: recursive, properties: properties, filter: filter);
+	}
+
+	#endregion
+
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	#region GetPropertyPairs
+
+	public static Dictionary GetPropertyPairs(this GodotObject self)
 	{
 		var propInfos = self.GetPropertyList();
 		Dictionary pairs = new();
@@ -46,28 +137,17 @@ public static class ENode
 		{
 			foreach (var newprop in propInfo)
 			{
-				var name = propInfo.GetValueOrDefault("name").AsString();
-				pairs[name] = self.Get(name);
+				try
+				{
+					var name = propInfo.GetValueOrDefault("name").AsString();
+					var value = self.Get(name);
+					pairs[name] = value;
+				}
+				catch { }
 			}
 		}
 
 		return pairs;
-	}
-
-	public static void MakeReplicated(this GodotObject self, bool recursive = true)
-	{
-		var properties = self.Pairs();
-
-		GD.Print(properties);
-
-		self.PropertyListChanged += () =>
-		{
-			var newprops = self.Pairs();
-			
-			// add this in later I have to go
-
-			properties = newprops;
-		};
 	}
 
 	#endregion
@@ -585,3 +665,7 @@ public static class ENode
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }
+
+
+// ignore this
+public partial class Ext : Node {}

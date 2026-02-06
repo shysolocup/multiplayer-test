@@ -2,6 +2,7 @@ using Godot;
 
 [Tool]
 [GlobalClass]
+[NotReplicated]
 public partial class Screen : Singleton<Screen>
 {
     public static Vector2I WindowSize {

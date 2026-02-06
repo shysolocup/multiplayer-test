@@ -4,6 +4,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 
+[NotReplicated]
 [GlobalClass, Icon("uid://cx7nfcxc0as46")]
 public partial class Server : Singleton<Server>
 {
@@ -15,11 +16,11 @@ public partial class Server : Singleton<Server>
 	
 	[Signal] public delegate void PlayerConnectedEventHandler(string hostId);
 
-	private static NodeTunnelPeer Peer { get; set; }
+	protected private static NodeTunnelPeer Peer { get; set; }
 	public static NodeTunnelPeer GetPeer() => Peer;
 
 	[Export]
-	private string HostId { get; set; }
+	protected private string HostId { get; set; }
 
 	public void SetHostId(string hostId) => HostId = hostId;
 
@@ -34,8 +35,8 @@ public partial class Server : Singleton<Server>
 	/// </summary>
 	public long GetHostPeerId() => players.GetPlayerById(HostId).GetPeerId();
 
-	private const int Port = 9998;
-	private const string DefaultServerAddress = "relay.nodetunnel.io"; 
+	protected private const int Port = 9998;
+	protected private const string DefaultServerAddress = "relay.nodetunnel.io"; 
 	[Export] private int MaxPlayers = 20;
 
 
@@ -75,8 +76,6 @@ public partial class Server : Singleton<Server>
 		Replicator = await Replicator.Instance();
 		players = await Players.Instance();
 		client = await Client.Instance();
-
-		await this.Replicate([Server.PropertyName.HostId]);
 	}
 
 
@@ -86,10 +85,13 @@ public partial class Server : Singleton<Server>
 			CallLocal = true
 		)
 	]
-	private void _invoke(ulong objId, StringName method, Variant args)
+	protected private void _invoke(ulong objId, StringName method, Variant args)
 	{
+		GD.Print(objId, IsInstanceIdValid(objId));
+
 		if (Game.IsServer() && IsInstanceIdValid(objId) && InstanceFromId(objId) is GodotObject obj)
 		{
+			GD.Print("invoked ", method, " in ", obj);
 			obj.Call(method, [.. args.AsGodotArray()]);
 		}
 	}
@@ -110,7 +112,8 @@ public partial class Server : Singleton<Server>
 	{
 		return RpcId(1, 
 			MethodName._invoke, 
-			obj, method, 
+			obj.GetInstanceId(), 
+			method,
 			// turns Variant[] into godot array and then into a variant
 			// packing it to be unpacked and used as params in _invoke
 			Variant.From<Godot.Collections.Array>([.. args])

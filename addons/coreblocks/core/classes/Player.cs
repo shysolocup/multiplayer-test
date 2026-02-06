@@ -11,9 +11,9 @@ public partial class Player : Node
 	[Signal]
 	public delegate void SpawnedEventHandler(Character character);
 
-	[Export] private string PlayerName { get; set; } = "Player";
-	[Export] private string Id { get; set; }
-	[Export] private long PeerId { get; set; }
+	[Export] protected private string PlayerName { get; set; } = "Player";
+	[Export] protected private string Id { get; set; }
+	[Export] protected private long PeerId { get; set; }
 	[Export] public Character Character
 	{
 		get => characters is Characters c ? c.GetCharacterById(Id) : null;

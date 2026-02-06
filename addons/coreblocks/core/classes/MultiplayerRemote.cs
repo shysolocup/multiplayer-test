@@ -28,7 +28,7 @@ public partial class MultiplayerRemote : Node
     
 
     [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true)]
-    private void _fireClient(Array<Variant> args)
+    protected private void _fireClient(Array<Variant> args)
     {
         EmitSignalOnClientEvent(args);
     }

@@ -4,8 +4,8 @@ using Godot;
 [GlobalClass, Icon("uid://ck61ilinbabbn")]
 public partial class Image3D : MeshInstance3D
 {
-    private StandardMaterial3D mat = new();
-    private Texture2D source;
+    protected private StandardMaterial3D mat = new();
+    protected private Texture2D source;
     private float imageScale = 1;
     private float transparency = 0;
 
@@ -23,7 +23,8 @@ public partial class Image3D : MeshInstance3D
     /// </summary>
     [Export] public bool Reference = false;
 
-    [Export(PropertyHint.Range, "0,2,or_greater,or_less")] public float ImageScale {
+    [Export(PropertyHint.Range, "0,2,or_greater,or_less")] 
+    public float ImageScale {
         get => imageScale;
         set {
             if (imageScale == value) return;

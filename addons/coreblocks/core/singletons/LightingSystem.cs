@@ -234,12 +234,6 @@ public partial class LightingSystem : Singleton3D<LightingSystem>
 	private Callable ResetCall => Callable.From(_resetCall);
 	private void _resetCall() => ResetApply();
 
-	private Callable DayCall => Callable.From(_dayCall);
-	private void _dayCall()
-	{
-		
-	}
-
 	public bool LightingIs(string name) => Lighting is PackedScene light && light.ResourcePath.Contains(name);
 	public bool TempLightingIs(string name) => TempLighting is PackedScene temp && temp.ResourcePath.Contains(name);
 

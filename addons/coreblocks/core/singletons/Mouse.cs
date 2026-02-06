@@ -2,7 +2,7 @@ using Godot;
 using Godot.Collections;
 using System.Collections.Generic;
 
-
+[NotReplicated]
 [GlobalClass, Icon("uid://bd2ep30fvfeix")]
 public partial class Mouse : Singleton<Mouse>
 {

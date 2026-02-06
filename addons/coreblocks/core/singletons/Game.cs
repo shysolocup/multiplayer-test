@@ -5,6 +5,7 @@ using NodeTunnel;
 using System.Reflection;
 
 [Tool]
+[NotReplicated]
 [GlobalClass, Icon("uid://boo8iw5pvoaa8")]
 public partial class Game : Singleton<Game>
 {
@@ -338,7 +339,7 @@ public partial class Game : Singleton<Game>
 			CallLocal = true
 		)
 	]
-	private void _leave()
+	protected private void _leave()
 	{
 		EmitSignalLeftConnection();
 	}
@@ -361,7 +362,7 @@ public partial class Game : Singleton<Game>
 		EmitSignalStartedHosting(stringId);
 	}
 
-	private void guh(long peerId, string stringId)
+	protected private void guh(long peerId, string stringId)
 	{
 		Player player = (Player)Replicator.PlayerSpawner.Spawn(new Godot.Collections.Array { 
 			peerId, stringId 
@@ -369,7 +370,7 @@ public partial class Game : Singleton<Game>
 	}
 
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
-	private void EmitJoin(long peerId, string stringId)
+	protected private void EmitJoin(long peerId, string stringId)
 	{
 		if (IsServer())
 		{

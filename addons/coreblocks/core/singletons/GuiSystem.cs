@@ -1,5 +1,6 @@
 using Godot;
 
+[NotReplicated]
 [GlobalClass, Icon("uid://7xxdvadqtbc3")]
 public partial class GuiSystem : SingletonControl<GuiSystem>
 {

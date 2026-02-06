@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=4 uid="uid://dtwjgai1ljwtw"]
+[gd_scene load_steps=25 format=4 uid="uid://dtwjgai1ljwtw"]
 
 [ext_resource type="Script" uid="uid://bvp7c0e42bdmd" path="res://addons/coreblocks/core/classes/Character.cs" id="1_bbyxb"]
 
@@ -268,6 +268,15 @@ _surfaces = [{
 }]
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_kpl5v")
+
+[sub_resource type="Animation" id="Animation_s6jt6"]
+resource_name = "new_animation"
+step = 0.0333333
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_afnhg"]
+_data = {
+&"new_animation": SubResource("Animation_s6jt6")
+}
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_3xf06"]
 radius = 0.375
@@ -1314,6 +1323,9 @@ bones/100/scale = Vector3(1, 1, 1)
 transform = Transform3D(100, 0, 0, 0, -1.1920929e-05, 99.99999, 0, -99.99999, -1.1920929e-05, 0, 0, 0)
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="mesh"]
+libraries = {
+&"": SubResource("AnimationLibrary_afnhg")
+}
 
 [node name="collision" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8032261, 0)

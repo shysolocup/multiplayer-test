@@ -6,6 +6,7 @@ using Godot;
 /// controls cameras
 /// </summary>
 [Tool]
+[NotReplicated]
 [GlobalClass, Icon("uid://nxhbjfaqej4p")]
 public partial class CameraSystem : Singleton3D<CameraSystem>
 {
@@ -83,7 +84,7 @@ public partial class CameraSystem : Singleton3D<CameraSystem>
 
 	#endregion
 
-	private void _changeActive(Camera3D newCamera)
+	protected private void _changeActive(Camera3D newCamera)
 	{
 		if (newCamera is not null) {
 			// godot really hates getting the camera for some reason
@@ -196,7 +197,7 @@ public partial class CameraSystem : Singleton3D<CameraSystem>
 
 
 	#region subject
-	private static Node3D _subject { get; set; }
+	protected private static Node3D _subject { get; set; }
 
 	[Export] public Node3D Subject { 
 		get => _subject; 
@@ -320,7 +321,7 @@ public partial class CameraSystem : Singleton3D<CameraSystem>
 	#endregion
 	#region freecam methods
 
-	private void SetupFreecamNodes()
+	protected private void SetupFreecamNodes()
 	{
 		if (FreecamCamera is null && !Engine.IsEditorHint()) return;
 
@@ -348,7 +349,7 @@ public partial class CameraSystem : Singleton3D<CameraSystem>
 		ScreenOverlay.Visible = OverlayText;
 	}
 
-	private void FreecamProcess(double delta)
+	protected private void FreecamProcess(double delta)
 	{
 		if (this.IsUnhandled() && FreecamActive && FreecamCamera is not null && !Engine.IsEditorHint()) {
 			mouse.SetBindingMode(Enum.PriorityChannel.Camera, 
@@ -391,19 +392,19 @@ public partial class CameraSystem : Singleton3D<CameraSystem>
 		}
 	}
 
-	private void FreecamSpeedUp()
+	public void FreecamSpeedUp()
 	{
 		FreecamTargetSpeed = Mathf.Clamp(FreecamTargetSpeed + 0.05f, FreecamMinSpeed, FreecamMaxSpeed);
 		DisplayMessage($"[Speed up] {FreecamTargetSpeed}");
 	}
 
-	private void FreecamSlowDown()
+	public void FreecamSlowDown()
 	{
 		FreecamTargetSpeed = Mathf.Clamp(FreecamTargetSpeed - 0.05f, FreecamMinSpeed, FreecamMaxSpeed);
 		DisplayMessage($"[Slow down] {FreecamTargetSpeed}");
 	}
 
-	private void FreecamInput(InputEvent @event)
+	protected private void FreecamInput(InputEvent @event)
 	{
 		if (this.IsUnhandled() && Input.IsActionJustPressed("freecam") && FreecamCamera is not null)
 		{
@@ -473,7 +474,7 @@ public partial class CameraSystem : Singleton3D<CameraSystem>
 	}
 
 
-	private static Label MakeLabel(string text) {
+	protected private static Label MakeLabel(string text) {
 		var label = new Label {
 			Text = text
 		};
@@ -487,7 +488,7 @@ public partial class CameraSystem : Singleton3D<CameraSystem>
 
 	#region third person cam
 
-	private void ThirdPersonProcess(double delta)
+	protected private void ThirdPersonProcess(double delta)
 	{
 		if (CameraType == Enum.CameraType.ThirdPerson && !Engine.IsEditorHint())
 		{
@@ -526,7 +527,7 @@ public partial class CameraSystem : Singleton3D<CameraSystem>
 		}
 	}
 
-	private void ThirdPersonUnhandled(InputEvent @event)
+	protected private void ThirdPersonUnhandled(InputEvent @event)
 	{
 		if (CameraType == Enum.CameraType.ThirdPerson && !Engine.IsEditorHint() && @event is InputEventMouseButton wheel)
 		{
@@ -542,7 +543,7 @@ public partial class CameraSystem : Singleton3D<CameraSystem>
 		}
 	}
 
-	private void ThirdPersonInput(InputEvent @event)
+	protected private void ThirdPersonInput(InputEvent @event)
 	{
 		if (this.IsUnhandled() && CameraType == Enum.CameraType.ThirdPerson && !Engine.IsEditorHint() && Input.IsActionJustPressed("shift_lock") && !FreecamActive)
 		{
@@ -581,7 +582,7 @@ public partial class CameraSystem : Singleton3D<CameraSystem>
 
 	#region first person cam
 
-	private void FirstPersonProcess(double delta)
+	protected private void FirstPersonProcess(double delta)
 	{
 		if (this.IsUnhandled() && CameraType == Enum.CameraType.FirstPerson && !Engine.IsEditorHint())
 		{
@@ -603,7 +604,7 @@ public partial class CameraSystem : Singleton3D<CameraSystem>
 		}
 	}
 
-	private void FirstPersonInput(InputEvent @event)
+	protected private void FirstPersonInput(InputEvent @event)
 	{
 		if (
 			@event is InputEventMouseMotion mouse
@@ -632,7 +633,7 @@ public partial class CameraSystem : Singleton3D<CameraSystem>
 
 	#region misc & events
 
-	private Vector2 GetInputDirection(double delta)
+	protected private Vector2 GetInputDirection(double delta)
 	{
 		Vector2 direction = Input.GetVector("ui_left", "ui_right", "ui_up", "ui_down");
 

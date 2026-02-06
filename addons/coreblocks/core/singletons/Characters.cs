@@ -14,6 +14,7 @@ public partial class Characters : Singleton3D<Characters>
 	[Signal]
 	public delegate void CharacterRemovedEventHandler(Character character);
 
+
 	private CameraSystem cameras { get; set; }
 	private Workspace workspace { get; set; }
 	private Camera3D cam { get; set; }
@@ -106,7 +107,7 @@ public partial class Characters : Singleton3D<Characters>
 	#endregion
 
 
-	private void _spawnEmitter(Node node)
+	protected private void _spawnEmitter(Node node)
 	{
 		if (node is Character character)
 		{
@@ -114,7 +115,7 @@ public partial class Characters : Singleton3D<Characters>
 		}
 	}
 
-	private void _removedEmitter(Node node)
+	protected private void _removedEmitter(Node node)
 	{
 		if (node is Character character)
 		{
@@ -122,8 +123,8 @@ public partial class Characters : Singleton3D<Characters>
 		}
 	}
 
-	private Callable _spawnCall => new(this, MethodName._spawnEmitter);
-	private Callable _remCall => new(this, MethodName._removedEmitter);
+	protected private Callable _spawnCall => new(this, MethodName._spawnEmitter);
+	protected private Callable _remCall => new(this, MethodName._removedEmitter);
 
 
 	// Called when the node enters the scene tree for the first time.

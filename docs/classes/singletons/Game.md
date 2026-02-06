@@ -4,6 +4,7 @@
 {% include-markdown "../../types/classdef.md" start="<!--class_head-->" end="<!--class_head_end-->" %}
 
 # Game
+
 <sub><b> INHERITS FROM 
 <code><a href="https://docs.godotengine.org/en/stable/classes/class_node.html">Node</a></code>, 
 <code><a href="../IBaseSingleton">IBaseSingleton</a></code> ➜ 

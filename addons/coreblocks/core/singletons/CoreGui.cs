@@ -1,6 +1,7 @@
 using Godot;
 
 
+[NotReplicated]
 [GlobalClass]
 public partial class CoreGui : SingletonCanvas<CoreGui>
 {

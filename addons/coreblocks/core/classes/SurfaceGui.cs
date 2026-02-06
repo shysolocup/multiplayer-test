@@ -29,7 +29,7 @@ public partial class SurfaceGui : Sprite3D
     [Export]
     public Vector3 ScaleOffset = new();
 
-    private SubViewport viewport;
+    protected private SubViewport viewport;
 
 
     public SubViewport Viewport

@@ -12,7 +12,7 @@ public partial class Chat : SingletonControl<Chat>
     [Signal]
     public delegate void NewChannelEventHandler(int channel);
 
-    private static MultiplayerSpawner ChannelSpawner { get; set; }
+    protected private static MultiplayerSpawner ChannelSpawner { get; set; }
     public static LineEdit Label { get; set; }
     public static Button SendButton { get; set; }
     public static TabContainer Channels { get; set; }
@@ -80,7 +80,7 @@ public partial class Chat : SingletonControl<Chat>
         } 
     }
 
-    private ScrollContainer makeTab(string tabName)
+    protected private ScrollContainer makeTab(string tabName)
     {
         var tab = StarterChannel.Instantiate<ScrollContainer>();
         tab.Name = tabName;
@@ -88,10 +88,10 @@ public partial class Chat : SingletonControl<Chat>
         return tab;
     }
 
-    private Callable tabCall => new(this, MethodName.makeTab);
+    protected private Callable tabCall => new(this, MethodName.makeTab);
 
 
-    [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true)]
+    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
     public void EmitMessage(ulong id, string message, int index)
     {
         var player = (Player)InstanceFromId(id);
@@ -102,39 +102,34 @@ public partial class Chat : SingletonControl<Chat>
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
     public RichTextLabel MakeMessage(int index, string message, string name, ulong id)
     {
-        if (Game.IsServer())
+        var channel = GetChannel(index);
+        message = message.Trim();
+
+        Behavior.assert(channel is not null, "Channel is null");
+        if (string.IsNullOrEmpty(message)) return null;
+
+        var player = (Player)InstanceFromId(id);
+
+        var color = PlayerColor(id).ToHtml();
+
+        var label = new RichTextLabel()
         {
-            var channel = GetChannel(index);
-            message = message.Trim();
+            BbcodeEnabled = true,
+            Text = $"[color=#{color}]{name}[/color]: {message}",
+            FitContent = true,
+            Theme = MessageTheme
+        };
 
-            Behavior.assert(channel is not null, "Channel is null");
-            if (string.IsNullOrEmpty(message)) return null;
+        channel.GetNode("./content").AddChild(label);
 
-            var player = (Player)InstanceFromId(id);
+        Rpc(MethodName.EmitMessage, player.GetInstanceId(), message, index);
 
-            var color = PlayerColor(id).ToHtml();
-
-            var label = new RichTextLabel()
-            {
-                BbcodeEnabled = true,
-                Text = $"[color=#{color}]{name}[/color]: {message}",
-                FitContent = true,
-                Theme = MessageTheme
-            };
-
-            channel.GetNode("./content").AddChild(label);
-
-            Rpc(MethodName.EmitMessage, player.GetInstanceId(), message, index);
-
-            return label;   
-        }
-
-        return null;
+        return label;
     }
 
 
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
-    private void sendMessage()
+    protected private void sendMessage()
     {
         SendMessage(Channels.CurrentTab, Label.Text);
         Label.Text = "";
@@ -160,7 +155,7 @@ public partial class Chat : SingletonControl<Chat>
             }
             else
             {
-                return RpcId(1, MethodName.MakeMessage, 
+                return Rpc(MethodName.MakeMessage, 
                     channel, 
                     message.Trim(), 
                     player.GetPlayerName(),
@@ -187,6 +182,8 @@ public partial class Chat : SingletonControl<Chat>
 
         var helper = channel.GetNode<RichTextLabel>("./content/helper");
         helper.Theme = MessageTheme;
+
+        channel.StartReplicating(true);
 
         Rpc(MethodName.EmitChannel, channel.GetIndex());
 
