@@ -254,6 +254,7 @@ public partial class Game : Singleton<Game>
 	/// </summary>
 	public static class Systems
 	{
+		public static Game Game { get; set; }
 		public static Workspace Workspace { get; set; }
 		public static Players Players { get; set; }
 		public static GlobalStorage GlobalStorage { get; set; }
