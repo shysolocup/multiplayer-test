@@ -13,7 +13,7 @@ public partial class EventBus : Singleton<EventBus>
     {
         public static readonly StringName loaded = new("_Loaded");
         public static readonly StringName cameraType = new("_CameraType");
-        public static readonly StringName cameraSubject = CameraSystem.SignalName.SubjectChanged;
+        public static readonly StringName cameraSubject = new("_CameraSubject");
         public static readonly StringName currentCamera = CameraSystem.SignalName.CurrentCameraChanged;
         public static readonly StringName freecamOn = CameraSystem.SignalName.FreecamEnabled;
         public static readonly StringName freecamOff = CameraSystem.SignalName.FreecamEnabled;
@@ -22,7 +22,7 @@ public partial class EventBus : Singleton<EventBus>
     }
 
 
-    public void On(StringName @event, Action callback)
+    public Action On(StringName @event, Action callback)
     {
         var prop = this.GetType().GetProperty(@event.ToString(), 
             System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Public
@@ -32,6 +32,8 @@ public partial class EventBus : Singleton<EventBus>
         {
             ev += callback;
         }
+
+        return callback;
     }
 
 
