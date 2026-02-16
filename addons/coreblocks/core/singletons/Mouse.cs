@@ -8,33 +8,33 @@ public partial class Mouse : Singleton<Mouse>
 {
 
 	/// <summary>
-	/// an array of <see cref="MouseModeBinding"/>s with actors that control what should get priority over the mouse's lock
+	/// an array of <see cref="ActorBinding"/>s with actors that control what should get priority over the mouse's lock
 	/// </summary>
 	[Export]
-	public Godot.Collections.Dictionary<int, MouseModeBinding> PriorityList = [];
+	public Godot.Collections.Dictionary<int, ActorBinding<Input.MouseModeEnum>> PriorityList = [];
 
 
 	/// <summary>
-	/// binds a <see cref="MouseModeBinding"/> which controls what should get priority over the mouse's lock
+	/// binds a <see cref="ActorBinding"/> which controls what should get priority over the mouse's lock
 	/// 
 	/// <para/> if the mode is set to <see cref="Input.MouseModeEnum.Captured"/> the mouse will be invisible and locked into the window
 	/// <para/> if the mode is set to <see cref="Input.MouseModeEnum.Visible"/> the mouse will be unlocked and visible
 	/// </summary>
-	public MouseModeBinding BindActor(Node actor, Enum.PriorityChannel channel, bool persist = false, Input.MouseModeEnum? mode = null)
+	public ActorBinding<Input.MouseModeEnum> BindActor(Node actor, Enum.PriorityChannel channel, bool persist = false, Input.MouseModeEnum? mode = null)
 		=> BindActor(actor, (int)channel, persist, mode);
 
 
 	/// <summary>
-	/// binds a <see cref="MouseModeBinding"/> to the given priority channel which controls what should get priority over the mouse's mode
+	/// binds a <see cref="ActorBinding"/> to the given priority channel which controls what should get priority over the mouse's mode
 	/// <para/>if the persist param is false (default) it'll set the mode to null once all actors are disconnected from the channel
 	/// </summary>
 	/// <param name="actor">acting node that </param>
 	/// <param name="channel">priority level, optionally an int</param>
 	/// <param name="persist">if the mode should persist after all actors are unbound, default false meaning once all the actors disconnect it'll set the mode to null</param>
 	/// <returns></returns>
-	public MouseModeBinding BindActor(Node actor, int channel, bool persist = false, Input.MouseModeEnum? mode = null)
+	public ActorBinding<Input.MouseModeEnum> BindActor(Node actor, int channel, bool persist = false, Input.MouseModeEnum? mode = null)
 	{
-		if (PriorityList.GetValueOrDefault(channel) is MouseModeBinding value)
+		if (PriorityList.GetValueOrDefault(channel) is ActorBinding<Input.MouseModeEnum> value)
 		{
 			if (!value.Actors.Contains(actor))
 				value.Actors.Add(actor);
@@ -42,18 +42,18 @@ public partial class Mouse : Singleton<Mouse>
 			value.Persist = persist;
 
 			if (mode is not null)
-				value.Mode = mode;
+				value.Value = mode;
 		}
 		else
 		{
-			var binding = new MouseModeBinding
+			var binding = new ActorBinding<Input.MouseModeEnum>
 			{
 				Actors = [actor],
 				Persist = persist,
 			};
 
 			if (mode is not null)
-				binding.Mode = mode;
+				binding.Value = mode;
 
 			PriorityList[channel] = binding;
 				
@@ -63,10 +63,10 @@ public partial class Mouse : Singleton<Mouse>
 	}
 
 
-	public MouseModeBinding GetBindng(Enum.PriorityChannel channel)
+	public ActorBinding<Input.MouseModeEnum> GetBindng(Enum.PriorityChannel channel)
 		=> PriorityList.GetValueOrDefault((int)channel);
 
-	public MouseModeBinding GetBindng(int channel)
+	public ActorBinding<Input.MouseModeEnum> GetBindng(int channel)
 		=> PriorityList.GetValueOrDefault(channel);
 
 	public Array<Node> GetActors(Enum.PriorityChannel channel)
@@ -77,30 +77,30 @@ public partial class Mouse : Singleton<Mouse>
 
 
 	/// <summary>
-	/// sets the mode of the <see cref="MouseModeBinding"/>
+	/// sets the mode of the <see cref="ActorBinding"/>
 	/// </summary>
 	public Mouse SetBindingMode(Enum.PriorityChannel channel, Input.MouseModeEnum mode)
 		=> SetBindingMode((int)channel, mode);
 
 
 	/// <summary>
-	/// sets the mode of the <see cref="MouseModeBinding"/>
+	/// sets the mode of the <see cref="ActorBinding"/>
 	/// </summary>
 	public Mouse SetBindingMode(int channel, Input.MouseModeEnum mode)
 	{
-		if (PriorityList.GetValueOrDefault(channel) is MouseModeBinding value)
+		if (PriorityList.GetValueOrDefault(channel) is ActorBinding<Input.MouseModeEnum> value)
 		{
-			value.Mode = mode;
+			value.Value = mode;
 		}
 		return this;
 	}
 
 	/// <summary>
-	/// sets the mode of the <see cref="MouseModeBinding"/>
+	/// sets the mode of the <see cref="ActorBinding"/>
 	/// </summary>
 	public Mouse SetBindingPersist(int channel, bool persist)
 	{
-		if (PriorityList.GetValueOrDefault(channel) is MouseModeBinding value)
+		if (PriorityList.GetValueOrDefault(channel) is ActorBinding<Input.MouseModeEnum> value)
 		{
 			value.Persist = persist;
 		}
@@ -108,17 +108,17 @@ public partial class Mouse : Singleton<Mouse>
 	}
 
 	/// <summary>
-	/// unbinds a <see cref="MouseModeBinding"/>
+	/// unbinds a <see cref="ActorBinding"/>
 	/// </summary>
 	public bool UnbindActor(Node actor, Enum.PriorityChannel channel)
 		=> UnbindActor(actor, (int)channel);
 
 	/// <summary>
-	/// unbinds a <see cref="MouseModeBinding"/>
+	/// unbinds a <see cref="ActorBinding"/>
 	/// </summary>
 	public bool UnbindActor(Node actor, int channel)
 	{
-		if (PriorityList.GetValueOrDefault(channel) is MouseModeBinding value)
+		if (PriorityList.GetValueOrDefault(channel) is ActorBinding<Input.MouseModeEnum> value)
 		{
 			return value.Actors.Remove(actor);
 		}
@@ -136,22 +136,22 @@ public partial class Mouse : Singleton<Mouse>
 		{
 			// if htehe actors are greater than 0 and it has the stuff and it works then it does
 			if (
-				binding.Actors.Count > 0 
+				binding.Acted
 				&& (nullablePriority is null || i < nullablePriority) 
-				&& binding.Mode is Input.MouseModeEnum
+				&& binding.Value is Input.MouseModeEnum
 			) 
 				nullablePriority = i;
 
 			// iff ffff all actors stop acting on the bind then reset its mode back to null
-			else if (binding.Actors.Count > 0 && !binding.Persist)
-				binding.Mode = null;
+			else if (binding.Acted && !binding.Persist)
+				binding.Value = null;
 		}
 
 		// oouegh if nullable priority exists thn get the prioirity and get the bind mode and apply it
 		if (
 			nullablePriority is int priority 
 			&& PriorityList.TryGetValue(priority, out var bind)
-			&& bind.Mode is Input.MouseModeEnum mode
+			&& bind.Value is Input.MouseModeEnum mode
 		)
 			Input.MouseMode = mode;
 	}
